@@ -1,0 +1,5 @@
+# Files and directories from Assignment1
+Framework/ThirdParty
+
+# Other files and directories to ignore
+.vs/
