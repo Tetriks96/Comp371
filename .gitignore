@@ -1,7 +1,7 @@
 # Files and directories from Assignment1
 Framework/Bin
-Framework/Build
 Framework/ThirdParty
 
 # Other files and directories to ignore
 .vs/
+Framework/Build
