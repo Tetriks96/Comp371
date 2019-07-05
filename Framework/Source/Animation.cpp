@@ -121,7 +121,13 @@ void Animation::Draw()
     // The shader is bound in World.cpp and the ViewProjection Matrix uniform is set there...
 	// The Model View Projection transforms are computed in the Vertex Shader
 
+	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
+	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &mat4(1.0f)[0][0]);
+
+	glDrawArrays(GL_LINE_LOOP, 0, mVertexBuffer.size());
 }
 
 
@@ -199,8 +205,30 @@ glm::mat4 Animation::GetAnimationWorldMatrix() const
     //           Finally concatenate the interpolated transforms into a single
     //           world transform and return it.
     
-    mat4 worldMatrix(1.0f);
-    
-    
-    return worldMatrix;
+	int before = -1;
+	int after = -1;
+	for (int i = 0; i < (int)mKey.size(); i++)
+	{
+		if (mCurrentTime > mKeyTime[i])
+		{
+			before = i;
+			after = (i + 1) % mKey.size();
+		}
+	}
+
+	float transitionDuration = mKeyTime[after] - mKeyTime[before];
+	float tween = (mCurrentTime - mKeyTime[before]) / (transitionDuration);
+	float angleDiff = mKey[after].mRotationAngleInDegrees - mKey[before].mRotationAngleInDegrees;
+
+	vec3 position = mix(mKey[before].mPosition, mKey[after].mPosition, tween);
+	float rotationAngleInDegrees = mKey[before].mRotationAngleInDegrees + tween * angleDiff;
+	float rotationAngleInRadians = radians(rotationAngleInDegrees);
+	vec3 rotationAxis = mix(mKey[before].mRotationAxis, mKey[after].mRotationAxis, tween);
+	vec3 scaling = mix(mKey[before].mScaling, mKey[after].mScaling, tween);
+
+	mat4 T = translate(mat4(1.0f), position);
+	mat4 TR = rotate(T, rotationAngleInRadians, rotationAxis);
+	mat4 TRS = scale(TR, scaling);
+
+	return TRS;
 }

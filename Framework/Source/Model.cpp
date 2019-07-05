@@ -124,10 +124,18 @@ glm::mat4 Model::GetWorldMatrix() const
 {
 	// @TODO 2 - You must build the world matrix from the position, scaling and rotation informations
     //           If the model has an animation, get the world transform from the animation.
-	mat4 worldMatrix(1.0f);
 
-    
-	return worldMatrix;
+	if (mAnimation == nullptr)
+	{
+		mat4 T = translate(mat4(1.0f), mPosition);
+		mat4 TR = rotate(T, radians(mRotationAngleInDegrees), mRotationAxis);
+		mat4 TRS = scale(TR, mScaling);
+		return TRS;
+	}
+	else
+	{
+		return mAnimation->GetAnimationWorldMatrix();
+	}
 }
 
 void Model::SetPosition(glm::vec3 position)

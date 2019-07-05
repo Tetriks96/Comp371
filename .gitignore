@@ -5,3 +5,4 @@ Framework/ThirdParty
 # Other files and directories to ignore
 .vs/
 Framework/Build
+Framework/VS2017/Project.log
