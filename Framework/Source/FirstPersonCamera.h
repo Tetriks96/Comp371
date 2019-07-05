@@ -21,12 +21,13 @@ public:
 	virtual glm::mat4 GetViewMatrix() const;
 
 private:
-	glm::vec3 mPosition;	
-	float mHorizontalAngle; // horizontal angle
-	float mVerticalAngle;   // vertical angle
-
-	float mSpeed;			// World units per second
-	float mAngularSpeed;    // Degrees per pixel
-
+	glm::vec3 mPosition;
 	glm::vec3 mLookAt;
+	glm::vec3 mUp;
+
+	float mDisplacementSpeed;
+	float mAngularSpeed;
+	float mTiltAngularSpeedAdjustment;
+	float mScrollDisplacementSpeedAdjustment;
+	float mSlowDownFactor;
 };

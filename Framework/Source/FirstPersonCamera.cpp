@@ -10,6 +10,7 @@
 #include "EventManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
 
 #include <GLFW/glfw3.h>
 #include <algorithm>
@@ -18,8 +19,17 @@
 
 using namespace glm;
 
-FirstPersonCamera::FirstPersonCamera(glm::vec3 position) :  Camera(), mPosition(position), mLookAt(0.0f, 0.0f, -1.0f), mHorizontalAngle(90.0f), mVerticalAngle(0.0f), mSpeed(5.0f), mAngularSpeed(2.5f)
+FirstPersonCamera::FirstPersonCamera(glm::vec3 position) : Camera(),
+	mPosition(position),
+	mLookAt(0.0f, -1.0f, -1.0f),
+	mUp(0.0f, 1.0f, 0.0f),
+	mDisplacementSpeed(50.0f),
+	mAngularSpeed(0.75f),
+	mScrollDisplacementSpeedAdjustment(5.0f),
+	mTiltAngularSpeedAdjustment(5.0f),
+	mSlowDownFactor(0.1f)
 {
+	mLookAt = normalize(mLookAt);
 }
 
 FirstPersonCamera::~FirstPersonCamera()
@@ -31,58 +41,96 @@ void FirstPersonCamera::Update(float dt)
 	// Prevent from having the camera move only when the cursor is within the windows
 	EventManager::DisableMouseCursor();
 
-
 	// The Camera moves based on the User inputs
 	// - You can access the mouse motion with EventManager::GetMouseMotionXY()
 	// - For mapping A S D W, you can look in World.cpp for an example of accessing key states
 	// - Don't forget to use dt to control the speed of the camera motion
 
-	// Mouse motion to get the variation in angle
-	mHorizontalAngle -= EventManager::GetMouseMotionX() * mAngularSpeed * dt;
-	mVerticalAngle   -= EventManager::GetMouseMotionY() * mAngularSpeed * dt;
+	vec3 x = vec3(1.0f, 0.0f, 0.0f);
+	vec3 y = vec3(0.0f, 1.0f, 0.0f);
+	vec3 z = vec3(0.0f, 0.0f, 1.0f);
 
-	// Clamp vertical angle to [-85, 85] degrees
-	mVerticalAngle = std::max(-85.0f, std::min(85.0f, mVerticalAngle));
-	if (mHorizontalAngle > 360)
+	vec3 visionLeft = glm::cross(mUp, mLookAt);
+	vec3 groundForward = glm::cross(visionLeft, y);
+	vec3 groundLeft = glm::cross(y, groundForward);
+
+	float adjustedAngularSpeed = mAngularSpeed;
+	float adjustedDisplacementSpeed = mDisplacementSpeed;
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		mHorizontalAngle -= 360;
-	}
-	else if (mHorizontalAngle < -360)
-	{
-		mHorizontalAngle += 360;
+		adjustedAngularSpeed *= mSlowDownFactor;
+		adjustedDisplacementSpeed *= mSlowDownFactor;
 	}
 
-	float theta = radians(mHorizontalAngle);
-	float phi = radians(mVerticalAngle);
+	float horizontalMotion = - EventManager::GetMouseMotionX() * adjustedAngularSpeed;
+	float verticalMotion = EventManager::GetMouseMotionY() * adjustedAngularSpeed;
 
-	mLookAt = vec3(cosf(phi)*cosf(theta), sinf(phi), -cosf(phi)*sinf(theta));
+	mat4 lookAtRotation(1.0f);
+	mat4 upRotation(1.0f);
+
+	// Horizontal motion
+	lookAtRotation = rotate(lookAtRotation, horizontalMotion * dt * adjustedAngularSpeed, y);
+	upRotation = rotate(upRotation, horizontalMotion * dt * adjustedAngularSpeed, y);
 	
-	vec3 sideVector = glm::cross(mLookAt, vec3(0.0f, 1.0f, 0.0f));
-	glm::normalize(sideVector);
+	// Vertical motion
+	lookAtRotation = rotate(lookAtRotation, verticalMotion * dt * adjustedAngularSpeed, visionLeft);
+	upRotation = rotate(upRotation, verticalMotion * dt * adjustedAngularSpeed, visionLeft);
 
-	// A S D W for motion along the camera basis vectors
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_PRESS)
+	// Tilt motion
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_Q) == GLFW_PRESS)
 	{
-		mPosition += mLookAt * dt * mSpeed;
+		upRotation = rotate(upRotation, -mTiltAngularSpeedAdjustment * dt * adjustedAngularSpeed, mLookAt);
+	}
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_E) == GLFW_PRESS)
+	{
+		upRotation = rotate(upRotation, mTiltAngularSpeedAdjustment * dt * adjustedAngularSpeed, mLookAt);
 	}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_PRESS)
+	// Apply Rotations
+	vec4 lookAt4(mLookAt, 0.0f);
+	lookAt4 = lookAtRotation * lookAt4;
+	mLookAt = vec3(lookAt4);
+	mLookAt = normalize(mLookAt);
+
+	vec4 up4(mUp, 0.0f);
+	up4 = upRotation * up4;
+	mUp = vec3(up4);
+	mUp = normalize(mUp);
+
+	vec3 displacement(0.0f);
+	// Displacements
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		mPosition -= mLookAt * dt * mSpeed;
+		displacement += groundForward;
 	}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D ) == GLFW_PRESS)
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		mPosition += sideVector * dt * mSpeed;
+		displacement -= groundForward;
 	}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A ) == GLFW_PRESS)
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
-		mPosition -= sideVector * dt * mSpeed;
+		displacement += groundLeft;
 	}
+
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
+	{
+		displacement -= groundLeft;
+	}
+
+	if (length(displacement) > 0)
+	{
+		displacement = normalize(displacement);
+		displacement *= dt * adjustedDisplacementSpeed;
+		mPosition += displacement;
+	}
+
+	double scrollMotion = EventManager::GetMouseMotionScroll();
+	mPosition += mLookAt * (float)scrollMotion * dt * mScrollDisplacementSpeedAdjustment * adjustedDisplacementSpeed;
 }
 
 glm::mat4 FirstPersonCamera::GetViewMatrix() const
 {
-	return glm::lookAt(	mPosition, mPosition + mLookAt, vec3(0.0f, 1.0f, 0.0f) );
+	return glm::lookAt(	mPosition, mPosition + mLookAt, mUp);
 }

@@ -24,8 +24,9 @@ public:
 
 	static GLFWwindow* GetWindow();
 
-	static float GetMouseMotionX();
-	static float GetMouseMotionY();
+	static float  GetMouseMotionX();
+	static float  GetMouseMotionY();
+	static double GetMouseMotionScroll();
 
 	static void EnableMouseCursor();
 	static void DisableMouseCursor();
@@ -41,7 +42,10 @@ private:
 	static float  sMouseDeltaX;
 	static double sLastMousePositionY;
 	static float  sMouseDeltaY;
+	static double sMouseDeltaScroll;
 
 	// Window
 	static GLFWwindow* spWindow;
+
+	static void ScrollCallback(GLFWwindow* window, double x, double y);
 };

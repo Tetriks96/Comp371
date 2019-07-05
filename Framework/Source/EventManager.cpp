@@ -32,6 +32,7 @@ double EventManager::sLastMousePositionX = 0.0f;
 float  EventManager::sMouseDeltaX = 0.0f;
 double EventManager::sLastMousePositionY = 0.0f;
 float  EventManager::sMouseDeltaY = 0.0f;
+double EventManager::sMouseDeltaScroll = 0;
 
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
@@ -91,6 +92,20 @@ void EventManager::Initialize()
 	// Initial time
 	sLastFrameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
+
+	glfwSetScrollCallback(spWindow, ScrollCallback);
+}
+
+void EventManager::ScrollCallback(GLFWwindow* window, double x, double y)
+{
+	sMouseDeltaScroll += y;
+}
+
+double EventManager::GetMouseMotionScroll()
+{
+	double value = sMouseDeltaScroll;
+	sMouseDeltaScroll = 0;
+	return value;
 }
 
 void EventManager::Shutdown()
