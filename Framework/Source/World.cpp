@@ -35,7 +35,7 @@ World::World()
     instance = this;
 
 	// Setup Camera
-	mCamera.push_back(new FirstPersonCamera(vec3(0.0f, 25.0f, 25.0f)));
+	mCamera.push_back(new FirstPersonCamera(vec3(0.0f, 0.0f, -3.0f), vec3(0.0f, 0.0f, 1.0f)));
 	mCurrentCamera = 0;
 }
 

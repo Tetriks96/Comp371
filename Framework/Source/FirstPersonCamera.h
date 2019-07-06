@@ -13,7 +13,7 @@
 class FirstPersonCamera : public Camera
 {
 public:
-	FirstPersonCamera(glm::vec3 position);
+	FirstPersonCamera(glm::vec3 position, glm::vec3 lookAt);
 	virtual ~FirstPersonCamera();
 
 	virtual void Update(float dt);

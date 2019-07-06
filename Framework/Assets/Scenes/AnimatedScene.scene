@@ -10,7 +10,7 @@ name     = "KeyBack"
 position =  3.0 1.0 0.0
 rotation =  1.0f 0.0f 0.0f 270.0f
 
-[Animation]
+[#Animation]
 name     = "BackAndForth"
 key      = "KeyForth"     time = 0.0f
 key      = "KeyBack"      time = 2.0f
@@ -53,7 +53,7 @@ position = 7.07 2.0 -7.07
 scaling  = 2.0f 2.0f 2.0f
 
 
-[Animation]
+[#Animation]
 name     = "CycleAnim"
 key      = "KeyCycle1"  time = 0.0f
 key      = "KeyCycle2"  time = 1.0f
@@ -72,7 +72,7 @@ position = 0.0 -0.5 0.0
 rotation = 0.0 0.0 1.0 0.0
 
 
-[Cube]
+[#Cube]
 name     = "Cube"
 scaling  = 1.0 1.0 1.0
 position = 0.0 1.0 0.0
@@ -81,5 +81,5 @@ animation = "BackAndForth"
 
 [Sphere]
 name     = "Sphere"
-position = 10.0 2.0 0.0
-animation = "CycleAnim"
+position = 0.0 0.0 0.0
+#animation = "CycleAnim"
