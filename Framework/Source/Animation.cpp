@@ -74,15 +74,6 @@ void Animation::CreateVertexBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*mVertexBuffer.size(), &(mVertexBuffer[0]), GL_STATIC_DRAW);
     
-    // Create a vertex array
-    glGenVertexArrays(1, &mVAO);
-    glBindVertexArray(mVAO);
-    
-    // Upload Vertex Buffer to the GPU, keep a reference to it (mVertexBufferID)
-    glGenBuffers(1, &mVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*mVertexBuffer.size(), &(mVertexBuffer[0]), GL_STATIC_DRAW);
-    
     // 1st attribute buffer : vertex Positions
     glVertexAttribPointer(0,
                           3,                // size
