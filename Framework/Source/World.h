@@ -17,6 +17,7 @@ class Camera;
 class Model;
 class Animation;
 class AnimationKey;
+class ControllableSphere;
 
 class World
 {
@@ -43,4 +44,7 @@ private:
     std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;
 	unsigned int mCurrentCamera;
+	std::vector<ControllableSphere*> mSphere;
+
+	float XFormula(float ratio);
 };

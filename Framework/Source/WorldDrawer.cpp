@@ -2,6 +2,11 @@
 #include "Renderer.h"
 #include <glm/glm.hpp>
 
+#include "Camera.h"
+#include "Model.h"
+#include "Animation.h"
+#include "ControllableSphere.h"
+
 using namespace glm;
 using namespace std;
 
@@ -10,7 +15,8 @@ void WorldDrawer::DrawWorld(
 	unsigned int currentCamera,
 	vector<Model*> model,
 	vector<Animation*> animation,
-	vector<AnimationKey*> animationKey)
+	vector<AnimationKey*> animationKey,
+	vector<ControllableSphere*> sphere)
 {
 	Renderer::BeginFrame();
 
@@ -26,6 +32,11 @@ void WorldDrawer::DrawWorld(
 
 	// Draw models
 	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it)
+	{
+		(*it)->Draw();
+	}
+
+	for (vector<ControllableSphere*>::iterator it = sphere.begin(); it < sphere.end(); ++it)
 	{
 		(*it)->Draw();
 	}

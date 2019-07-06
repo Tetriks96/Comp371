@@ -16,6 +16,7 @@
 
 #include "CubeModel.h"
 #include "SphereModel.h"
+#include "ControllableSphere.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
@@ -35,6 +36,10 @@ World::World()
 {
     instance = this;
 
+	SphereModel* sphereModel = new SphereModel(vec3(1.0f), vec3(1.0f, 1.0f, 0.05f));
+	ControllableSphere * controllableSphere = new ControllableSphere(sphereModel);
+	mSphere.push_back(controllableSphere);
+
 	// Setup Camera
 	mCamera.push_back(new FirstPersonCamera(vec3(0.0f, 0.0f, -3.0f), vec3(0.0f, 0.0f, 1.0f)));
 	mCurrentCamera = 0;
@@ -49,6 +54,13 @@ World::~World()
 	}
 
 	mModel.clear();
+
+	for (vector<ControllableSphere*>::iterator it = mSphere.begin(); it < mSphere.end(); ++it)
+	{
+		delete *it;
+	}
+	
+	mSphere.clear();
 
 	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
 	{
@@ -98,6 +110,11 @@ void World::Update(float dt)
 	{
 		(*it)->Update(dt);
 	}
+
+	for (vector<ControllableSphere*>::iterator it = mSphere.begin(); it < mSphere.end(); ++it)
+	{
+		(*it)->Update(dt);
+	}
 }
 
 void World::Draw()
@@ -107,7 +124,8 @@ void World::Draw()
 		mCurrentCamera,
 		mModel,
 		mAnimation,
-		mAnimationKey);
+		mAnimationKey,
+		mSphere);
 }
 
 void World::LoadScene(const char * scene_path)
@@ -120,8 +138,8 @@ void World::LoadScene(const char * scene_path)
 	//);
 	int numberOfSpheres = 1000;
 	int minSize = 1;
-	int maxSize = 10;
-	int maxDistance = 300;
+	int maxSize = 1;
+	int maxDistance = 100;
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
 		float size = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
@@ -130,27 +148,38 @@ void World::LoadScene(const char * scene_path)
 		float color3 = (float)rand() / RAND_MAX;
 		SphereModel* sphere = new SphereModel(vec3(size), vec3(color1, color2, color3));
 
-		vec3 direction;
-		do
-		{
-			float x = -1 + ((float)rand() / RAND_MAX) * 2;
-			float y = -1 + ((float)rand() / RAND_MAX) * 2;
-			float z = -1 + ((float)rand() / RAND_MAX) * 2;
-			direction = vec3(x, y, z);
-		} while (length(direction) == 0);
-		direction = normalize(direction);
-
 		float ratio = (float)rand() / RAND_MAX;
-		float distanceMultiplier = pow(ratio, 1.0f / 3);
-		float distance = distanceMultiplier * maxDistance;
 
-		vec3 position = direction * distance;
+		int signX = -1 + 2 * (rand() % 2);
 
-		sphere->SetPosition(position);
-		sphere->Initialize();
+		float xMagnitude = signX * XFormula(ratio) / XFormula(1.0f);
+		vec3 x (xMagnitude, 0.0f, 0.0f);
+
+		float r = sqrt(1.0f - pow(length(x), 2.0f));
+
+		float degrees = (float)rand() / RAND_MAX * 360;
+		vec3 y_plus_z = rotate(mat4(1.0f), radians(degrees), x) * vec4(0.0f, 1.0f, 0.0f, 0.0f) * r;
+
+		vec3 direction = x + y_plus_z;
+
+		ratio = (float)rand() / RAND_MAX;
+		float distance = pow(ratio, 1.0f / 3) * maxDistance;
+
+		sphere->SetPosition(distance * direction);
 
 		mModel.push_back(sphere);
 	}
+}
+
+float World::XFormula(float ratio)
+{
+	float r2 = pow(ratio, 2.0f);
+	float s = sqrt(r2 + 4.0f);
+	float a = s - ratio;
+	float b = pow(2 / a, 1.0f / 3);
+	float c = pow(a / 2, 1.0f / 3);
+
+	return b - c;
 }
 
 Animation* World::FindAnimation(ci_string animName)

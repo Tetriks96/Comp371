@@ -21,11 +21,10 @@ public:
     virtual void Draw();
 
 	virtual void Load(ci_istringstream& iss);
-
-	virtual void Initialize();
     
 protected:
     virtual bool ParseLine(const std::vector<ci_string> &token);
+	virtual void Initialize();
 
 	glm::vec3 mColor;
 

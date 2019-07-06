@@ -1,8 +1,12 @@
 #pragma once
 
-#include "Camera.h"
-#include "Model.h"
-#include "Animation.h"
+#include <vector>
+
+class Camera;
+class Model;
+class Animation;
+class AnimationKey;
+class ControllableSphere;
 
 class WorldDrawer
 {
@@ -12,5 +16,6 @@ public:
 		unsigned int currentCamera,
 		std::vector<Model*> model,
 		std::vector<Animation*> animation,
-		std::vector<AnimationKey*> animationKey);
+		std::vector<AnimationKey*> animationKey,
+		std::vector<ControllableSphere*> sphere);
 };
