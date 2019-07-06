@@ -23,6 +23,7 @@
 #include "WorldDrawer.h"
 #include "SceneLoader.h"
 
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
 using namespace glm;
@@ -111,12 +112,41 @@ void World::Draw()
 
 void World::LoadScene(const char * scene_path)
 {
-	SceneLoader::LoadScene(
-		scene_path,
-		&mModel,
-		&mAnimation,
-		&mAnimationKey
-	);
+	//SceneLoader::LoadScene(
+	//	scene_path,
+	//	&mModel,
+	//	&mAnimation,
+	//	&mAnimationKey
+	//);
+	int numberOfSpheres = 1000;
+	int minSize = 1;
+	int maxSize = 10;
+	int minDistance = 0;
+	int maxDistance = 300;
+	for (int i = 0; i < numberOfSpheres; i++)
+	{
+		float size = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
+		float color1 = (float)rand() / RAND_MAX;
+		float color2 = (float)rand() / RAND_MAX;
+		float color3 = (float)rand() / RAND_MAX;
+		SphereModel* sphere = new SphereModel(vec3(size), vec3(color1, color2, color3));
+
+		float x = -1 + ((float)rand() / RAND_MAX) * 2;
+		float y = -1 + ((float)rand() / RAND_MAX) * 2;
+		float z = -1 + ((float)rand() / RAND_MAX) * 2;
+
+		vec3 direction = vec3(x, y, z);
+		direction = normalize(direction);
+
+		float distance = minDistance + ((float)rand() / RAND_MAX) * (maxDistance - minDistance);
+
+		vec3 position = direction * distance;
+
+		sphere->SetPosition(position);
+		sphere->Initialize();
+
+		mModel.push_back(sphere);
+	}
 }
 
 Animation* World::FindAnimation(ci_string animName)

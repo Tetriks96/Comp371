@@ -14,6 +14,7 @@ using namespace glm;
 
 SphereModel::SphereModel(vec3 size, vec3 color) : Model()
 {
+	mScaling = size;
 	mColor = color;
 }
 
