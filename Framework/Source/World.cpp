@@ -121,7 +121,6 @@ void World::LoadScene(const char * scene_path)
 	int numberOfSpheres = 1000;
 	int minSize = 1;
 	int maxSize = 10;
-	int minDistance = 0;
 	int maxDistance = 300;
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
@@ -131,14 +130,19 @@ void World::LoadScene(const char * scene_path)
 		float color3 = (float)rand() / RAND_MAX;
 		SphereModel* sphere = new SphereModel(vec3(size), vec3(color1, color2, color3));
 
-		float x = -1 + ((float)rand() / RAND_MAX) * 2;
-		float y = -1 + ((float)rand() / RAND_MAX) * 2;
-		float z = -1 + ((float)rand() / RAND_MAX) * 2;
-
-		vec3 direction = vec3(x, y, z);
+		vec3 direction;
+		do
+		{
+			float x = -1 + ((float)rand() / RAND_MAX) * 2;
+			float y = -1 + ((float)rand() / RAND_MAX) * 2;
+			float z = -1 + ((float)rand() / RAND_MAX) * 2;
+			direction = vec3(x, y, z);
+		} while (direction.length == 0);
 		direction = normalize(direction);
 
-		float distance = minDistance + ((float)rand() / RAND_MAX) * (maxDistance - minDistance);
+		float ratio = (float)rand() / RAND_MAX;
+		float distanceMultiplier = pow(ratio, 1.0f / 3);
+		float distance = distanceMultiplier * maxDistance;
 
 		vec3 position = direction * distance;
 
