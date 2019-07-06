@@ -46,13 +46,7 @@ void FirstPersonCamera::Update(float dt)
 	// - For mapping A S D W, you can look in World.cpp for an example of accessing key states
 	// - Don't forget to use dt to control the speed of the camera motion
 
-	vec3 x = vec3(1.0f, 0.0f, 0.0f);
-	vec3 y = vec3(0.0f, 1.0f, 0.0f);
-	vec3 z = vec3(0.0f, 0.0f, 1.0f);
-
-	vec3 visionLeft = glm::cross(mUp, mLookAt);
-	vec3 groundForward = glm::cross(visionLeft, y);
-	vec3 groundLeft = glm::cross(y, groundForward);
+	vec3 left = glm::cross(mUp, mLookAt);
 
 	float adjustedAngularSpeed = mAngularSpeed;
 	float adjustedDisplacementSpeed = mDisplacementSpeed;
@@ -69,12 +63,12 @@ void FirstPersonCamera::Update(float dt)
 	mat4 upRotation(1.0f);
 
 	// Horizontal motion
-	lookAtRotation = rotate(lookAtRotation, horizontalMotion * dt * adjustedAngularSpeed, y);
-	upRotation = rotate(upRotation, horizontalMotion * dt * adjustedAngularSpeed, y);
+	lookAtRotation = rotate(lookAtRotation, horizontalMotion * dt * adjustedAngularSpeed, mUp);
+	upRotation = rotate(upRotation, horizontalMotion * dt * adjustedAngularSpeed, mUp);
 	
 	// Vertical motion
-	lookAtRotation = rotate(lookAtRotation, verticalMotion * dt * adjustedAngularSpeed, visionLeft);
-	upRotation = rotate(upRotation, verticalMotion * dt * adjustedAngularSpeed, visionLeft);
+	lookAtRotation = rotate(lookAtRotation, verticalMotion * dt * adjustedAngularSpeed, left);
+	upRotation = rotate(upRotation, verticalMotion * dt * adjustedAngularSpeed, left);
 
 	// Tilt motion
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_Q) == GLFW_PRESS)
@@ -101,22 +95,22 @@ void FirstPersonCamera::Update(float dt)
 	// Displacements
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		displacement += groundForward;
+		displacement += mUp;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		displacement -= groundForward;
+		displacement -= mUp;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 	{
-		displacement += groundLeft;
+		displacement += left;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 	{
-		displacement -= groundLeft;
+		displacement -= left;
 	}
 
 	if (length(displacement) > 0)
