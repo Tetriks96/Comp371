@@ -137,7 +137,7 @@ void World::LoadScene(const char * scene_path)
 			float y = -1 + ((float)rand() / RAND_MAX) * 2;
 			float z = -1 + ((float)rand() / RAND_MAX) * 2;
 			direction = vec3(x, y, z);
-		} while (direction.length == 0);
+		} while (length(direction) == 0);
 		direction = normalize(direction);
 
 		float ratio = (float)rand() / RAND_MAX;
