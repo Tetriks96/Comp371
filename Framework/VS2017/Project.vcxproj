@@ -122,6 +122,7 @@
     <ClCompile Include="..\Source\SphereModel.cpp" />
     <ClCompile Include="..\Source\StaticCamera.cpp" />
     <ClCompile Include="..\Source\World.cpp" />
+    <ClCompile Include="..\Source\WorldDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Animation.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="..\Source\SphereModel.h" />
     <ClInclude Include="..\Source\StaticCamera.h" />
     <ClInclude Include="..\Source\World.h" />
+    <ClInclude Include="..\Source\WorldDrawer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

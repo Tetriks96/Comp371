@@ -82,6 +82,9 @@
     <ClCompile Include="..\Source\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\WorldDrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Renderer.h">
@@ -115,6 +118,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\ParsingHelper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\WorldDrawer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
