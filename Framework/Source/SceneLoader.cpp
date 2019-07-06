@@ -31,7 +31,11 @@ void SceneLoader::LoadScene(
 		ci_string result;
 		if (std::getline(iss, result, ']'))
 		{
-			if (result == "cube")
+			if (result.empty() == false && result[0] == '#')
+			{
+				// this is a comment line
+			}
+			else if (result == "cube")
 			{
 				// Box attributes
 				CubeModel* cube = new CubeModel();
@@ -55,10 +59,6 @@ void SceneLoader::LoadScene(
 				Animation* anim = new Animation();
 				anim->Load(iss);
 				animation->push_back(anim);
-			}
-			else if (result.empty() == false && result[0] == '#')
-			{
-				// this is a comment line
 			}
 			else
 			{
