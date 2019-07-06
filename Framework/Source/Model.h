@@ -26,7 +26,7 @@ public:
 	virtual void Update(float dt) = 0;
 	virtual void Draw() = 0;
 
-	void Load(ci_istringstream& iss);
+	virtual void Load(ci_istringstream& iss);
 
 	virtual glm::mat4 GetWorldMatrix() const;
 

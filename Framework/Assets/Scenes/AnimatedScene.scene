@@ -82,4 +82,5 @@ animation = "BackAndForth"
 [Sphere]
 name     = "Sphere"
 position = 0.0 0.0 0.0
+color    = 1.0, 1.0, 1.0
 #animation = "CycleAnim"
