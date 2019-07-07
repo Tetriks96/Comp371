@@ -33,7 +33,10 @@ void WorldDrawer::DrawWorld(
 	// Draw models
 	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it)
 	{
-		(*it)->Draw();
+		if ((*it) != nullptr)
+		{
+			(*it)->Draw();
+		}
 	}
 
 	for (vector<ControllableSphere*>::iterator it = sphere.begin(); it < sphere.end(); ++it)

@@ -12,7 +12,7 @@
 #include "ParsingHelper.h"
 
 #include "StaticCamera.h"
-#include "FirstPersonCamera.h"
+#include "ThirdPersonCamera.h"
 
 #include "CubeModel.h"
 #include "SphereModel.h"
@@ -36,12 +36,12 @@ World::World()
 {
     instance = this;
 
-	SphereModel* sphereModel = new SphereModel(vec3(1.0f), vec3(1.0f, 1.0f, 0.05f));
+	SphereModel* sphereModel = new SphereModel(vec3(1.01f), vec3(0.05f, 0.05f, 1.0f));
 	ControllableSphere * controllableSphere = new ControllableSphere(sphereModel);
 	mSphere.push_back(controllableSphere);
 
 	// Setup Camera
-	mCamera.push_back(new FirstPersonCamera(vec3(0.0f, 0.0f, -3.0f), vec3(0.0f, 0.0f, 1.0f)));
+	mCamera.push_back(new ThirdPersonCamera(controllableSphere));
 	mCurrentCamera = 0;
 }
 
@@ -89,6 +89,11 @@ World* World::GetInstance()
     return instance;
 }
 
+vector<Model*>* World::GetModels()
+{
+	return &mModel;
+}
+
 void World::Update(float dt)
 {
 	// Update animation and keys
@@ -108,7 +113,10 @@ void World::Update(float dt)
 	// Update models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
-		(*it)->Update(dt);
+		if (*it != nullptr)
+		{
+			(*it)->Update(dt);
+		}
 	}
 
 	for (vector<ControllableSphere*>::iterator it = mSphere.begin(); it < mSphere.end(); ++it)
@@ -136,10 +144,10 @@ void World::LoadScene(const char * scene_path)
 	//	&mAnimation,
 	//	&mAnimationKey
 	//);
-	int numberOfSpheres = 1000;
+	int numberOfSpheres = 100;
 	int minSize = 1;
 	int maxSize = 1;
-	int maxDistance = 100;
+	int maxDistance = 25;
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
 		float size = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);

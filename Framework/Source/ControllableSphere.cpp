@@ -1,14 +1,19 @@
 #include "ControllableSphere.h"
 #include "EventManager.h"
+#include "World.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 using namespace glm;
+using namespace std;
 
 ControllableSphere::ControllableSphere(SphereModel* model):
 	mLookAt(0.0f, 0.0f, 1.0f),
 	mUp(0.0f, 1.0f, 0.0f),
-	mDisplacementSpeed(50.0f),
+	mDisplacementEnergy(20.0f),
 	mAngularSpeed(0.75f),
 	mSlowDownFactor(0.1f),
 	mTiltAngularSpeedAdjustment(5.0f),
@@ -27,6 +32,48 @@ ControllableSphere::~ControllableSphere()
 
 void ControllableSphere::Update(float dt)
 {
+	Move(dt);
+	HandleCollisions();
+}
+
+void ControllableSphere::HandleCollisions()
+{
+	World* world = World::GetInstance();
+	vector<Model*>* models = world->GetModels();
+
+	for (vector<Model*>::iterator it = models->begin(); it < models->end(); ++it)
+	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
+		vec3 position = (*it)->GetPosition();
+		float radius = (*it)->GetScaling()[0]; // just take x value. Assume all models are spheres for now...
+		float dist = distance(mModel->GetPosition(), position);
+		float myRadius = mModel->GetScaling()[0];
+
+		if (dist - std::max(radius, myRadius) < 0)
+		{
+			// Collision!
+			if (myRadius > radius)
+			{
+				float myVolume = 4 * (float)M_PI * pow(myRadius, 3) / 3;
+				float volume = 4 * (float)M_PI * pow(radius, 3) / 3;
+
+				myVolume += volume;
+				myRadius = pow(3 * myVolume / (4 * (float)M_PI), 1.0f / 3);
+
+				mModel->SetScaling(vec3(myRadius));
+
+				delete *it;
+				*it = nullptr;
+			}
+		}
+	}
+}
+
+void ControllableSphere::Move(float dt)
+{
 	// Prevent from having the camera move only when the cursor is within the windows
 	EventManager::DisableMouseCursor();
 
@@ -38,7 +85,7 @@ void ControllableSphere::Update(float dt)
 	vec3 left = glm::cross(mUp, mLookAt);
 
 	float adjustedAngularSpeed = mAngularSpeed;
-	float adjustedDisplacementSpeed = mDisplacementSpeed;
+	float adjustedDisplacementSpeed = mDisplacementEnergy / GetRadius();
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
 		adjustedAngularSpeed *= mSlowDownFactor;
@@ -84,23 +131,23 @@ void ControllableSphere::Update(float dt)
 	// Displacements
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		displacement += mUp;
+		displacement += mLookAt;
 	}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
-	{
-		displacement -= mUp;
-	}
+	//if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
+	//{
+	//	displacement -= mUp;
+	//}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
-	{
-		displacement += left;
-	}
+	//if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
+	//{
+	//	displacement += left;
+	//}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
-	{
-		displacement -= left;
-	}
+	//if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
+	//{
+	//	displacement -= left;
+	//}
 
 	vec3 previousPosition = mModel->GetPosition();
 
@@ -110,8 +157,8 @@ void ControllableSphere::Update(float dt)
 		displacement *= dt * adjustedDisplacementSpeed;
 	}
 
-	double scrollMotion = EventManager::GetMouseMotionScroll();
-	displacement += mLookAt * (float)scrollMotion * dt * mScrollDisplacementSpeedAdjustment * adjustedDisplacementSpeed;
+	//double scrollMotion = EventManager::GetMouseMotionScroll();
+	//displacement += mLookAt * (float)scrollMotion * dt * mScrollDisplacementSpeedAdjustment * adjustedDisplacementSpeed;
 
 	mModel->SetPosition(previousPosition + displacement);
 }
@@ -119,4 +166,24 @@ void ControllableSphere::Update(float dt)
 void ControllableSphere::Draw()
 {
 	mModel->Draw();
+}
+
+vec3 ControllableSphere::GetPosition()
+{
+	return mModel->GetPosition();
+}
+
+vec3 ControllableSphere::GetLookAt()
+{
+	return mLookAt;
+}
+
+vec3 ControllableSphere::GetUp()
+{
+	return mUp;
+}
+
+float ControllableSphere::GetRadius()
+{
+	return mModel->GetScaling()[0];
 }

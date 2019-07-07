@@ -10,6 +10,8 @@
 #include "SphereModel.h"
 #include "Renderer.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace glm;
 
 SphereModel::SphereModel(vec3 size, vec3 color) : Model()
@@ -30,6 +32,9 @@ SphereModel::~SphereModel()
 void SphereModel::Update(float dt)
 {
     Model::Update(dt);
+	float degrees = 0.1f;
+	mat4 R = rotate(mat4(1.0f), radians(degrees), vec3(1.0f, 0.0f, 0.0f));
+	mPosition = R * vec4(mPosition, 0.0f);
 }
 
 void SphereModel::Draw()

@@ -35,6 +35,7 @@ public:
     AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
+	std::vector<Model*>* GetModels();
     
 private:
     static World* instance;

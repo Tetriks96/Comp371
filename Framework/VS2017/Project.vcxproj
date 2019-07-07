@@ -123,6 +123,7 @@
     <ClCompile Include="..\Source\SceneLoader.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
     <ClCompile Include="..\Source\StaticCamera.cpp" />
+    <ClCompile Include="..\Source\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\Source\World.cpp" />
     <ClCompile Include="..\Source\WorldDrawer.cpp" />
   </ItemGroup>
@@ -139,6 +140,7 @@
     <ClInclude Include="..\Source\SceneLoader.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
     <ClInclude Include="..\Source\StaticCamera.h" />
+    <ClInclude Include="..\Source\ThirdPersonCamera.h" />
     <ClInclude Include="..\Source\World.h" />
     <ClInclude Include="..\Source\WorldDrawer.h" />
   </ItemGroup>
