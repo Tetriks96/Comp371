@@ -32,9 +32,9 @@ SphereModel::~SphereModel()
 void SphereModel::Update(float dt)
 {
     Model::Update(dt);
-	float degrees = 0.1f;
-	mat4 R = rotate(mat4(1.0f), radians(degrees), vec3(1.0f, 0.0f, 0.0f));
-	mPosition = R * vec4(mPosition, 0.0f);
+	//float degrees = 0.1f;
+	//mat4 R = rotate(mat4(1.0f), radians(degrees), vec3(1.0f, 0.0f, 0.0f));
+	//mPosition = R * vec4(mPosition, 0.0f);
 }
 
 void SphereModel::Draw()
