@@ -12,6 +12,7 @@
 
 #include "ParsingHelper.h"
 #include <vector>
+#include "glm/fwd.hpp"
 
 class Camera;
 class Model;
@@ -47,5 +48,5 @@ private:
 	unsigned int mCurrentCamera;
 	std::vector<ControllableSphere*> mSphere;
 
-	float XFormula(float ratio);
+	glm::vec3 GetRandomPositionInsideUnitSphere();
 };

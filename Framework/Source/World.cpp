@@ -147,7 +147,7 @@ void World::LoadScene(const char * scene_path)
 	int numberOfSpheres = 100;
 	int minSize = 1;
 	int maxSize = 1;
-	int maxDistance = 25;
+	float maxDistance = 25.0f;
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
 		float size = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
@@ -156,38 +156,27 @@ void World::LoadScene(const char * scene_path)
 		float color3 = (float)rand() / RAND_MAX;
 		SphereModel* sphere = new SphereModel(vec3(size), vec3(color1, color2, color3));
 
-		float ratio = (float)rand() / RAND_MAX;
-
-		int signX = -1 + 2 * (rand() % 2);
-
-		float xMagnitude = signX * XFormula(ratio) / XFormula(1.0f);
-		vec3 x (xMagnitude, 0.0f, 0.0f);
-
-		float r = sqrt(1.0f - pow(length(x), 2.0f));
-
-		float degrees = (float)rand() / RAND_MAX * 360;
-		vec3 y_plus_z = rotate(mat4(1.0f), radians(degrees), x) * vec4(0.0f, 1.0f, 0.0f, 0.0f) * r;
-
-		vec3 direction = x + y_plus_z;
-
-		ratio = (float)rand() / RAND_MAX;
-		float distance = pow(ratio, 1.0f / 3) * maxDistance;
-
-		sphere->SetPosition(distance * direction);
+		sphere->SetPosition(maxDistance * GetRandomPositionInsideUnitSphere());
 
 		mModel.push_back(sphere);
 	}
 }
 
-float World::XFormula(float ratio)
+vec3 World::GetRandomPositionInsideUnitSphere()
 {
-	float r2 = pow(ratio, 2.0f);
-	float s = sqrt(r2 + 4.0f);
-	float a = s - ratio;
-	float b = pow(2 / a, 1.0f / 3);
-	float c = pow(a / 2, 1.0f / 3);
+	float x;
+	float y;
+	float z;
+	vec3 position;
+	do
+	{
+		x = -1.0f + 2 * (float)rand() / RAND_MAX;
+		y = -1.0f + 2 * (float)rand() / RAND_MAX;
+		z = -1.0f + 2 * (float)rand() / RAND_MAX;
 
-	return b - c;
+		position = vec3(x, y, z);
+	} while (length(position) > 1.0f);
+	return position;
 }
 
 Animation* World::FindAnimation(ci_string animName)
