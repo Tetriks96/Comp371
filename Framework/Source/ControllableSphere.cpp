@@ -134,20 +134,20 @@ void ControllableSphere::Move(float dt)
 		displacement += mLookAt;
 	}
 
-	//if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
-	//{
-	//	displacement -= mUp;
-	//}
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
+	{
+		displacement -= mLookAt;
+	}
 
-	//if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
-	//{
-	//	displacement += left;
-	//}
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
+	{
+		displacement += left;
+	}
 
-	//if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
-	//{
-	//	displacement -= left;
-	//}
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
+	{
+		displacement -= left;
+	}
 
 	vec3 previousPosition = mModel->GetPosition();
 
