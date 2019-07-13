@@ -32,20 +32,14 @@
     <None Include="..\Assets\Shaders\SolidColor.vertexshader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="..\Assets\Scenes\CoordinateSystem.scene">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="..\Assets\Scenes\StaticScene.scene">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="..\Assets\Scenes\AnimatedScene.scene">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
     <None Include="..\Assets\Shaders\Texture.fragmentshader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="..\Assets\Shaders\Texture.vertexshader">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Scenes\PrototypeUniverse.scene">
+      <Filter>Resource Files\Scenes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -99,9 +99,7 @@
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\Assets\Scenes\AnimatedScene.scene" />
-    <None Include="..\Assets\Scenes\CoordinateSystem.scene" />
-    <None Include="..\Assets\Scenes\StaticScene.scene" />
+    <None Include="..\Assets\Scenes\PrototypeUniverse.scene" />
     <None Include="..\Assets\Shaders\BlueColor.fragmentshader" />
     <None Include="..\Assets\Shaders\PathLines.fragmentshader" />
     <None Include="..\Assets\Shaders\PathLines.vertexshader" />

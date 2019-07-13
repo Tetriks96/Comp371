@@ -10,7 +10,7 @@
 using namespace glm;
 using namespace std;
 
-ControllableSphere::ControllableSphere(SphereModel* model):
+ControllableSphere::ControllableSphere(SphereModel* sphereModel) :
 	mLookAt(0.0f, 0.0f, 1.0f),
 	mUp(0.0f, 1.0f, 0.0f),
 	mDisplacementEnergy(20.0f),
@@ -19,14 +19,14 @@ ControllableSphere::ControllableSphere(SphereModel* model):
 	mTiltAngularSpeedAdjustment(5.0f),
 	mScrollDisplacementSpeedAdjustment(5.0f)
 {
-	mModel = model;
+	mSphereModel = sphereModel;
 }
 
 ControllableSphere::~ControllableSphere()
 {
-	if (mModel != nullptr)
+	if (mSphereModel != nullptr)
 	{
-		delete mModel;
+		delete mSphereModel;
 	}
 }
 
@@ -49,8 +49,8 @@ void ControllableSphere::HandleCollisions()
 		}
 		vec3 position = (*it)->GetPosition();
 		float radius = (*it)->GetScaling()[0]; // just take x value. Assume all models are spheres for now...
-		float dist = distance(mModel->GetPosition(), position);
-		float myRadius = mModel->GetScaling()[0];
+		float dist = distance(mSphereModel->GetPosition(), position);
+		float myRadius = mSphereModel->GetScaling()[0];
 
 		if (dist - std::max(radius, myRadius) < 0)
 		{
@@ -63,7 +63,7 @@ void ControllableSphere::HandleCollisions()
 				myVolume += volume;
 				myRadius = pow(3 * myVolume / (4 * (float)M_PI), 1.0f / 3);
 
-				mModel->SetScaling(vec3(myRadius));
+				mSphereModel->SetScaling(vec3(myRadius));
 
 				delete *it;
 				*it = nullptr;
@@ -149,7 +149,7 @@ void ControllableSphere::Move(float dt)
 		displacement -= left;
 	}
 
-	vec3 previousPosition = mModel->GetPosition();
+	vec3 previousPosition = mSphereModel->GetPosition();
 
 	if (length(displacement) > 0)
 	{
@@ -160,17 +160,17 @@ void ControllableSphere::Move(float dt)
 	//double scrollMotion = EventManager::GetMouseMotionScroll();
 	//displacement += mLookAt * (float)scrollMotion * dt * mScrollDisplacementSpeedAdjustment * adjustedDisplacementSpeed;
 
-	mModel->SetPosition(previousPosition + displacement);
+	mSphereModel->SetPosition(previousPosition + displacement);
 }
 
 void ControllableSphere::Draw()
 {
-	mModel->Draw();
+	mSphereModel->Draw();
 }
 
 vec3 ControllableSphere::GetPosition()
 {
-	return mModel->GetPosition();
+	return mSphereModel->GetPosition();
 }
 
 vec3 ControllableSphere::GetLookAt()
@@ -185,5 +185,5 @@ vec3 ControllableSphere::GetUp()
 
 float ControllableSphere::GetRadius()
 {
-	return mModel->GetScaling()[0];
+	return mSphereModel->GetScaling()[0];
 }

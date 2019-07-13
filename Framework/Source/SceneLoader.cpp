@@ -7,6 +7,7 @@ using namespace std;
 
 void SceneLoader::LoadScene(
 	const char * scene_path,
+	World* world,
 	std::vector<Model*>* model,
 	std::vector<Animation*>* animation,
 	std::vector<AnimationKey*>* animationKey)
@@ -59,6 +60,10 @@ void SceneLoader::LoadScene(
 				Animation* anim = new Animation();
 				anim->Load(iss);
 				animation->push_back(anim);
+			}
+			else if (result == "world")
+			{
+				world->Load(iss);
 			}
 			else
 			{

@@ -32,6 +32,16 @@ public:
 	void Draw();
 
 	void LoadScene(const char * scene_path);
+	void Load(ci_istringstream& iss);
+	void ParseLine(
+		ci_string line,
+		int* numberOfSpheres,
+		float* minSize,
+		float* maxSize,
+		float* maxDistance,
+		float* playerSize,
+		glm::vec3* playerPosition,
+		glm::vec3* playerColor);
     Animation* FindAnimation(ci_string animName);
     AnimationKey* FindAnimationKey(ci_string keyName);
 

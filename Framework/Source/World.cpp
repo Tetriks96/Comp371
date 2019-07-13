@@ -36,12 +36,6 @@ World::World()
 {
     instance = this;
 
-	SphereModel* sphereModel = new SphereModel(vec3(1.01f), vec3(0.05f, 0.05f, 1.0f));
-	ControllableSphere * controllableSphere = new ControllableSphere(sphereModel);
-	mSphere.push_back(controllableSphere);
-
-	// Setup Camera
-	mCamera.push_back(new ThirdPersonCamera(controllableSphere));
 	mCurrentCamera = 0;
 }
 
@@ -138,16 +132,145 @@ void World::Draw()
 
 void World::LoadScene(const char * scene_path)
 {
-	//SceneLoader::LoadScene(
-	//	scene_path,
-	//	&mModel,
-	//	&mAnimation,
-	//	&mAnimationKey
-	//);
-	int numberOfSpheres = 100;
-	int minSize = 1;
-	int maxSize = 1;
-	float maxDistance = 25.0f;
+	SceneLoader::LoadScene(
+		scene_path,
+		this,
+		&mModel,
+		&mAnimation,
+		&mAnimationKey
+	);
+}
+
+void World::ParseLine(
+	ci_string line,
+	int* numberOfSpheres,
+	float* minSize,
+	float* maxSize,
+	float* maxDistance,
+	float* playerSize,
+	vec3* playerPosition,
+	vec3* playerColor)
+{
+	// Splitting line into tokens
+	ci_istringstream strstr(line);
+	istream_iterator<ci_string, char, ci_char_traits> it(strstr);
+	istream_iterator<ci_string, char, ci_char_traits> end;
+	vector<ci_string> token(it, end);
+
+	bool tokenParsedSuccessfully = false;
+
+	if (token.size() == 0)
+	{
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "name")
+	{
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "numberOfSpheres")
+	{
+		assert(token.size() > 2);
+		assert(token[1] == "=");
+
+		*numberOfSpheres = static_cast<int>(atof(token[2].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "minSize")
+	{
+		assert(token.size() > 2);
+		assert(token[1] == "=");
+
+		*minSize = static_cast<float>(atof(token[2].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "maxSize")
+	{
+		assert(token.size() > 2);
+		assert(token[1] == "=");
+
+		*maxSize = static_cast<float>(atof(token[2].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "maxDistance")
+	{
+		assert(token.size() > 2);
+		assert(token[1] == "=");
+
+		*maxDistance = static_cast<float>(atof(token[2].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "playerSize")
+	{
+		assert(token.size() > 2);
+		assert(token[1] == "=");
+
+		*playerSize = static_cast<float>(atof(token[2].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "playerPosition")
+	{
+		assert(token.size() > 4);
+		assert(token[1] == "=");
+
+		playerPosition->x = static_cast<float>(atof(token[2].c_str()));
+		playerPosition->y = static_cast<float>(atof(token[3].c_str()));
+		playerPosition->z = static_cast<float>(atof(token[4].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+	else if (token[0] == "playerColor")
+	{
+		assert(token.size() > 4);
+		assert(token[1] == "=");
+
+		playerColor->x = static_cast<float>(atof(token[2].c_str()));
+		playerColor->y = static_cast<float>(atof(token[3].c_str()));
+		playerColor->z = static_cast<float>(atof(token[4].c_str()));
+
+		tokenParsedSuccessfully = true;
+	}
+
+	if (tokenParsedSuccessfully == false)
+	{
+		fprintf(stderr, "Error loading scene file... token:  %s!", token[0].c_str());
+		getchar();
+		exit(-1);
+	}
+}
+
+void World::Load(ci_istringstream& iss)
+{
+
+	int numberOfSpheres = 0;
+	float minSize = 0.0f;
+	float maxSize = 0.0f;
+	float maxDistance = 0.0f;
+	float playerSize = 0.0f;
+	vec3 playerPosition = vec3(0.0f);
+	vec3 playerColor = vec3(0.0f);
+
+	ci_string line;
+
+	// Parse world line by line
+	while (std::getline(iss, line))
+	{
+		ParseLine(
+			line,
+			&numberOfSpheres,
+			&minSize,
+			&maxSize,
+			&maxDistance,
+			&playerSize,
+			&playerPosition,
+			&playerColor
+		);
+	}
+
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
 		float size = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
@@ -160,6 +283,13 @@ void World::LoadScene(const char * scene_path)
 
 		mModel.push_back(sphere);
 	}
+
+	SphereModel* sphereM = new SphereModel(vec3(playerSize), playerColor);
+	ControllableSphere* cSphere = new ControllableSphere(sphereM);
+
+	mSphere.push_back(cSphere);
+
+	mCamera.push_back(new ThirdPersonCamera(cSphere));
 }
 
 vec3 World::GetRandomPositionInsideUnitSphere()
