@@ -4,8 +4,6 @@
 
 class Camera;
 class Model;
-class Animation;
-class AnimationKey;
 class ControllableSphere;
 
 class WorldDrawer

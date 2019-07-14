@@ -15,8 +15,6 @@
 
 #include <glm/glm.hpp>
 
-class Animation;
-
 class Model
 {
 public:
@@ -48,9 +46,4 @@ protected:
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
 	float     mRotationAngleInDegrees;
-
-    // Makes the model follow a list of Animation Keys so it's world transform changes over time
-    Animation* mAnimation;
-
-    friend class Animation;
 };
