@@ -75,17 +75,11 @@ void Renderer::Initialize()
 #endif
 
 	sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "SolidColor.vertexshader",
-                            shaderPathPrefix + "SolidColor.fragmentshader")
-                               );
-	sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "PathLines.vertexshader",
-                            shaderPathPrefix + "PathLines.fragmentshader")
-                               );
-	sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "SolidColor.vertexshader",
-                            shaderPathPrefix + "BlueColor.fragmentshader")
-                               );
+		LoadShaders(
+			shaderPathPrefix + "SolidColor.vertexshader",
+            shaderPathPrefix + "SolidColor.fragmentshader"
+		)
+	);
     
 	sCurrentShader = 0;
 

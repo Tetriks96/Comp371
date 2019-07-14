@@ -1,6 +1,5 @@
 #include "SceneLoader.h"
 #include "ParsingHelper.h"
-#include "CubeModel.h"
 #include "SphereModel.h"
 
 using namespace std;
@@ -8,9 +7,7 @@ using namespace std;
 void SceneLoader::LoadScene(
 	const char * scene_path,
 	World* world,
-	std::vector<Model*>* model,
-	std::vector<Animation*>* animation,
-	std::vector<AnimationKey*>* animationKey)
+	std::vector<Model*>* model)
 {
 	// Using case-insensitive strings and streams for easier parsing
 	ci_ifstream input;
@@ -36,30 +33,11 @@ void SceneLoader::LoadScene(
 			{
 				// this is a comment line
 			}
-			else if (result == "cube")
-			{
-				// Box attributes
-				CubeModel* cube = new CubeModel();
-				cube->Load(iss);
-				model->push_back(cube);
-			}
 			else if (result == "sphere")
 			{
 				SphereModel* sphere = new SphereModel();
 				sphere->Load(iss);
 				model->push_back(sphere);
-			}
-			else if (result == "animationkey")
-			{
-				AnimationKey* key = new AnimationKey();
-				key->Load(iss);
-				animationKey->push_back(key);
-			}
-			else if (result == "animation")
-			{
-				Animation* anim = new Animation();
-				anim->Load(iss);
-				animation->push_back(anim);
 			}
 			else if (result == "world")
 			{
@@ -74,11 +52,4 @@ void SceneLoader::LoadScene(
 		}
 	}
 	input.close();
-
-	// Set Animation vertex buffers
-	for (vector<Animation*>::iterator it = animation->begin(); it < animation->end(); ++it)
-	{
-		// Draw model
-		(*it)->CreateVertexBuffer();
-	}
 }

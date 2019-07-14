@@ -4,7 +4,6 @@
 
 #include "Camera.h"
 #include "Model.h"
-#include "Animation.h"
 #include "ControllableSphere.h"
 
 using namespace glm;
@@ -14,8 +13,6 @@ void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
 	vector<Model*> model,
-	vector<Animation*> animation,
-	vector<AnimationKey*> animationKey,
 	vector<ControllableSphere*> sphere)
 {
 	Renderer::BeginFrame();
@@ -54,19 +51,6 @@ void WorldDrawer::DrawWorld(
 	// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
-
-	for (vector<Animation*>::iterator it = animation.begin(); it < animation.end(); ++it)
-	{
-		(*it)->Draw();
-	}
-
-	for (vector<AnimationKey*>::iterator it = animationKey.begin(); it < animationKey.end(); ++it)
-	{
-		mat4 VP = camera[currentCamera]->GetViewProjectionMatrix();
-		glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
-
-		(*it)->Draw();
-	}
 
 	Renderer::CheckForErrors();
 

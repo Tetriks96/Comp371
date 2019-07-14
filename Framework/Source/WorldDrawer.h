@@ -15,7 +15,5 @@ public:
 		std::vector<Camera*> camera,
 		unsigned int currentCamera,
 		std::vector<Model*> model,
-		std::vector<Animation*> animation,
-		std::vector<AnimationKey*> animationKey,
 		std::vector<ControllableSphere*> sphere);
 };

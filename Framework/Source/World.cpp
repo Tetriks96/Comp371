@@ -10,20 +10,14 @@
 #include "World.h"
 #include "Renderer.h"
 #include "ParsingHelper.h"
-
-#include "StaticCamera.h"
 #include "ThirdPersonCamera.h"
-
-#include "CubeModel.h"
 #include "SphereModel.h"
 #include "ControllableSphere.h"
-#include "Animation.h"
-#include <GLFW/glfw3.h>
-#include "EventManager.h"
-
 #include "WorldDrawer.h"
 #include "SceneLoader.h"
+#include "EventManager.h"
 
+#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
@@ -56,20 +50,6 @@ World::~World()
 	
 	mSphere.clear();
 
-	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
-	{
-		delete *it;
-	}
-
-	mAnimation.clear();
-
-	for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
-	{
-		delete *it;
-	}
-
-	mAnimationKey.clear();
-
 	// Camera
 	for (vector<Camera*>::iterator it = mCamera.begin(); it < mCamera.end(); ++it)
 	{
@@ -90,17 +70,6 @@ vector<Model*>* World::GetModels()
 
 void World::Update(float dt)
 {
-	// Update animation and keys
-    for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
-    {
-        (*it)->Update(dt);
-    }
-    
-    for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
-    {
-        (*it)->Update(dt);
-    }
-
 	// Update models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
@@ -125,8 +94,6 @@ void World::Draw()
 		mCamera,
 		mCurrentCamera,
 		mModel,
-		mAnimation,
-		mAnimationKey,
 		mSphere);
 }
 
@@ -135,9 +102,7 @@ void World::LoadScene(const char * scene_path)
 	SceneLoader::LoadScene(
 		scene_path,
 		this,
-		&mModel,
-		&mAnimation,
-		&mAnimationKey
+		&mModel
 	);
 }
 
@@ -307,30 +272,6 @@ vec3 World::GetRandomPositionInsideUnitSphere()
 		position = vec3(x, y, z);
 	} while (length(position) > 1.0f);
 	return position;
-}
-
-Animation* World::FindAnimation(ci_string animName)
-{
-    for(std::vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
-    {
-        if((*it)->GetName() == animName)
-        {
-            return *it;
-        }
-    }
-    return nullptr;
-}
-
-AnimationKey* World::FindAnimationKey(ci_string keyName)
-{
-    for(std::vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
-    {
-        if((*it)->GetName() == keyName)
-        {
-            return *it;
-        }
-    }
-    return nullptr;
 }
 
 const Camera* World::GetCurrentCamera() const

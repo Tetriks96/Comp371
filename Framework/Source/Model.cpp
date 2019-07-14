@@ -8,7 +8,6 @@
 //
 
 #include "Model.h"
-#include "Animation.h"
 #include "World.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/common.hpp>
@@ -102,15 +101,6 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			mScaling.y = static_cast<float>(atof(token[3].c_str()));
 			mScaling.z = static_cast<float>(atof(token[4].c_str()));
 		}
-		else if (token[0] == "animation")
-		{
-			assert(token.size() > 2);
-			assert(token[1] == "=");
-
-			ci_string animName = token[2];
-            
-            mAnimation = World::GetInstance()->FindAnimation(animName);
-		}
 		else
 		{
 			return false;
@@ -122,20 +112,10 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 
 glm::mat4 Model::GetWorldMatrix() const
 {
-	// @TODO 2 - You must build the world matrix from the position, scaling and rotation informations
-    //           If the model has an animation, get the world transform from the animation.
-
-	if (mAnimation == nullptr)
-	{
-		mat4 T = translate(mat4(1.0f), mPosition);
-		mat4 TR = rotate(T, radians(mRotationAngleInDegrees), mRotationAxis);
-		mat4 TRS = scale(TR, mScaling);
-		return TRS;
-	}
-	else
-	{
-		return mAnimation->GetAnimationWorldMatrix();
-	}
+	mat4 T = translate(mat4(1.0f), mPosition);
+	mat4 TR = rotate(T, radians(mRotationAngleInDegrees), mRotationAxis);
+	mat4 TRS = scale(TR, mScaling);
+	return TRS;
 }
 
 void Model::SetPosition(glm::vec3 position)

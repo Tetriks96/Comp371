@@ -16,8 +16,6 @@
 
 class Camera;
 class Model;
-class Animation;
-class AnimationKey;
 class ControllableSphere;
 
 class World
@@ -42,8 +40,6 @@ public:
 		float* playerSize,
 		glm::vec3* playerPosition,
 		glm::vec3* playerColor);
-    Animation* FindAnimation(ci_string animName);
-    AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
 	std::vector<Model*>* GetModels();
@@ -52,8 +48,6 @@ private:
     static World* instance;
     
 	std::vector<Model*> mModel;
-    std::vector<Animation*> mAnimation;
-    std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;
 	unsigned int mCurrentCamera;
 	std::vector<ControllableSphere*> mSphere;
