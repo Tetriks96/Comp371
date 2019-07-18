@@ -9,8 +9,6 @@
 
 #pragma once
 
-#include "ParsingHelper.h"
-
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -18,13 +16,10 @@
 class Model
 {
 public:
-	Model();
+	Model::Model(glm::vec3 position, glm::vec3 scaling, glm::vec3 rotationAxis, float rotationAngleInDegrees);
 	virtual ~Model();
 
-	virtual void Update(float dt) = 0;
 	virtual void Draw() = 0;
-
-	virtual void Load(ci_istringstream& iss);
 
 	virtual glm::mat4 GetWorldMatrix() const;
 
@@ -36,12 +31,8 @@ public:
 	glm::vec3 GetScaling() const		{ return mScaling; }
 	glm::vec3 GetRotationAxis() const	{ return mRotationAxis; }
 	float     GetRotationAngle() const	{ return mRotationAngleInDegrees; }
-    ci_string GetName()                 { return mName; }
 
 protected:
-	virtual bool ParseLine(const std::vector<ci_string> &token) = 0;
-
-	ci_string mName; // The model name is mainly for debugging
 	glm::vec3 mPosition;
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;

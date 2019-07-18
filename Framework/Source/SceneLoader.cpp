@@ -33,12 +33,6 @@ void SceneLoader::LoadScene(
 			{
 				// this is a comment line
 			}
-			else if (result == "sphere")
-			{
-				SphereModel* sphere = new SphereModel();
-				sphere->Load(iss);
-				model->push_back(sphere);
-			}
 			else if (result == "world")
 			{
 				world->Load(iss);

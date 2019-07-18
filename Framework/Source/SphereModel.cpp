@@ -12,11 +12,19 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 using namespace glm;
 
-SphereModel::SphereModel(vec3 size, vec3 color) : Model()
+SphereModel::SphereModel(vec3 position, float volume, vec3 color)
+	: Model(position, vec3(0.0f), vec3(0.0f, 1.0f, 0.0f), 0.0f)
 {
-	mScaling = size;
+	mVolume = volume;
+
+	float radius = GetRadius();
+	mScaling = vec3(radius);
+
 	mColor = color;
 
 	Initialize();
@@ -26,15 +34,6 @@ SphereModel::~SphereModel()
 {
     glDeleteBuffers(1, &mVBO);
     glDeleteVertexArrays(1, &mVAO);
-}
-
-
-void SphereModel::Update(float dt)
-{
-    Model::Update(dt);
-	//float degrees = 0.1f;
-	//mat4 R = rotate(mat4(1.0f), radians(degrees), vec3(1.0f, 0.0f, 0.0f));
-	//mPosition = R * vec4(mPosition, 0.0f);
 }
 
 void SphereModel::Draw()
@@ -52,33 +51,9 @@ void SphereModel::Draw()
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 }
 
-bool SphereModel::ParseLine(const std::vector<ci_string> &token)
+float SphereModel::GetRadius()
 {
-    if (token.empty())
-    {
-        return true;
-    }
-	else if (token[0] == "color")
-	{
-		assert(token.size() > 4);
-		assert(token[1] == "=");
-
-		mColor.x = static_cast<float>(atof(token[2].c_str()));
-		mColor.y = static_cast<float>(atof(token[3].c_str()));
-		mColor.z = static_cast<float>(atof(token[4].c_str()));
-
-		return true;
-	}
-    else
-    {
-        return Model::ParseLine(token);
-    }
-}
-
-void SphereModel::Load(ci_istringstream& iss)
-{
-	Model::Load(iss);
-	Initialize();
+	return pow(((3 * mVolume) / (4 * (float)M_PI)), (1.0f / 3.0f));
 }
 
 void SphereModel::Initialize()

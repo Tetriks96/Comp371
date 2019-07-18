@@ -70,15 +70,6 @@ vector<Model*>* World::GetModels()
 
 void World::Update(float dt)
 {
-	// Update models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
-	{
-		if (*it != nullptr)
-		{
-			(*it)->Update(dt);
-		}
-	}
-
 	for (vector<ControllableSphere*>::iterator it = mSphere.begin(); it < mSphere.end(); ++it)
 	{
 		(*it)->Update(dt);
@@ -238,18 +229,17 @@ void World::Load(ci_istringstream& iss)
 
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
-		float size = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
+		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
+		float volume = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
 		float color1 = (float)rand() / RAND_MAX;
 		float color2 = (float)rand() / RAND_MAX;
 		float color3 = (float)rand() / RAND_MAX;
-		SphereModel* sphere = new SphereModel(vec3(size), vec3(color1, color2, color3));
-
-		sphere->SetPosition(maxDistance * GetRandomPositionInsideUnitSphere());
+		SphereModel* sphere = new SphereModel(position, volume, vec3(color1, color2, color3));
 
 		mModel.push_back(sphere);
 	}
 
-	SphereModel* sphereM = new SphereModel(vec3(playerSize), playerColor);
+	SphereModel* sphereM = new SphereModel(vec3(0.0f), playerSize, playerColor);
 	ControllableSphere* cSphere = new ControllableSphere(sphereM);
 
 	mSphere.push_back(cSphere);

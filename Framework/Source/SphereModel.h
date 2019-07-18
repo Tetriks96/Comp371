@@ -14,19 +14,18 @@
 class SphereModel : public Model
 {
 public:
-	SphereModel(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3 color = glm::vec3(1.0f, 0.05f, 0.05f));
+	SphereModel(glm::vec3 position, float volume, glm::vec3 color);
     virtual ~SphereModel(void);
 
-    virtual void Update(float dt);
     virtual void Draw();
 
-	virtual void Load(ci_istringstream& iss);
+	float GetRadius();
     
 protected:
-    virtual bool ParseLine(const std::vector<ci_string> &token);
 	virtual void Initialize();
 
 	glm::vec3 mColor;
+	float mVolume;
 
 private:
     // The vertex format could be different for different types of models
