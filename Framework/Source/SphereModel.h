@@ -20,6 +20,10 @@ public:
     virtual void Draw();
 
 	float GetRadius();
+
+	void SetVolume(float volume);
+
+	float GetVolume() const { return mVolume; }
     
 protected:
 	virtual void Initialize();

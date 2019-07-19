@@ -13,7 +13,7 @@ using namespace std;
 ControllableSphere::ControllableSphere(SphereModel* sphereModel) :
 	mLookAt(0.0f, 0.0f, 1.0f),
 	mUp(0.0f, 1.0f, 0.0f),
-	mDisplacementEnergy(20.0f),
+	mDisplacementEnergy(50.0f),
 	mAngularSpeed(0.75f),
 	mSlowDownFactor(0.1f),
 	mTiltAngularSpeedAdjustment(5.0f),
@@ -43,30 +43,28 @@ void ControllableSphere::HandleCollisions()
 
 	for (vector<SphereModel*>::iterator it = sphereModels->begin(); it < sphereModels->end(); ++it)
 	{
-		if (*it == nullptr)
+		if ((*it)->GetVolume() == 0.0f)
 		{
 			continue;
 		}
 		vec3 position = (*it)->GetPosition();
-		float radius = (*it)->GetScaling()[0]; // just take x value. Assume all models are spheres for now...
+		float radius = (*it)->GetRadius();
 		float dist = distance(mSphereModel->GetPosition(), position);
-		float myRadius = mSphereModel->GetScaling()[0];
+		float myRadius = mSphereModel->GetRadius();
 
 		if (dist - std::max(radius, myRadius) < 0)
 		{
 			// Collision!
 			if (myRadius > radius)
 			{
-				float myVolume = 4 * (float)M_PI * pow(myRadius, 3) / 3;
-				float volume = 4 * (float)M_PI * pow(radius, 3) / 3;
+				float myVolume = mSphereModel->GetVolume();
+				float volume = (*it)->GetVolume();
 
 				myVolume += volume;
-				myRadius = pow(3 * myVolume / (4 * (float)M_PI), 1.0f / 3);
 
-				mSphereModel->SetScaling(vec3(myRadius));
+				mSphereModel->SetVolume(myVolume);
 
-				delete *it;
-				*it = nullptr;
+				(*it)->SetVolume(0.0f);
 			}
 		}
 	}
@@ -85,7 +83,7 @@ void ControllableSphere::Move(float dt)
 	vec3 left = glm::cross(mUp, mLookAt);
 
 	float adjustedAngularSpeed = mAngularSpeed;
-	float adjustedDisplacementSpeed = mDisplacementEnergy / GetRadius();
+	float adjustedDisplacementSpeed = mDisplacementEnergy / log(10.0f * mSphereModel->GetVolume());
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
 		adjustedAngularSpeed *= mSlowDownFactor;

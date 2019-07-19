@@ -30,7 +30,7 @@ void WorldDrawer::DrawWorld(
 	// Draw models
 	for (vector<SphereModel*>::iterator it = sphereModels.begin(); it < sphereModels.end(); ++it)
 	{
-		if ((*it) != nullptr)
+		if ((*it)->GetVolume() > 0.0f)
 		{
 			(*it)->Draw();
 		}

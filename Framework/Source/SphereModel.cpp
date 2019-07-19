@@ -56,6 +56,12 @@ float SphereModel::GetRadius()
 	return pow(((3 * mVolume) / (4 * (float)M_PI)), (1.0f / 3.0f));
 }
 
+void SphereModel::SetVolume(float volume)
+{
+	mVolume = volume;
+	mScaling = vec3(GetRadius());
+}
+
 void SphereModel::Initialize()
 {
 	Vertex vertexBuffer[] = {
