@@ -7,7 +7,7 @@ using namespace std;
 void SceneLoader::LoadScene(
 	const char * scene_path,
 	World* world,
-	std::vector<Model*>* model)
+	std::vector<SphereModel*>* sphereModels)
 {
 	// Using case-insensitive strings and streams for easier parsing
 	ci_ifstream input;

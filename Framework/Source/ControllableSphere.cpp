@@ -39,9 +39,9 @@ void ControllableSphere::Update(float dt)
 void ControllableSphere::HandleCollisions()
 {
 	World* world = World::GetInstance();
-	vector<Model*>* models = world->GetModels();
+	vector<SphereModel*>* sphereModels = world->GetSphereModels();
 
-	for (vector<Model*>::iterator it = models->begin(); it < models->end(); ++it)
+	for (vector<SphereModel*>::iterator it = sphereModels->begin(); it < sphereModels->end(); ++it)
 	{
 		if (*it == nullptr)
 		{

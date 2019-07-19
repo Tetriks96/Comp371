@@ -35,27 +35,27 @@ World::World()
 
 World::~World()
 {
-	// Models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	// Sphere Models
+	for (vector<SphereModel*>::iterator it = mSphereModels.begin(); it < mSphereModels.end(); ++it)
 	{
 		delete *it;
 	}
 
-	mModel.clear();
+	mSphereModels.clear();
 
-	for (vector<ControllableSphere*>::iterator it = mSphere.begin(); it < mSphere.end(); ++it)
+	for (vector<ControllableSphere*>::iterator it = mControllableSpheres.begin(); it < mControllableSpheres.end(); ++it)
 	{
 		delete *it;
 	}
 	
-	mSphere.clear();
+	mControllableSpheres.clear();
 
 	// Camera
-	for (vector<Camera*>::iterator it = mCamera.begin(); it < mCamera.end(); ++it)
+	for (vector<Camera*>::iterator it = mCameras.begin(); it < mCameras.end(); ++it)
 	{
 		delete *it;
 	}
-	mCamera.clear();
+	mCameras.clear();
 }
 
 World* World::GetInstance()
@@ -63,29 +63,29 @@ World* World::GetInstance()
     return instance;
 }
 
-vector<Model*>* World::GetModels()
+vector<SphereModel*>* World::GetSphereModels()
 {
-	return &mModel;
+	return &mSphereModels;
 }
 
 void World::Update(float dt)
 {
-	for (vector<ControllableSphere*>::iterator it = mSphere.begin(); it < mSphere.end(); ++it)
+	for (vector<ControllableSphere*>::iterator it = mControllableSpheres.begin(); it < mControllableSpheres.end(); ++it)
 	{
 		(*it)->Update(dt);
 	}
 
 	// Update current Camera
-	mCamera[mCurrentCamera]->Update(dt);
+	mCameras[mCurrentCamera]->Update(dt);
 }
 
 void World::Draw()
 {
 	WorldDrawer::DrawWorld(
-		mCamera,
+		mCameras,
 		mCurrentCamera,
-		mModel,
-		mSphere);
+		mSphereModels,
+		mControllableSpheres);
 }
 
 void World::LoadScene(const char * scene_path)
@@ -93,7 +93,7 @@ void World::LoadScene(const char * scene_path)
 	SceneLoader::LoadScene(
 		scene_path,
 		this,
-		&mModel
+		&mSphereModels
 	);
 }
 
@@ -236,15 +236,15 @@ void World::Load(ci_istringstream& iss)
 		float color3 = (float)rand() / RAND_MAX;
 		SphereModel* sphere = new SphereModel(position, volume, vec3(color1, color2, color3));
 
-		mModel.push_back(sphere);
+		mSphereModels.push_back(sphere);
 	}
 
 	SphereModel* sphereM = new SphereModel(vec3(0.0f), playerSize, playerColor);
 	ControllableSphere* cSphere = new ControllableSphere(sphereM);
 
-	mSphere.push_back(cSphere);
+	mControllableSpheres.push_back(cSphere);
 
-	mCamera.push_back(new ThirdPersonCamera(cSphere));
+	mCameras.push_back(new ThirdPersonCamera(cSphere));
 }
 
 vec3 World::GetRandomPositionInsideUnitSphere()
@@ -266,5 +266,5 @@ vec3 World::GetRandomPositionInsideUnitSphere()
 
 const Camera* World::GetCurrentCamera() const
 {
-     return mCamera[mCurrentCamera];
+     return mCameras[mCurrentCamera];
 }

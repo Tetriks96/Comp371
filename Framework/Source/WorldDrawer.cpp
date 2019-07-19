@@ -12,7 +12,7 @@ using namespace std;
 void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
-	vector<Model*> model,
+	vector<SphereModel*> sphereModels,
 	vector<ControllableSphere*> sphere)
 {
 	Renderer::BeginFrame();
@@ -28,7 +28,7 @@ void WorldDrawer::DrawWorld(
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	// Draw models
-	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it)
+	for (vector<SphereModel*>::iterator it = sphereModels.begin(); it < sphereModels.end(); ++it)
 	{
 		if ((*it) != nullptr)
 		{

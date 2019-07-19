@@ -14,8 +14,10 @@
 #include <vector>
 #include "glm/fwd.hpp"
 
+#include "Model.h"
+#include "SphereModel.h"
+
 class Camera;
-class Model;
 class ControllableSphere;
 
 class World
@@ -42,15 +44,15 @@ public:
 		glm::vec3* playerColor);
 
     const Camera* GetCurrentCamera() const;
-	std::vector<Model*>* GetModels();
+	std::vector<SphereModel*>* GetSphereModels();
     
 private:
     static World* instance;
     
-	std::vector<Model*> mModel;
-	std::vector<Camera*> mCamera;
+	std::vector<SphereModel*> mSphereModels;
+	std::vector<Camera*> mCameras;
 	unsigned int mCurrentCamera;
-	std::vector<ControllableSphere*> mSphere;
+	std::vector<ControllableSphere*> mControllableSpheres;
 
 	glm::vec3 GetRandomPositionInsideUnitSphere();
 };
