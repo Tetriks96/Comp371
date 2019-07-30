@@ -2,9 +2,9 @@
 
 #include <vector>
 #include "SphereModel.h"
+#include "BubbleGroup.h"
 
 class Camera;
-class ControllableSphere;
 
 class WorldDrawer
 {
@@ -13,5 +13,5 @@ public:
 		std::vector<Camera*> camera,
 		unsigned int currentCamera,
 		std::vector<SphereModel*> model,
-		std::vector<ControllableSphere*> sphere);
+		std::vector<BubbleGroup*> bubbleGroups);
 };

@@ -4,7 +4,6 @@
 
 #include "Camera.h"
 #include "Model.h"
-#include "ControllableSphere.h"
 
 using namespace glm;
 using namespace std;
@@ -13,7 +12,7 @@ void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
 	vector<SphereModel*> sphereModels,
-	vector<ControllableSphere*> sphere)
+	vector<BubbleGroup*> bubbleGroups)
 {
 	Renderer::BeginFrame();
 
@@ -36,7 +35,7 @@ void WorldDrawer::DrawWorld(
 		}
 	}
 
-	for (vector<ControllableSphere*>::iterator it = sphere.begin(); it < sphere.end(); ++it)
+	for (vector<BubbleGroup*>::iterator it = bubbleGroups.begin(); it < bubbleGroups.end(); ++it)
 	{
 		(*it)->Draw();
 	}

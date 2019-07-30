@@ -12,10 +12,10 @@
 #include "ParsingHelper.h"
 #include "ThirdPersonCamera.h"
 #include "SphereModel.h"
-#include "ControllableSphere.h"
 #include "WorldDrawer.h"
 #include "SceneLoader.h"
 #include "EventManager.h"
+#include "PlayerBubbleGroup.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -43,12 +43,12 @@ World::~World()
 
 	mSphereModels.clear();
 
-	for (vector<ControllableSphere*>::iterator it = mControllableSpheres.begin(); it < mControllableSpheres.end(); ++it)
+	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
 	{
 		delete *it;
 	}
 	
-	mControllableSpheres.clear();
+	mBubbleGroups.clear();
 
 	// Camera
 	for (vector<Camera*>::iterator it = mCameras.begin(); it < mCameras.end(); ++it)
@@ -70,7 +70,7 @@ vector<SphereModel*>* World::GetSphereModels()
 
 void World::Update(float dt)
 {
-	for (vector<ControllableSphere*>::iterator it = mControllableSpheres.begin(); it < mControllableSpheres.end(); ++it)
+	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
 	{
 		(*it)->Update(dt);
 	}
@@ -85,7 +85,7 @@ void World::Draw()
 		mCameras,
 		mCurrentCamera,
 		mSphereModels,
-		mControllableSpheres);
+		mBubbleGroups);
 }
 
 void World::LoadScene(const char * scene_path)
@@ -239,12 +239,11 @@ void World::Load(ci_istringstream& iss)
 		mSphereModels.push_back(sphere);
 	}
 
-	SphereModel* sphereM = new SphereModel(vec3(0.0f), playerSize, playerColor);
-	ControllableSphere* cSphere = new ControllableSphere(sphereM);
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup();
 
-	mControllableSpheres.push_back(cSphere);
+	mBubbleGroups.push_back(playerBubbleGroup);
 
-	mCameras.push_back(new ThirdPersonCamera(cSphere));
+	mCameras.push_back(new ThirdPersonCamera(playerBubbleGroup));
 }
 
 vec3 World::GetRandomPositionInsideUnitSphere()

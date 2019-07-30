@@ -55,9 +55,6 @@
     <ClCompile Include="..\Source\SceneLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\ControllableSphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\ThirdPersonCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\SceneLoader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ControllableSphere.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\ThirdPersonCamera.h">
