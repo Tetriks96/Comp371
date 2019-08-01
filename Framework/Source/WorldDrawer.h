@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "SphereModel.h"
+#include "Bubble.h"
 #include "BubbleGroup.h"
 
 class Camera;
@@ -12,6 +12,6 @@ public:
 	static void WorldDrawer::DrawWorld(
 		std::vector<Camera*> camera,
 		unsigned int currentCamera,
-		std::vector<SphereModel*> model,
+		std::vector<Bubble*> bubbles,
 		std::vector<BubbleGroup*> bubbleGroups);
 };

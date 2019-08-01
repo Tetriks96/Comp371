@@ -10,10 +10,10 @@ BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume)
 {
 	mCenterOfMass = centerOfMass;
 	mVolume = volume;
-	mRadius = pow((3.0f * mVolume) / (4.0f * (float)M_PI), 1.0f / 3.0f);
+	Bubble* initialBubble = new Bubble(vec3(0.0f), mVolume, vec3(0.0f, 1.0f, 1.0f));
+	mRadius = initialBubble->GetRadius();
 	mMoveTowards = vec3(0.0f);
-	SphereModel* initialBubble = new SphereModel(vec3(0.0f), mVolume, vec3(0.0f, 1.0f, 1.0f));
-	mSphereModels.push_back(initialBubble);
+	mBubbles.push_back(initialBubble);
 }
 
 BubbleGroup::~BubbleGroup()
@@ -27,17 +27,16 @@ void BubbleGroup::Update(float dt)
 	{
 		mCenterOfMass += 20 * dt * normalize(mMoveTowards);
 
-		for (vector<SphereModel*>::iterator it = mSphereModels.begin(); it < mSphereModels.end(); ++it)
+		for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 		{
 			(*it)->SetPosition(mCenterOfMass);
-			(*it)->SetVolume(mVolume);
 		}
 	}
 }
 
 void BubbleGroup::Draw()
 {
-	for (vector<SphereModel*>::iterator it = mSphereModels.begin(); it < mSphereModels.end(); ++it)
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
 		(*it)->Draw();
 	}

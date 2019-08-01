@@ -96,9 +96,9 @@ void PlayerBubbleGroup::Update(float dt)
 
 
 	World* world = World::GetInstance();
-	vector<SphereModel*>* sphereModels = world->GetSphereModels();
+	vector<Bubble*>* bubbles = world->GetBubbles();
 
-	for (vector<SphereModel*>::iterator it = sphereModels->begin(); it < sphereModels->end(); ++it)
+	for (vector<Bubble*>::iterator it = bubbles->begin(); it < bubbles->end(); ++it)
 	{
 		if ((*it)->GetVolume() == 0.0f)
 		{
@@ -118,7 +118,7 @@ void PlayerBubbleGroup::Update(float dt)
 				mVolume += volume;
 				mRadius = pow((3.0f * mVolume) / (4.0f * (float)M_PI), 1.0f / 3.0f);
 
-				mSphereModels[0]->SetVolume(mVolume);
+				mBubbles[0]->SetVolume(mVolume);
 
 				(*it)->SetVolume(0.0f);
 			}

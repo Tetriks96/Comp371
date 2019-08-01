@@ -1,13 +1,11 @@
 #include "SceneLoader.h"
 #include "ParsingHelper.h"
-#include "SphereModel.h"
 
 using namespace std;
 
 void SceneLoader::LoadScene(
 	const char * scene_path,
-	World* world,
-	std::vector<SphereModel*>* sphereModels)
+	World* world)
 {
 	// Using case-insensitive strings and streams for easier parsing
 	ci_ifstream input;

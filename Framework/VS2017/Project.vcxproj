@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\AIBubbleGroup.cpp" />
+    <ClCompile Include="..\Source\Bubble.cpp" />
     <ClCompile Include="..\Source\BubbleGroup.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
     <ClCompile Include="..\Source\EventManager.cpp" />
@@ -120,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\AIBubbleGroup.h" />
+    <ClInclude Include="..\Source\Bubble.h" />
     <ClInclude Include="..\Source\BubbleGroup.h" />
     <ClInclude Include="..\Source\Camera.h" />
     <ClInclude Include="..\Source\EventManager.h" />
