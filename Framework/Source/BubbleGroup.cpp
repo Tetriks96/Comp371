@@ -23,15 +23,11 @@ BubbleGroup::~BubbleGroup()
 
 void BubbleGroup::Update(float dt)
 {
-	if (length(mMoveTowards) > 0.0f)
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
-		mCenterOfMass += 20 * dt * normalize(mMoveTowards);
-
-		for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
-		{
-			(*it)->SetPosition(mCenterOfMass);
-		}
+		(*it)->Update(dt, mMoveTowards, vec3(0.0f), false);
 	}
+	mCenterOfMass = (mBubbles[0]->GetPosition());
 }
 
 void BubbleGroup::Draw()

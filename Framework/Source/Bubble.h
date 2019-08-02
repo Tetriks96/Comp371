@@ -9,9 +9,9 @@ public:
 	~Bubble();
 
 	void Draw();
+	virtual void Update(float dt, glm::vec3 moveTowards, glm::vec3 gravity, bool split);
 
 	glm::vec3 GetPosition() { return mSphereModel->GetPosition(); }
-	void SetPosition(glm::vec3 position) { mSphereModel->SetPosition(position); }
 
 	float GetRadius() { return mRadius; }
 	float GetVolume() { return mVolume; }
@@ -21,5 +21,7 @@ protected:
 	float mRadius;
 	SphereModel* mSphereModel;
 private:
+	glm::vec3 mVelocity;
 	float CalculateRadius(float volume);
+	float CalculateEquilibriumSpeed();
 };

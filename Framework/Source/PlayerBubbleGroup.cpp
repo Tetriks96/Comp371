@@ -70,16 +70,17 @@ void PlayerBubbleGroup::Update(float dt)
 	mUp = vec3(up4);
 	mUp = normalize(mUp);
 
-	vec3 displacement(0.0f);
-	// Displacements
+	// Displacement
+	vec3 displacement(mLookAt);
+
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		displacement += mLookAt;
+		displacement += mUp;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		displacement -= mLookAt;
+		displacement -= mUp;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)

@@ -10,6 +10,7 @@ Bubble::Bubble(vec3 position, float volume, vec3 color)
 	mVolume = volume;
 	mRadius = CalculateRadius(volume);
 	mSphereModel = new SphereModel(position, mRadius, color);
+	mVelocity = vec3(0.0f);
 }
 
 Bubble::~Bubble()
@@ -18,6 +19,27 @@ Bubble::~Bubble()
 	{
 		delete mSphereModel;
 	}
+}
+
+void Bubble::Update(float dt, glm::vec3 moveTowards, vec3 gravity, bool split)
+{
+	if (length(moveTowards) > 0.0f)
+	{
+		float equilibriumSpeed = CalculateEquilibriumSpeed();
+		mVelocity += equilibriumSpeed * normalize(moveTowards) * dt;
+		if (length(mVelocity) > equilibriumSpeed)
+		{
+			mVelocity = equilibriumSpeed * normalize(mVelocity);
+		}
+	}
+	vec3 currentPosition = mSphereModel->GetPosition();
+	vec3 nextPosition = currentPosition + mVelocity * dt;
+	mSphereModel->SetPosition(nextPosition);
+}
+
+float Bubble::CalculateEquilibriumSpeed()
+{
+	return 20.0f / mRadius;
 }
 
 void Bubble::Draw()
