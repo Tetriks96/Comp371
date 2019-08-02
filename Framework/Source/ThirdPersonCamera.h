@@ -1,18 +1,17 @@
 #pragma once
 
 #include "Camera.h"
-#include "ControllableSphere.h"
+#include "PlayerBubbleGroup.h"
 
 class ControllableSphere;
 
 class ThirdPersonCamera : public Camera
 {
 public:
-	ThirdPersonCamera(ControllableSphere* controllableSphere);
-
-	virtual void Update(float dt);
+	ThirdPersonCamera(PlayerBubbleGroup* bubbleGroup);
+	virtual void Update(float dt) {};
 	virtual glm::mat4 GetViewMatrix() const;
 
 private:
-	ControllableSphere* mControllableSphere;
+	PlayerBubbleGroup * mPlayerBubbleGroup;
 };

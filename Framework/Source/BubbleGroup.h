@@ -1,14 +1,23 @@
 #pragma once
 
-#include "SphereModel.h"
+#include "Bubble.h"
 #include <vector>
 
 class BubbleGroup
 {
 public:
-	virtual void Update(float dt) = 0;
+	BubbleGroup(glm::vec3 centerOfMass, float volume);
+	~BubbleGroup();
+	virtual void Update(float dt);
 	void Draw();
+	glm::vec3 GetCenterOfMass() { return mCenterOfMass; }
+	float GetRadius() { return mRadius; }
 protected:
-	std::vector<SphereModel*> mSphereModels;
+	virtual void Split();
+	std::vector<Bubble*> mBubbles;
+	glm::vec3 mMoveTowards;
+	float mVolume; // TODO: Make this private
+	float mRadius; // TODO: Make this private
 private:
+	glm::vec3 mCenterOfMass;
 };

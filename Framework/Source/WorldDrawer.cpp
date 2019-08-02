@@ -4,7 +4,6 @@
 
 #include "Camera.h"
 #include "Model.h"
-#include "ControllableSphere.h"
 
 using namespace glm;
 using namespace std;
@@ -12,8 +11,8 @@ using namespace std;
 void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
-	vector<SphereModel*> sphereModels,
-	vector<ControllableSphere*> sphere)
+	vector<Bubble*> bubbles,
+	vector<BubbleGroup*> bubbleGroups)
 {
 	Renderer::BeginFrame();
 
@@ -28,15 +27,12 @@ void WorldDrawer::DrawWorld(
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	// Draw models
-	for (vector<SphereModel*>::iterator it = sphereModels.begin(); it < sphereModels.end(); ++it)
+	for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
 	{
-		if ((*it)->GetVolume() > 0.0f)
-		{
-			(*it)->Draw();
-		}
+		(*it)->Draw();
 	}
 
-	for (vector<ControllableSphere*>::iterator it = sphere.begin(); it < sphere.end(); ++it)
+	for (vector<BubbleGroup*>::iterator it = bubbleGroups.begin(); it < bubbleGroups.end(); ++it)
 	{
 		(*it)->Draw();
 	}
