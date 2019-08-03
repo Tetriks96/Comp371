@@ -158,6 +158,7 @@ std::vector<Bubble*>* Bubble::Pop()
 		Bubble* newBubble = new Bubble(GetPosition(), mVolume, mSphereModel->GetColor(), mDivisionVelocity + CalculateEquilibriumSpeed() * World::GetRandomPositionInsideUnitSphere(), this);
 		newBubbles->push_back(newBubble);
 	}
+	mDivisionVelocity += CalculateEquilibriumSpeed() * World::GetRandomPositionInsideUnitSphere();
 	mLastSplitTime = EventManager::GetGameTime();
 	return newBubbles;
 }
