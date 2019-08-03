@@ -26,34 +26,24 @@ Bubble::~Bubble()
 void Bubble::Update(float dt, glm::vec3 moveTowards, vec3 gravity, bool split)
 {
 	// Update position
+	vec3 previousPosition = mSphereModel->GetPosition();
 	if (length(moveTowards) > 0.0f)
 	{
-		vec3 previousPosition = mSphereModel->GetPosition();
-		vec3 newPosition = previousPosition + CalculateEquilibriumSpeed() * normalize(moveTowards) * dt;
-		mSphereModel->SetPosition(newPosition);
+		moveTowards = normalize(moveTowards);
 	}
+	vec3 newPosition = previousPosition + (CalculateEquilibriumSpeed() * moveTowards + gravity / 2.0f) * dt;
+	mSphereModel->SetPosition(newPosition);
 
 	// Handle Collisions
-	vector<Bubble*>* bubbles = World::GetInstance()->GetBubbles();
-	vector<Bubble*>::iterator it = bubbles->begin();
-	while (it != bubbles->end())
+	World* world = World::GetInstance();
+
+	HandleCollisions(world->GetBubbles());
+
+	vector<BubbleGroup*>* bubbleGroups = world->GetBubbleGroups();
+	for (vector<BubbleGroup*>::iterator it = bubbleGroups->begin(); it < bubbleGroups->end(); it++)
 	{
-		vec3 itsPosition = (*it)->GetPosition();
-		float itsRadius = (*it)->GetRadius();
-		if (distance(GetPosition(), itsPosition) < std::max(mRadius, itsRadius))
-		{
-			// Collision!
-			float itsVolume = (*it)->GetVolume();
-			if (mVolume > itsVolume)
-			{
-				// Absorb it!
-				float myNewVolume = mVolume + itsVolume;
-				SetVolume(myNewVolume);
-				it = bubbles->erase(it);
-				continue;
-			}
-		}
-		it++;
+		vector<Bubble*>* bubbles = (*it)->GetBubbles();
+		HandleCollisions(bubbles);
 	}
 }
 
@@ -76,5 +66,36 @@ void Bubble::SetVolume(float volume)
 
 float Bubble::CalculateRadius(float volume)
 {
-	return pow((3.0f * mVolume) / (4.0f * (float)M_PI), (1.0f / 3.0f));
+	return pow((3.0f * volume) / (4.0f * (float)M_PI), (1.0f / 3.0f));
+}
+
+void Bubble::HandleCollisions(vector<Bubble*>* bubbles)
+{
+	vector<Bubble*>::iterator it = bubbles->begin();
+	while (it != bubbles->end())
+	{
+		if (this == (*it))
+		{
+			// Don't handle collisions with self
+			it++;
+			continue;
+		}
+		vec3 itsPosition = (*it)->GetPosition();
+		float itsRadius = (*it)->GetRadius();
+		if (distance(GetPosition(), itsPosition) < std::max(mRadius, itsRadius))
+		{
+			// Collision!
+			float itsVolume = (*it)->GetVolume();
+			if (mVolume >= itsVolume)
+			{
+				// Absorb it!
+				float myNewVolume = mVolume + itsVolume;
+				SetVolume(myNewVolume);
+				*it = nullptr;
+				it = bubbles->erase(it);
+				continue;
+			}
+		}
+		it++;
+	}
 }

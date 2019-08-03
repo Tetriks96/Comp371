@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Bubble.h"
-#include <vector>
 
 class BubbleGroup
 {
@@ -12,6 +11,7 @@ public:
 	virtual void Update(float dt);
 	void Draw();
 
+	std::vector<Bubble*>* GetBubbles() { return &mBubbles; }
 	glm::vec3 GetCenterOfMass() { return mCenterOfMass; }
 	float GetGroupRadius() { return mGroupRadius; }
 	float GetGroupVolume() { return mGroupVolume; }
@@ -23,4 +23,7 @@ private:
 	glm::vec3 mCenterOfMass;
 	float mGroupVolume;
 	float mGroupRadius;
+
+	glm::vec3 CalculateCenterOfMass();
+	float CalculateGroupRadius();
 };

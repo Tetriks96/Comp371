@@ -22,4 +22,5 @@ private:
 	SphereModel* mSphereModel;
 	float CalculateRadius(float volume);
 	float CalculateEquilibriumSpeed();
+	void HandleCollisions(std::vector<Bubble*>* bubbles);
 };
