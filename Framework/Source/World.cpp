@@ -79,6 +79,19 @@ void World::Update(float dt)
 		(*it)->Update(dt);
 	}
 
+	// Remove null bubbles
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end();)
+	{
+		if (*it == nullptr)
+		{
+			it = mBubbles.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	// Update current Camera
 	mCameras[mCurrentCamera]->Update(dt);
 }

@@ -15,7 +15,7 @@ Every line until the next model is counted as a comment
 
 [World]
 name = "World"
-numberOfSpheres = 1
+numberOfSpheres = 100
 minSize = 1.0
 maxSize = 1.0
 maxDistance = 25.0

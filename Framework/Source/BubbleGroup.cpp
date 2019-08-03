@@ -25,18 +25,30 @@ BubbleGroup::~BubbleGroup()
 
 void BubbleGroup::Update(float dt)
 {
-	vector<Bubble*>::iterator it = mBubbles.begin();
-	vector<Bubble*>::iterator end = mBubbles.end();
-	while (it < end)
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); it++)
 	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
 		(*it)->Update(dt, mMoveTowards, mCenterOfMass - (*it)->GetPosition(), false);
-		
-		// If a collision happens between 2 bubbles in this group, the end of the iterator must be updated
-		end = mBubbles.end();
-		it++;
 	}
+
+	// Remove null bubbles
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end();)
+	{
+		if (*it == nullptr)
+		{
+			it = mBubbles.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	mCenterOfMass = CalculateCenterOfMass();
-	mGroupVolume = mBubbles[0]->GetVolume() + mBubbles[1]->GetVolume();
+	mGroupVolume = CalculateGroupVolume();
 	mGroupRadius = CalculateGroupRadius();
 }
 
@@ -92,4 +104,14 @@ float BubbleGroup::CalculateGroupRadius()
 	}
 
 	return maxLength;
+}
+
+float BubbleGroup::CalculateGroupVolume()
+{
+	float groupVolume = 0.0f;
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
+	{
+		groupVolume += (*it)->GetVolume();
+	}
+	return groupVolume;
 }

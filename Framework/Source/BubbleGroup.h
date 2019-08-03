@@ -26,4 +26,5 @@ private:
 
 	glm::vec3 CalculateCenterOfMass();
 	float CalculateGroupRadius();
+	float CalculateGroupVolume();
 };

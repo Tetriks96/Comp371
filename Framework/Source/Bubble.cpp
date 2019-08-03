@@ -71,13 +71,11 @@ float Bubble::CalculateRadius(float volume)
 
 void Bubble::HandleCollisions(vector<Bubble*>* bubbles)
 {
-	vector<Bubble*>::iterator it = bubbles->begin();
-	while (it != bubbles->end())
+	for (vector<Bubble*>::iterator it = bubbles->begin(); it < bubbles->end(); it++)
 	{
-		if (this == (*it))
+		if (*it == nullptr || *it == this)
 		{
-			// Don't handle collisions with self
-			it++;
+			// Don't handle collisions with null bubbles or self
 			continue;
 		}
 		vec3 itsPosition = (*it)->GetPosition();
@@ -92,10 +90,8 @@ void Bubble::HandleCollisions(vector<Bubble*>* bubbles)
 				float myNewVolume = mVolume + itsVolume;
 				SetVolume(myNewVolume);
 				*it = nullptr;
-				it = bubbles->erase(it);
 				continue;
 			}
 		}
-		it++;
 	}
 }
