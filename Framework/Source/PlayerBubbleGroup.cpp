@@ -1,5 +1,4 @@
 #include "PlayerBubbleGroup.h"
-#include "World.h"
 #include "EventManager.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -71,16 +70,16 @@ void PlayerBubbleGroup::Update(float dt)
 	mUp = normalize(mUp);
 
 	// Displacement
-	vec3 displacement(mLookAt);
+	vec3 displacement(vec3(0.0f));
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 	{
-		displacement += mUp;
+		displacement += mLookAt;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 	{
-		displacement -= mUp;
+		displacement -= mLookAt;
 	}
 
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
@@ -94,37 +93,6 @@ void PlayerBubbleGroup::Update(float dt)
 	}
 
 	mMoveTowards = displacement;
-
-
-	World* world = World::GetInstance();
-	vector<Bubble*>* bubbles = world->GetBubbles();
-
-	for (vector<Bubble*>::iterator it = bubbles->begin(); it < bubbles->end(); ++it)
-	{
-		if ((*it)->GetVolume() == 0.0f)
-		{
-			continue;
-		}
-		vec3 position = (*it)->GetPosition();
-		float radius = (*it)->GetRadius();
-		float dist = distance(GetCenterOfMass(), position);
-
-		if (dist - std::max(radius, GetRadius()) < 0)
-		{
-			// Collision!
-			if (GetRadius() > radius)
-			{
-				float volume = (*it)->GetVolume();
-
-				mVolume += volume;
-				mRadius = pow((3.0f * mVolume) / (4.0f * (float)M_PI), 1.0f / 3.0f);
-
-				mBubbles[0]->SetVolume(mVolume);
-
-				(*it)->SetVolume(0.0f);
-			}
-		}
-	}
 
 	BubbleGroup::Update(dt);
 }

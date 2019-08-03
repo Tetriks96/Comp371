@@ -1,8 +1,11 @@
 #include "Bubble.h"
+#include "World.h"
+#include <vector>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+using namespace std;
 using namespace glm;
 
 Bubble::Bubble(vec3 position, float volume, vec3 color)
@@ -10,7 +13,6 @@ Bubble::Bubble(vec3 position, float volume, vec3 color)
 	mVolume = volume;
 	mRadius = CalculateRadius(volume);
 	mSphereModel = new SphereModel(position, mRadius, color);
-	mVelocity = vec3(0.0f);
 }
 
 Bubble::~Bubble()
@@ -23,18 +25,36 @@ Bubble::~Bubble()
 
 void Bubble::Update(float dt, glm::vec3 moveTowards, vec3 gravity, bool split)
 {
+	// Update position
 	if (length(moveTowards) > 0.0f)
 	{
-		float equilibriumSpeed = CalculateEquilibriumSpeed();
-		mVelocity += equilibriumSpeed * normalize(moveTowards) * dt;
-		if (length(mVelocity) > equilibriumSpeed)
-		{
-			mVelocity = equilibriumSpeed * normalize(mVelocity);
-		}
+		vec3 previousPosition = mSphereModel->GetPosition();
+		vec3 newPosition = previousPosition + CalculateEquilibriumSpeed() * normalize(moveTowards) * dt;
+		mSphereModel->SetPosition(newPosition);
 	}
-	vec3 currentPosition = mSphereModel->GetPosition();
-	vec3 nextPosition = currentPosition + mVelocity * dt;
-	mSphereModel->SetPosition(nextPosition);
+
+	// Handle Collisions
+	vector<Bubble*>* bubbles = World::GetInstance()->GetBubbles();
+	vector<Bubble*>::iterator it = bubbles->begin();
+	while (it != bubbles->end())
+	{
+		vec3 itsPosition = (*it)->GetPosition();
+		float itsRadius = (*it)->GetRadius();
+		if (distance(GetPosition(), itsPosition) < std::max(mRadius, itsRadius))
+		{
+			// Collision!
+			float itsVolume = (*it)->GetVolume();
+			if (mVolume > itsVolume)
+			{
+				// Absorb it!
+				float myNewVolume = mVolume + itsVolume;
+				SetVolume(myNewVolume);
+				it = bubbles->erase(it);
+				continue;
+			}
+		}
+		it++;
+	}
 }
 
 float Bubble::CalculateEquilibriumSpeed()

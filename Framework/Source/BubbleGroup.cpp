@@ -9,9 +9,9 @@ using namespace glm;
 BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume)
 {
 	mCenterOfMass = centerOfMass;
-	mVolume = volume;
-	Bubble* initialBubble = new Bubble(vec3(0.0f), mVolume, vec3(0.0f, 1.0f, 1.0f));
-	mRadius = initialBubble->GetRadius();
+	mGroupVolume = volume;
+	Bubble* initialBubble = new Bubble(vec3(0.0f), mGroupVolume, vec3(0.0f, 1.0f, 1.0f));
+	mGroupRadius = initialBubble->GetRadius();
 	mMoveTowards = vec3(0.0f);
 	mBubbles.push_back(initialBubble);
 }
@@ -28,6 +28,8 @@ void BubbleGroup::Update(float dt)
 		(*it)->Update(dt, mMoveTowards, vec3(0.0f), false);
 	}
 	mCenterOfMass = (mBubbles[0]->GetPosition());
+	mGroupVolume = (mBubbles[0]->GetVolume());
+	mGroupRadius = (mBubbles[0]->GetRadius());
 }
 
 void BubbleGroup::Draw()

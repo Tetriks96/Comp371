@@ -12,7 +12,7 @@ ThirdPersonCamera::ThirdPersonCamera(PlayerBubbleGroup* playerBubbleGroup) :
 glm::mat4 ThirdPersonCamera::GetViewMatrix() const
 {
 	mat4 viewMatrix = glm::lookAt(
-		mPlayerBubbleGroup->GetCenterOfMass() - 10.0f * mPlayerBubbleGroup->GetRadius() * mPlayerBubbleGroup->GetLookAt(),
+		mPlayerBubbleGroup->GetCenterOfMass() - 10.0f * mPlayerBubbleGroup->GetGroupRadius() * mPlayerBubbleGroup->GetLookAt(),
 		mPlayerBubbleGroup->GetCenterOfMass(),
 		mPlayerBubbleGroup->GetUp());
 	return viewMatrix;
