@@ -60,7 +60,7 @@ void BubbleGroup::Draw()
 	}
 }
 
-void BubbleGroup::Split(float dt)
+void BubbleGroup::Split()
 {
 	if (length(mMoveTowards) <= 0.0f || EventManager::GetGameTime() - mLastSplitTime < 1.0)
 	{
@@ -76,7 +76,7 @@ void BubbleGroup::Split(float dt)
 
 	for (int i = 0; i < currentSize; i++)
 	{
-		Bubble* newBubble = mBubbles[i]->Split(dt, mMoveTowards);
+		Bubble* newBubble = mBubbles[i]->Split(mMoveTowards);
 		if (newBubble != nullptr)
 		{
 			mBubbles.push_back(newBubble);
@@ -133,4 +133,32 @@ float BubbleGroup::CalculateGroupVolume()
 		groupVolume += (*it)->GetVolume();
 	}
 	return groupVolume;
+}
+
+void BubbleGroup::Pop()
+{
+	if (EventManager::GetGameTime() - mLastSplitTime < 1.0)
+	{
+		// Two splits are not allowed within 1 second of eachother
+		return;
+	}
+
+	mLastSplitTime = EventManager::GetGameTime();
+
+	int volume = (int)mGroupVolume;
+	mBubbles.reserve(volume);
+
+	int currentSize = mBubbles.size();
+
+	for (int i = 0; i < currentSize; i++)
+	{
+		vector<Bubble*>* newBubbles = mBubbles[i]->Pop();
+		if (newBubbles != nullptr)
+		{
+			for (vector<Bubble*>::iterator it = newBubbles->begin(); it < newBubbles->end(); it++)
+			{
+				mBubbles.push_back(*it);
+			}
+		}
+	}
 }

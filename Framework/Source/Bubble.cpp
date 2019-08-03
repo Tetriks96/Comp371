@@ -110,7 +110,7 @@ void Bubble::HandleCollisions(vector<Bubble*>* bubbles, vec3 previousPosition)
 		{
 			// Collision!
 
-			if (*it == mSplitFrom && EventManager::GetGameTime() - mLastSplitTime < 1.0)
+			if ((*it == mSplitFrom || (*it)->GetSplitFrom() == this || (*it)->GetSplitFrom() == mSplitFrom) && EventManager::GetGameTime() - mLastSplitTime < 1.0)
 			{
 				// Don't allow bubbles that just split from recolliding right away
 				continue;
@@ -129,7 +129,7 @@ void Bubble::HandleCollisions(vector<Bubble*>* bubbles, vec3 previousPosition)
 	}
 }
 
-Bubble* Bubble::Split(float dt, vec3 direction)
+Bubble* Bubble::Split(vec3 direction)
 {
 	// Split is undefined if no direction is provided
 	// Split is not permitted for bubbles who's volume is smaller than 2
@@ -140,7 +140,24 @@ Bubble* Bubble::Split(float dt, vec3 direction)
 
 	SetVolume(mVolume / 2.0f);
 	Bubble* newBubble = new Bubble(GetPosition(), mVolume, mSphereModel->GetColor(), mDivisionVelocity + CalculateEquilibriumSpeed() * normalize(direction), this);
-	mSplitFrom = newBubble;
 	mLastSplitTime = EventManager::GetGameTime();
 	return newBubble;
+}
+
+std::vector<Bubble*>* Bubble::Pop()
+{
+	int popCount = std::max(1, (int)mVolume);
+	if (popCount <= 1)
+	{
+		return nullptr;
+	}
+	SetVolume(mVolume / (float)popCount);
+	vector<Bubble*>* newBubbles = new vector<Bubble*>();
+	for (int i = 1; i < popCount; i++)
+	{
+		Bubble* newBubble = new Bubble(GetPosition(), mVolume, mSphereModel->GetColor(), mDivisionVelocity + CalculateEquilibriumSpeed() * World::GetRandomPositionInsideUnitSphere(), this);
+		newBubbles->push_back(newBubble);
+	}
+	mLastSplitTime = EventManager::GetGameTime();
+	return newBubbles;
 }

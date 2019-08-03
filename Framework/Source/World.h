@@ -47,6 +47,8 @@ public:
     const Camera* GetCurrentCamera() const;
 	std::vector<Bubble*>* GetBubbles();
 	std::vector<BubbleGroup*>* GetBubbleGroups();
+
+	static glm::vec3 GetRandomPositionInsideUnitSphere();
     
 private:
     static World* instance;
@@ -55,6 +57,4 @@ private:
 	std::vector<Camera*> mCameras;
 	unsigned int mCurrentCamera;
 	std::vector<BubbleGroup*> mBubbleGroups;
-
-	glm::vec3 GetRandomPositionInsideUnitSphere();
 };

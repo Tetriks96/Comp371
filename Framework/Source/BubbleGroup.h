@@ -16,7 +16,8 @@ public:
 	float GetGroupRadius() { return mGroupRadius; }
 	float GetGroupVolume() { return mGroupVolume; }
 protected:
-	virtual void Split(float dt);
+	virtual void Split();
+	virtual void Pop();
 	std::vector<Bubble*> mBubbles;
 	glm::vec3 mMoveTowards;
 private:
