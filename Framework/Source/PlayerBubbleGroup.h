@@ -5,7 +5,7 @@
 class PlayerBubbleGroup : public BubbleGroup
 {
 public:
-	PlayerBubbleGroup();
+	PlayerBubbleGroup(float volume);
 	~PlayerBubbleGroup();
 	virtual void Update(float dt);
 	glm::vec3 GetLookAt() { return mLookAt; }

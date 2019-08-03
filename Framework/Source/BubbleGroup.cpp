@@ -1,4 +1,5 @@
 #include "BubbleGroup.h"
+#include "EventManager.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -10,12 +11,11 @@ BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume)
 {
 	mCenterOfMass = centerOfMass;
 	mGroupVolume = volume;
-	Bubble* initialBubble1 = new Bubble(vec3(-10.0f, 0.0f, 0.0f), mGroupVolume, vec3(0.0f, 1.0f, 1.0f));
-	Bubble* initialBubble2 = new Bubble(vec3(10.0f, 0.0f, 0.0f), mGroupVolume, vec3(0.0f, 1.0f, 1.0f));
-	mGroupRadius = initialBubble1->GetRadius() + initialBubble2->GetRadius() + distance(initialBubble1->GetPosition(), initialBubble2->GetPosition());
+	Bubble* initialBubble = new Bubble(vec3(0.0f), volume, vec3(0.0f, 1.0f, 1.0f));
+	mGroupRadius = initialBubble->GetRadius();
 	mMoveTowards = vec3(0.0f);
-	mBubbles.push_back(initialBubble1);
-	mBubbles.push_back(initialBubble2);
+	mBubbles.push_back(initialBubble);
+	mLastSplitTime = -1.0;
 }
 
 BubbleGroup::~BubbleGroup()
@@ -31,7 +31,7 @@ void BubbleGroup::Update(float dt)
 		{
 			continue;
 		}
-		(*it)->Update(dt, mMoveTowards, mCenterOfMass - (*it)->GetPosition(), false);
+		(*it)->Update(dt, mMoveTowards, mCenterOfMass - (*it)->GetPosition());
 	}
 
 	// Remove null bubbles
@@ -60,9 +60,28 @@ void BubbleGroup::Draw()
 	}
 }
 
-void BubbleGroup::Split()
+void BubbleGroup::Split(float dt)
 {
+	if (length(mMoveTowards) <= 0.0f || EventManager::GetGameTime() - mLastSplitTime < 1.0)
+	{
+		// Split is undefined if the bubble group is not moving
+		// Two splits are not allowed within 1 second of eachother
+		return;
+	}
 
+	mLastSplitTime = EventManager::GetGameTime();
+
+	int currentSize = mBubbles.size();
+	mBubbles.reserve(2 * currentSize);
+
+	for (int i = 0; i < currentSize; i++)
+	{
+		Bubble* newBubble = mBubbles[i]->Split(dt, mMoveTowards);
+		if (newBubble != nullptr)
+		{
+			mBubbles.push_back(newBubble);
+		}
+	}
 }
 
 vec3 BubbleGroup::CalculateCenterOfMass()

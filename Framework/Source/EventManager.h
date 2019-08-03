@@ -19,6 +19,7 @@ public:
 
 	static void Update();
 
+	static double GetGameTime() { return sGameTime; }
 	static float GetFrameTime();
 	static bool ExitRequested();
 
@@ -34,7 +35,7 @@ public:
 
 private:
 	// Time
-	static double sLastFrameTime;
+	static double sGameTime;
 	static float sFrameTime;
 
 	// Mouse

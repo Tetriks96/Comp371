@@ -9,7 +9,7 @@
 using namespace std;
 using namespace glm;
 
-PlayerBubbleGroup::PlayerBubbleGroup() : BubbleGroup(vec3(0.0f), 2.0f)
+PlayerBubbleGroup::PlayerBubbleGroup(float volume) : BubbleGroup(vec3(0.0f), volume)
 {
 	mLookAt = vec3(0.0f, 0.0f, 1.0f);
 	mUp = vec3(0.0f, 1.0f, 0.0f);
@@ -95,4 +95,9 @@ void PlayerBubbleGroup::Update(float dt)
 	mMoveTowards = displacement;
 
 	BubbleGroup::Update(dt);
+
+	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		BubbleGroup::Split(dt);
+	}
 }

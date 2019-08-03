@@ -16,13 +16,14 @@ public:
 	float GetGroupRadius() { return mGroupRadius; }
 	float GetGroupVolume() { return mGroupVolume; }
 protected:
-	virtual void Split();
+	virtual void Split(float dt);
 	std::vector<Bubble*> mBubbles;
 	glm::vec3 mMoveTowards;
 private:
 	glm::vec3 mCenterOfMass;
 	float mGroupVolume;
 	float mGroupRadius;
+	double mLastSplitTime;
 
 	glm::vec3 CalculateCenterOfMass();
 	float CalculateGroupRadius();

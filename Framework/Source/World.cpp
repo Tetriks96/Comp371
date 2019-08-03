@@ -255,8 +255,8 @@ void World::Load(ci_istringstream& iss)
 		mBubbles.push_back(bubble);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup();
-
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize);
+	
 	mBubbleGroups.push_back(playerBubbleGroup);
 
 	mCameras.push_back(new ThirdPersonCamera(playerBubbleGroup));
