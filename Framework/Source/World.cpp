@@ -79,6 +79,19 @@ void World::Update(float dt)
 		(*it)->Update(dt);
 	}
 
+	// Remove null bubbles
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end();)
+	{
+		if (*it == nullptr)
+		{
+			it = mBubbles.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	// Update current Camera
 	mCameras[mCurrentCamera]->Update(dt);
 }
@@ -242,8 +255,8 @@ void World::Load(ci_istringstream& iss)
 		mBubbles.push_back(bubble);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup();
-
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
+	
 	mBubbleGroups.push_back(playerBubbleGroup);
 
 	mCameras.push_back(new ThirdPersonCamera(playerBubbleGroup));
