@@ -28,6 +28,7 @@ glm::vec3 ThirdPersonCamera::CalculateEyeVector() const
 	float volume = mPlayerBubbleGroup->GetGroupVolume();
 	float radius = mPlayerBubbleGroup->GetGroupRadius();
 	float tween = volume / (4.0f * (float)M_PI * pow(radius, 3.0f) / 3.0f);
+	tween = pow(tween, 1.0f / 3.0f);
 
 	return mPlayerBubbleGroup->GetCenterOfMass() - (7.5f * tween + 2.5f) * mPlayerBubbleGroup->GetGroupRadius() * mPlayerBubbleGroup->GetLookAt();
 }
