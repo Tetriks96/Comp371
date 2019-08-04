@@ -1,5 +1,6 @@
 #include "AIBubbleGroup.h"
 #include <map>
+#include <vector>
 #include <limits>
 using namespace std;
 
@@ -8,62 +9,50 @@ void AIBubbleGroup::Update(float dt)
 
 }
 
-float AIBubbleGroup::getNearestUnitSphere()
+void AIBubbleGroup::setUnitBubbleDistances()
 {
 	float minDistance = std::numeric_limits<float>::max();
-	for (int i = 0; i < unitList.size(); i++) {
-		float distance = glm::distance(this.getCenterOfMass() < unitList[i].getCenterOfMass());
-		if ( distance < minDistance) {
-			minDistance = distance;
-		}
+
+	vector<Bubble*> mBubbles = (*mWorld->GetBubbles());
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
+	{
+		float distance = glm::distance((*it)->GetPosition(), this->GetCenterOfMass());
+		this->unitDistances.push_back(distance);
 	}
-	return minDistance;
 }
 
-float AIBubbleGroup::getNearestThreat()
+void AIBubbleGroup::setBubbleGroupThreats()
 {
+	/*
+		function loops through all bubbles of all bubblegroups
+		calculates distances between AI and bubble groups.
+		calculates threat level between AI and bubble groups
+	*/
 	float minDistance = std::numeric_limits<float>::max();
-	vector<int> threatLevel;
-	vector<int> distances;
-	vector<int> vulnerableBubblesList;
+	vector<BubbleGroup*> mBubbleGroups = (*mWorld->GetBubbleGroups());
 
-	// loop through all bubble groups
-	for (int i = 0; i < world.getBubbleGroups().size(); i++) {
-		float distance = glm::distance(this.getCenterOfMass() < unitList[i].getCenterOfMass());
+	// Loop through bubble groups
+	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
+	{
+		// calculate distance
+		float distance = glm::distance((*it)->GetCenterOfMass(), this->GetCenterOfMass());
+		bubbleGroupDistances.insert(pair<BubbleGroup*, float>((*it), distance));
 
-		// loop through all bubbles in bubblegroup
-		for (SphereModel& enemyBubble : world.getBubbleGroups()) {
-			// check to see if bubblegroup has a bubble that is larger than any bubble in AI bubble group
-			int vulnerableBubbles = 0;
-			for (SphereModel& aiBubble : this->mSphereModels) {
-				if (aiBubble.radius < enemyBubble.radius) {
-					vulnerableBubbles++;
-					vulnerableBubblesList.push_back(vulnerableBubbles);
-				}
-				else {
-					// fill target list...
-				}
-			}
-			distances.push_back(distance(enemyBubble.centerOfMass, this.getCenterOfMass()))
+		// calculate vulnerabilities
+		vector<Bubble*> mBubbles = (*it)->getBubbles(); // TODO implement getBubbles
+		float vulnerability = 0;
+
+		for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
+		{
+			Bubble* largest = this->getLargestBubble(); // TODO implement getLargestBubble
+			float volumeDifference = this->largest->getVolume() - (*it)->GetVolume(); 
+			vulnerability += volumeDifference;
 		}
+
+		bubbleGroupThreats.insert(pair<BubbleGroup*, float>((*it), vulnerability));
+
+
 	}
-	return minDistance;
 }
 
-float AIBubbleGroup::getNearestTarget()
-{
-	return 0.0f;
-}
-
-
-
-void AIBubbleGroup::calculateNextPosition()
-{
-	int distanceScore = 0;
-	int targetScore = 0;
-	int vulnerableScore = 0;
-	// loop through vulnerable bubbles list, target list and distances calculate score for each
-	
-
-}
 
