@@ -255,7 +255,7 @@ void World::Load(ci_istringstream& iss)
 		mBubbles.push_back(bubble);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize);
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
 	
 	mBubbleGroups.push_back(playerBubbleGroup);
 

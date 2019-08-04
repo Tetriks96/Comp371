@@ -7,11 +7,11 @@
 using namespace std;
 using namespace glm;
 
-BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume)
+BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume, vec3 color)
 {
 	mCenterOfMass = centerOfMass;
 	mGroupVolume = volume;
-	Bubble* initialBubble = new Bubble(vec3(0.0f), volume, vec3(0.0f, 1.0f, 1.0f));
+	Bubble* initialBubble = new Bubble(vec3(0.0f), volume, color);
 	mGroupRadius = initialBubble->GetRadius();
 	mMoveTowards = vec3(0.0f);
 	mBubbles.push_back(initialBubble);

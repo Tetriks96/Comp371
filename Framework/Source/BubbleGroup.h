@@ -5,7 +5,7 @@
 class BubbleGroup
 {
 public:
-	BubbleGroup(glm::vec3 centerOfMass, float volume);
+	BubbleGroup(glm::vec3 centerOfMass, float volume, glm::vec3 color);
 	~BubbleGroup();
 
 	virtual void Update(float dt);

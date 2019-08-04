@@ -9,7 +9,7 @@
 using namespace std;
 using namespace glm;
 
-PlayerBubbleGroup::PlayerBubbleGroup(float volume) : BubbleGroup(vec3(0.0f), volume)
+PlayerBubbleGroup::PlayerBubbleGroup(float volume, vec3 color) : BubbleGroup(vec3(0.0f), volume, color)
 {
 	mLookAt = vec3(0.0f, 0.0f, 1.0f);
 	mUp = vec3(0.0f, 1.0f, 0.0f);
