@@ -18,6 +18,7 @@ AIBubbleGroup::~AIBubbleGroup()
 void AIBubbleGroup::Update(float dt)
 {
 	setMoveTowards();
+	BubbleGroup::Update(dt);
 }
 
 Bubble* AIBubbleGroup::getLargestBubble()
