@@ -56,6 +56,10 @@ void BubbleGroup::Draw()
 {
 	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
 		(*it)->Draw();
 	}
 }
@@ -76,6 +80,11 @@ void BubbleGroup::Split()
 
 	for (int i = 0; i < currentSize; i++)
 	{
+		if (mBubbles[i] == nullptr)
+		{
+			continue;
+		}
+
 		Bubble* newBubble = mBubbles[i]->Split(mMoveTowards);
 		if (newBubble != nullptr)
 		{
@@ -93,6 +102,11 @@ vec3 BubbleGroup::CalculateCenterOfMass()
 
 	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
+
 		float mass = (*it)->GetVolume();
 		vec3 position = (*it)->GetPosition();
 
@@ -118,6 +132,11 @@ float BubbleGroup::CalculateGroupRadius()
 	float maxLength = 0.0f;
 	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
+
 		float itsLength = distance(mCenterOfMass, (*it)->GetPosition()) + (*it)->GetRadius();
 		maxLength = max(maxLength, itsLength);
 	}
@@ -130,6 +149,11 @@ float BubbleGroup::CalculateGroupVolume()
 	float groupVolume = 0.0f;
 	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
+
 		groupVolume += (*it)->GetVolume();
 	}
 	return groupVolume;
@@ -152,11 +176,21 @@ void BubbleGroup::Pop()
 
 	for (int i = 0; i < currentSize; i++)
 	{
+		if (mBubbles[i] == nullptr)
+		{
+			continue;
+		}
+
 		vector<Bubble*>* newBubbles = mBubbles[i]->Pop();
 		if (newBubbles != nullptr)
 		{
 			for (vector<Bubble*>::iterator it = newBubbles->begin(); it < newBubbles->end(); it++)
 			{
+				if (*it == nullptr)
+				{
+					continue;
+				}
+
 				mBubbles.push_back(*it);
 			}
 		}
