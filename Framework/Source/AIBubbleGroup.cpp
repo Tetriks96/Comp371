@@ -9,9 +9,23 @@ void AIBubbleGroup::Update(float dt)
 
 }
 
+Bubble* AIBubbleGroup::getLargestBubble()
+{
+	vector<Bubble*> mBubbles = (*this->GetBubbles());
+	float largestVolume = 0;
+	Bubble* largestBubble;
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
+	{
+		if ((*it)->GetVolume() > largestVolume) {
+			largestBubble = (*it);
+		}
+	}
+	return largestBubble;
+}
+
 void AIBubbleGroup::setUnitBubbleDistances()
 {
-	float minDistance = std::numeric_limits<float>::max();
+	float minDistance = numeric_limits<float>::max();
 
 	vector<Bubble*> mBubbles = (*mWorld->GetBubbles());
 	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
@@ -28,7 +42,7 @@ void AIBubbleGroup::setBubbleGroupThreats()
 		calculates distances between AI and bubble groups.
 		calculates threat level between AI and bubble groups
 	*/
-	float minDistance = std::numeric_limits<float>::max();
+	float minDistance = numeric_limits<float>::max();
 	vector<BubbleGroup*> mBubbleGroups = (*mWorld->GetBubbleGroups());
 
 	// Loop through bubble groups
@@ -39,14 +53,16 @@ void AIBubbleGroup::setBubbleGroupThreats()
 		bubbleGroupDistances.insert(pair<BubbleGroup*, float>((*it), distance));
 
 		// calculate vulnerabilities
-		vector<Bubble*> mBubbles = (*it)->getBubbles(); // TODO implement getBubbles
+		//vector<Bubble*> mBubbles = (*it)->getBubbles(); // TODO implement getBubbles
 		float vulnerability = 0;
 
 		for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 		{
+			/*
 			Bubble* largest = this->getLargestBubble(); // TODO implement getLargestBubble
-			float volumeDifference = this->largest->getVolume() - (*it)->GetVolume(); 
+			float volumeDifference = largest->getVolume() - (*it)->GetVolume(); 
 			vulnerability += volumeDifference;
+			*/
 		}
 
 		bubbleGroupThreats.insert(pair<BubbleGroup*, float>((*it), vulnerability));

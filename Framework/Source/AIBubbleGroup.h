@@ -10,6 +10,7 @@ public:
 	virtual void Update(float dt);
 
 protected:
+	Bubble* getLargestBubble();
 	void setUnitBubbleDistances(); // returns the coordinates of the closest unit sphere
 	void setBubbleGroupThreats(); // returns the coordinates of the nearest bubble that is larger
 	
