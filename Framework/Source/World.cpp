@@ -15,6 +15,7 @@
 #include "SceneLoader.h"
 #include "EventManager.h"
 #include "PlayerBubbleGroup.h"
+#include "AIBubbleGroup.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -256,9 +257,10 @@ void World::Load(ci_istringstream& iss)
 	}
 
 	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
-	
-	mBubbleGroups.push_back(playerBubbleGroup);
+	AIBubbleGroup* aiBubbleGroup = new AIBubbleGroup(minSize, playerColor);
 
+	mBubbleGroups.push_back(playerBubbleGroup);
+	mBubbleGroups.push_back(aiBubbleGroup);
 	mCameras.push_back(new ThirdPersonCamera(playerBubbleGroup));
 }
 
