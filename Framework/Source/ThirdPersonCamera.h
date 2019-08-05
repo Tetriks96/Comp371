@@ -14,4 +14,5 @@ public:
 
 private:
 	PlayerBubbleGroup * mPlayerBubbleGroup;
+	glm::vec3 CalculateEyeVector() const;
 };

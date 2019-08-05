@@ -12,21 +12,12 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 using namespace glm;
 
-SphereModel::SphereModel(vec3 position, float volume, vec3 color)
-	: Model(position, vec3(0.0f), vec3(0.0f, 1.0f, 0.0f), 0.0f)
+SphereModel::SphereModel(vec3 position, float radius, vec3 color)
+	: Model(position, vec3(radius), vec3(0.0f, 1.0f, 0.0f), 0.0f)
 {
-	mVolume = volume;
-
-	float radius = GetRadius();
-	mScaling = vec3(radius);
-
 	mColor = color;
-
 	Initialize();
 }
 
@@ -49,17 +40,6 @@ void SphereModel::Draw()
     
     // Draw the triangles !
     glDrawArrays(GL_LINE_STRIP, 0, numOfVertices);
-}
-
-float SphereModel::GetRadius()
-{
-	return pow(((3 * mVolume) / (4 * (float)M_PI)), (1.0f / 3.0f));
-}
-
-void SphereModel::SetVolume(float volume)
-{
-	mVolume = volume;
-	mScaling = vec3(GetRadius());
 }
 
 void SphereModel::Initialize()

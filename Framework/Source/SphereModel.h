@@ -14,22 +14,17 @@
 class SphereModel : public Model
 {
 public:
-	SphereModel(glm::vec3 position, float volume, glm::vec3 color);
+	SphereModel(glm::vec3 position, float radius, glm::vec3 color);
     virtual ~SphereModel(void);
 
     virtual void Draw();
 
-	float GetRadius();
-
-	void SetVolume(float volume);
-
-	float GetVolume() const { return mVolume; }
+	glm::vec3 GetColor() { return mColor; }
     
 protected:
 	virtual void Initialize();
 
 	glm::vec3 mColor;
-	float mVolume;
 
 private:
     // The vertex format could be different for different types of models

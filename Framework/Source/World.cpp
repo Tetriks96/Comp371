@@ -11,7 +11,6 @@
 #include "Renderer.h"
 #include "ParsingHelper.h"
 #include "ThirdPersonCamera.h"
-#include "SphereModel.h"
 #include "WorldDrawer.h"
 #include "SceneLoader.h"
 #include "EventManager.h"
@@ -35,13 +34,13 @@ World::World()
 
 World::~World()
 {
-	// Sphere Models
-	for (vector<SphereModel*>::iterator it = mSphereModels.begin(); it < mSphereModels.end(); ++it)
+	// Bubbles
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
 	{
 		delete *it;
 	}
 
-	mSphereModels.clear();
+	mBubbles.clear();
 
 	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
 	{
@@ -63,9 +62,14 @@ World* World::GetInstance()
     return instance;
 }
 
-vector<SphereModel*>* World::GetSphereModels()
+vector<Bubble*>* World::GetBubbles()
 {
-	return &mSphereModels;
+	return &mBubbles;
+}
+
+vector<BubbleGroup*>* World::GetBubbleGroups()
+{
+	return &mBubbleGroups;
 }
 
 void World::Update(float dt)
@@ -73,6 +77,19 @@ void World::Update(float dt)
 	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
 	{
 		(*it)->Update(dt);
+	}
+
+	// Remove null bubbles
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end();)
+	{
+		if (*it == nullptr)
+		{
+			it = mBubbles.erase(it);
+		}
+		else
+		{
+			it++;
+		}
 	}
 
 	// Update current Camera
@@ -84,7 +101,7 @@ void World::Draw()
 	WorldDrawer::DrawWorld(
 		mCameras,
 		mCurrentCamera,
-		mSphereModels,
+		mBubbles,
 		mBubbleGroups);
 }
 
@@ -92,8 +109,7 @@ void World::LoadScene(const char * scene_path)
 {
 	SceneLoader::LoadScene(
 		scene_path,
-		this,
-		&mSphereModels
+		this
 	);
 }
 
@@ -234,13 +250,13 @@ void World::Load(ci_istringstream& iss)
 		float color1 = (float)rand() / RAND_MAX;
 		float color2 = (float)rand() / RAND_MAX;
 		float color3 = (float)rand() / RAND_MAX;
-		SphereModel* sphere = new SphereModel(position, volume, vec3(color1, color2, color3));
+		Bubble* bubble = new Bubble(position, volume, vec3(color1, color2, color3));
 
-		mSphereModels.push_back(sphere);
+		mBubbles.push_back(bubble);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup();
-
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
+	
 	mBubbleGroups.push_back(playerBubbleGroup);
 
 	mCameras.push_back(new ThirdPersonCamera(playerBubbleGroup));
