@@ -32,6 +32,7 @@ void WorldDrawer::DrawWorld(
 		if ((*it)->GetVolume() > 0.0f)
 		{
 			(*it)->Draw();
+			//cone->Draw();
 		}
 	}
 

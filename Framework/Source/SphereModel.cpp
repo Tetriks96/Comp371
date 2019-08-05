@@ -48,7 +48,7 @@ void SphereModel::Draw()
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
     
     // Draw the triangles !
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
+    glDrawArrays(GL_LINE_STRIP, 0, numOfVertices);
 }
 
 float SphereModel::GetRadius()

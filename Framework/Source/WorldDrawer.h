@@ -3,6 +3,7 @@
 #include <vector>
 #include "SphereModel.h"
 #include "BubbleGroup.h"
+#include "ConeModel.h"
 
 class Camera;
 

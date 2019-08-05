@@ -67,6 +67,9 @@
     <ClCompile Include="..\Source\AIBubbleGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\ConeModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Renderer.h">
@@ -90,9 +93,6 @@
     <ClInclude Include="..\Source\ParsingHelper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\WorldDrawer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\SceneLoader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -106,6 +106,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\AIBubbleGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ConeModel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\WorldDrawer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
