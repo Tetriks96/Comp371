@@ -6,9 +6,9 @@
 #include <GLFW/glfw3.h>
 using namespace std;
 
-AIBubbleGroup::AIBubbleGroup(float volume, glm::vec3 color) : BubbleGroup(glm::vec3(1.0f), volume, color)
+AIBubbleGroup::AIBubbleGroup(float volume, glm::vec3 color) : BubbleGroup(glm::vec3(10.0f), volume, color)
 {
-	mClosestBubble = nullptr;
+	mClosestBubblePosition = glm::vec3(1.f);
 }
 
 AIBubbleGroup::~AIBubbleGroup()
@@ -37,21 +37,46 @@ Bubble* AIBubbleGroup::getLargestBubble()
 
 void AIBubbleGroup::setUnitBubbleDistances()
 {
-	float minDistance = numeric_limits<float>::max();
 	World* mWorld = World::GetInstance();
 	vector<Bubble*>* mBubbles = mWorld->GetBubbles();
-	Bubble* closestBubble;
-
+	float minDistance = numeric_limits<float>::max();
+	glm::vec3 closestPosition = glm::vec3(1.f);
 	for (vector<Bubble*>::iterator it = mBubbles->begin(); it < mBubbles->end(); ++it)
 	{
-		if (*it == nullptr)
-			continue;
+		
 		float distance = glm::distance((*it)->GetPosition(), GetCenterOfMass());
-		unitDistances.insert(pair<Bubble*, float>((*it), distance));
-		closestBubble = (*it);
+		if (distance < minDistance) {
+			closestPosition = (*it)->GetPosition();
+			minDistance = distance;
+		}
+		unitDistances.push_back(distance);
+		//(*unitDistances).insert(pair<Bubble*, float>((*it), distance));
 	}
-	this->mClosestBubble = closestBubble;
+	this->mClosestBubblePosition = closestPosition;
 }
+
+void AIBubbleGroup::setBubbleGroupDistances()
+{
+	World* mWorld = World::GetInstance();
+	vector<BubbleGroup*>* mBubbleGroups = mWorld->GetBubbleGroups();
+	float minDistance = glm::distance(GetCenterOfMass(), mClosestBubblePosition);
+	//float minDistance = numeric_limits<float>::max();
+	glm::vec3 closestPosition = mClosestBubblePosition;
+	for (vector<BubbleGroup*>::iterator it = mBubbleGroups->begin(); it < mBubbleGroups->end(); ++it)
+	{
+		if ((*it) == this)
+			continue;
+		float distance = glm::distance((*it)->GetCenterOfMass(), GetCenterOfMass());
+		if (distance < minDistance) {
+			closestPosition = (*it)->GetCenterOfMass();
+			minDistance = distance;
+		}
+		unitDistances.push_back(distance);
+		//(*unitDistances).insert(pair<Bubble*, float>((*it), distance));
+	}
+	this->mClosestBubblePosition = closestPosition;
+}
+
 
 void AIBubbleGroup::setBubbleGroupThreats()
 {
@@ -69,7 +94,7 @@ void AIBubbleGroup::setBubbleGroupThreats()
 	{
 		// calculate distance
 		float distance = glm::distance((*it)->GetCenterOfMass(), this->GetCenterOfMass());
-		bubbleGroupDistances.insert(pair<BubbleGroup*, float>((*it), distance));
+		(*bubbleGroupDistances).insert(pair<BubbleGroup*, float>((*it), distance));
 
 		// calculate vulnerabilities
 		vector<Bubble*> mBubbles = (*(*it)->GetBubbles());
@@ -91,21 +116,30 @@ void AIBubbleGroup::setBubbleGroupThreats()
 
 void AIBubbleGroup::setMoveTowards()
 {
-	/*
-	for (map<Bubble*, float>::iterator it = this.begin(); it < this->bubbleGroupDistances.end(); ++it)
-	{
-
-	}
-	*/
 	setUnitBubbleDistances();
+	setBubbleGroupDistances();
+	//getClosestBubblePosition();
 
-	glm::vec3 direction = (mClosestBubble->GetPosition() - GetCenterOfMass());
+	glm::vec3 direction = (mClosestBubblePosition - GetCenterOfMass());
 	mMoveTowards = direction;
 }
 
-Bubble* AIBubbleGroup::getClosestBubble()
+glm::vec3 AIBubbleGroup::getClosestBubblePosition()
 {
-	return this->mClosestBubble;
+	float minDistance = numeric_limits<float>::max();
+	glm::vec3 closestPosition = glm::vec3(1.f);
+	/*
+	for (map<Bubble*, float>::iterator it = unitDistances->begin(); it != unitDistances->end(); ++it)
+	{
+		float distance = glm::distance(it->first->GetPosition(), GetCenterOfMass());
+		
+		if (distance < minDistance) {
+			closestPosition = it->first->GetPosition();
+		}
+	}
+	*/
+
+	return closestPosition;
 }
 
 

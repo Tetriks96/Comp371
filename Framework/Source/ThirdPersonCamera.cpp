@@ -38,5 +38,6 @@ glm::vec3 ThirdPersonCamera::CalculateEyeVector() const
 		tween = 1.0f;
 	}
 
-	return mPlayerBubbleGroup->GetCenterOfMass() - (7.5f * tween + 2.5f) * mPlayerBubbleGroup->GetGroupRadius() * mPlayerBubbleGroup->GetLookAt();
+	vec3 value = mPlayerBubbleGroup->GetCenterOfMass() - (7.5f * tween + 2.5f) * mPlayerBubbleGroup->GetGroupRadius() * mPlayerBubbleGroup->GetLookAt();
+	return value;
 }
