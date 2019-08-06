@@ -6,7 +6,7 @@
 class ConeModel : public Model
 {
 public:
-	ConeModel(glm::vec3 position, float radius, glm::vec3 color);
+	ConeModel(glm::vec3 position, float radius, glm::vec3 color, glm::vec3 rotationAxis, float angle);
 	virtual ~ConeModel(void);
 
 	virtual void Draw();

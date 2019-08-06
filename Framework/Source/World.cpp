@@ -273,7 +273,7 @@ void World::Load(ci_istringstream& iss)
 		);
 	}
 
-	for (int i = 0; i < numberOfSpheres; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
 		float volume = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
@@ -289,13 +289,13 @@ void World::Load(ci_istringstream& iss)
 		int conePerSides = 3;
 		float radius = bubble->GetRadius();
 		// Top cone
-		ConeModel* topCone = new ConeModel(vec3(position.x, position.y, position.z + radius), radius, vColor);
+		ConeModel* topCone = new ConeModel(vec3(position.x, position.y, position.z + radius), radius, vColor, vec3(1.0f), 0.0f);
 		mCones.push_back(topCone);
 		// Bottom cone
-		ConeModel* bottomCone = new ConeModel(vec3(position.x, position.y, position.z - radius), radius, vColor);
+		ConeModel* bottomCone = new ConeModel(vec3(position.x, position.y, position.z + radius), radius, vColor, vec3(0.0, 1.0, 0.0), 180.0f);
 		mCones.push_back(bottomCone);
 
-		for (int i = 0; i < sides; i++) {
+		/*for (int i = 0; i < sides; i++) {
 			for (int j = 0; j < conePerSides; j++) {
 				float twoPi = 2.0 * (float)M_PI;
 				float newX = position.x + radius * cos(twoPi * i / sides);
@@ -307,7 +307,7 @@ void World::Load(ci_istringstream& iss)
 
 				mCones.push_back(cone);
 			}
-		}
+		}*/
 	}
 
 	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
