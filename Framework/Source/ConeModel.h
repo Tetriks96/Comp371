@@ -22,6 +22,7 @@ protected:
 
 	glm::vec3 mColor;
 	float mVolume;
+	float mRadius;
 
 private:
 	// The vertex format could be different for different types of models

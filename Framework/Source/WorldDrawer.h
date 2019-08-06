@@ -14,5 +14,6 @@ public:
 		std::vector<Camera*> camera,
 		unsigned int currentCamera,
 		std::vector<Bubble*> bubbles,
+		std::vector<ConeModel*> cones,
 		std::vector<BubbleGroup*> bubbleGroups);
 };

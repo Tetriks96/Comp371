@@ -10,8 +10,10 @@
 using namespace glm;
 
 ConeModel::ConeModel(glm::vec3 position, float radius, glm::vec3 color)
-	: Model(vec3(1.0f), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f), 0.0f)
+	: Model(position, vec3(radius / 20.0), vec3(0.0f, 1.0f, 0.0f), 0.0f)
 {
+	mColor = color;
+	mRadius = radius;
 	Initialize();
 }
 
@@ -33,12 +35,12 @@ void ConeModel::Draw()
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 100);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, numOfVertices);
 }
 
 float ConeModel::GetRadius()
 {
-	return pow(((3 * mVolume) / (4 * (float)M_PI)), (1.0f / 3.0f));
+	return mRadius;
 }
 
 void ConeModel::SetVolume(float volume)
@@ -49,21 +51,23 @@ void ConeModel::SetVolume(float volume)
 
 void ConeModel::Initialize()
 {
-	const int numberOfSlices = 100;
+	const int numberOfSlices = 200;
 	const int radius = 5;
-	GLfloat twoPi = 2.0f * M_PI;
+	GLfloat twoPi = 2.0f * (float)M_PI;
 
-	Vertex vertexBuffer[numberOfSlices] = {
-		// position,                                    normal,                     color
-		{ vec3(0.000000, 0.000000, 0.500000), vec3(0.000000, 0.000000, 0.500000), mColor }
+	vec3 newPos = vec3(mPosition.x, mPosition.y, mPosition.z + 10.0);
+
+	Vertex vertexBuffer[numberOfSlices + 1] = {
+		// position,    normal,      color
+		{ newPos, normalize(newPos), mColor }
 	};
 
-	for (int i = 1; i < numberOfSlices; i++) {
-		float mX = (radius * cos(twoPi * i / numberOfSlices)) / radius;
-		float mY = (radius * sin(twoPi * i / numberOfSlices)) / radius;
-		float mZ = -0.5;
+	for (int i = 1; i < numberOfSlices + 1; i++) {
+		float mX = mPosition.x + (radius * cos(twoPi * i / numberOfSlices));
+		float mY = mPosition.y + (radius * sin(twoPi * i / numberOfSlices));
+		float mZ = mPosition.z;
 		vec3 mConeVertice = vec3(mX, mY, mZ);
-		vertexBuffer[i] = { mConeVertice, mConeVertice, mColor };
+		vertexBuffer[i] = { mConeVertice, normalize(mConeVertice), mColor };
 	}
 
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);

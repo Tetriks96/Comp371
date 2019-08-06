@@ -12,6 +12,7 @@ void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
 	vector<Bubble*> bubbles,
+	vector<ConeModel*> cones,
 	vector<BubbleGroup*> bubbleGroups)
 {
 	Renderer::BeginFrame();
@@ -32,7 +33,14 @@ void WorldDrawer::DrawWorld(
 		if ((*it)->GetVolume() > 0.0f)
 		{
 			(*it)->Draw();
-			//cone->Draw();
+		}
+	}
+
+	for (vector<ConeModel*>::iterator it = cones.begin(); it < cones.end(); ++it)
+	{
+		if ((*it)->GetRadius() > 0.0f)
+		{
+			(*it)->Draw();
 		}
 	}
 

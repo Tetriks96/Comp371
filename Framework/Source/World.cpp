@@ -18,6 +18,9 @@
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <cmath>
 
 using namespace std;
 using namespace glm;
@@ -42,6 +45,14 @@ World::~World()
 
 	mBubbles.clear();
 
+	// Cones
+	for (vector<ConeModel*>::iterator it = mCones.begin(); it < mCones.end(); ++it)
+	{
+		delete *it;
+	}
+
+	mCones.clear();
+
 	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
 	{
 		delete *it;
@@ -65,6 +76,11 @@ World* World::GetInstance()
 vector<Bubble*>* World::GetBubbles()
 {
 	return &mBubbles;
+}
+
+vector<ConeModel*>* World::GetCones()
+{
+	return &mCones;
 }
 
 vector<BubbleGroup*>* World::GetBubbleGroups()
@@ -92,6 +108,19 @@ void World::Update(float dt)
 		}
 	}
 
+	// Remove null cones
+	for (vector<ConeModel*>::iterator it = mCones.begin(); it < mCones.end();)
+	{
+		if (*it == nullptr)
+		{
+			it = mCones.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	// Update current Camera
 	mCameras[mCurrentCamera]->Update(dt);
 }
@@ -102,6 +131,7 @@ void World::Draw()
 		mCameras,
 		mCurrentCamera,
 		mBubbles,
+		mCones,
 		mBubbleGroups);
 }
 
@@ -250,9 +280,34 @@ void World::Load(ci_istringstream& iss)
 		float color1 = (float)rand() / RAND_MAX;
 		float color2 = (float)rand() / RAND_MAX;
 		float color3 = (float)rand() / RAND_MAX;
-		Bubble* bubble = new Bubble(position, volume, vec3(color1, color2, color3));
+		vec3 vColor = vec3(color1, color2, color3);
+		Bubble* bubble = new Bubble(position, volume, vColor);
 
 		mBubbles.push_back(bubble);
+
+		int sides = 8;
+		int conePerSides = 3;
+		float radius = bubble->GetRadius();
+		// Top cone
+		ConeModel* topCone = new ConeModel(vec3(position.x, position.y, position.z + radius), radius, vColor);
+		mCones.push_back(topCone);
+		// Bottom cone
+		ConeModel* bottomCone = new ConeModel(vec3(position.x, position.y, position.z - radius), radius, vColor);
+		mCones.push_back(bottomCone);
+
+		for (int i = 0; i < sides; i++) {
+			for (int j = 0; j < conePerSides; j++) {
+				float twoPi = 2.0 * (float)M_PI;
+				float newX = position.x + radius * cos(twoPi * i / sides);
+				float newY = position.y + radius * sin(twoPi * i / sides);
+				float r = sqrt(pow(newX, 2.0) + pow(newY, 2.0));
+				float newZ = position.z + r * sin(((float)M_PI / 2) - twoPi * (i + 1) / sides);
+				vec3 newPos = vec3(newX, newY, newZ);
+				ConeModel* cone = new ConeModel(newPos, radius, vColor);
+
+				mCones.push_back(cone);
+			}
+		}
 	}
 
 	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
