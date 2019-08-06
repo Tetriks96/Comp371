@@ -17,11 +17,14 @@ protected:
 	void setUnitBubbleDistances(); // returns the coordinates of the closest unit sphere
 	void setBubbleGroupDistances();
 	void setMoveTowards();
+	bool shouldSplit(float volumeDifference, float distance);
 
 private:
 	BubbleGroup* mClosestThreat;
 	BubbleGroup* mClosestTarget; 
 	Bubble* mClosestUnit;
+
+	glm::vec3 nextPosition;
 
 	// If we ever need to add the plane algorithm we will need these...
 	enum Plane { top, bottom, left, right, front, back };
