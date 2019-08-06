@@ -91,6 +91,7 @@ void AIBubbleGroup::setBubbleGroupDistances()
 			// Target BubbleGroup
 			minTargetDistance = distance;
 			mClosestTarget = (*it);
+			compareBubbleGroups((*it));
 			
 		}
 		else if (glm::distance((*it)->GetCenterOfMass(), GetCenterOfMass()) < minThreatDistance)
@@ -98,6 +99,7 @@ void AIBubbleGroup::setBubbleGroupDistances()
 			// Threat BubbleGroup
 			minThreatDistance = distance;
 			mClosestThreat = (*it);
+			compareBubbleGroups((*it));
 		}
 
 	}
@@ -114,9 +116,10 @@ void AIBubbleGroup::setMoveTowards()
 	std::uniform_int_distribution<std::mt19937::result_type> scoreModifier(1, 10);
 
 	// set closest bubbles
+	setLargestBubble();
 	setUnitBubbleDistances();
 	setBubbleGroupDistances();
-	setLargestBubble();
+
 
 	// set score
 	float unitScore = (float)scoreModifier(rng);
@@ -139,7 +142,7 @@ void AIBubbleGroup::setMoveTowards()
 		float mClosestTargetDistance = glm::distance(mClosestTarget->GetCenterOfMass(), GetCenterOfMass());
 
 		if (mClosestTargetDistance < nextDistance) {
-			// Check if there is a BubbleGroup bubble that you can eat
+			// Check if there is a bubble in BubbleGroup that you can eat
 			if (mClosestBubbleTarget != nullptr) {
 				nextPosition = mClosestBubbleTarget->GetPosition();
 			}
@@ -162,6 +165,10 @@ void AIBubbleGroup::compareBubbleGroups(BubbleGroup* bubbleGroup)
 
 
 	for (vector<Bubble*>::iterator it = bubbleGroup->GetBubbles()->begin(); it < bubbleGroup->GetBubbles()->end(); it++) {
+		
+		if (*it == nullptr || mLargestBubble == nullptr)
+			continue;
+
 		if (mLargestBubble->GetVolume() > (*it)->GetVolume()) {
 
 			float distance = glm::distance(mLargestBubble->GetPosition(), (*it)->GetPosition());
