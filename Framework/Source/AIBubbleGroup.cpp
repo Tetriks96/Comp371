@@ -5,8 +5,9 @@
 #include <limits>
 #include <GLFW/glfw3.h>
 using namespace std;
+using namespace glm;
 
-AIBubbleGroup::AIBubbleGroup(float volume, glm::vec3 color) : BubbleGroup(glm::vec3(10.0f), volume, color)
+AIBubbleGroup::AIBubbleGroup(vec3 position, float volume, glm::vec3 color) : BubbleGroup(position, volume, color)
 {
 	mClosestBubblePosition = glm::vec3(1.f);
 }

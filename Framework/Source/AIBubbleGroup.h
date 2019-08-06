@@ -8,7 +8,7 @@
 class AIBubbleGroup : public BubbleGroup
 {
 public:
-	AIBubbleGroup(float volume, glm::vec3 color);
+	AIBubbleGroup(glm::vec3 position, float volume, glm::vec3 color);
 	~AIBubbleGroup();
 	virtual void Update(float dt);
 

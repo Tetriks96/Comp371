@@ -57,4 +57,5 @@ private:
 	std::vector<Camera*> mCameras;
 	unsigned int mCurrentCamera;
 	std::vector<BubbleGroup*> mBubbleGroups;
+	glm::vec3 GetRandomColor();
 };
