@@ -122,7 +122,7 @@ vec3 BubbleGroup::CalculateCenterOfMass()
 	}
 	else
 	{
-		return vec3(0.0f);
+		return mCenterOfMass;
 	}
 }
 
