@@ -13,16 +13,19 @@ public:
 	virtual void Update(float dt);
 
 protected:
-	Bubble* getLargestBubble();
+	void setLargestBubble();
 	void setUnitBubbleDistances(); // returns the coordinates of the closest unit sphere
 	void setBubbleGroupDistances();
 	void setMoveTowards();
+	void compareBubbleGroups(BubbleGroup* bubbleGroup);
 	bool shouldSplit(float volumeDifference, float distance);
 
 private:
 	BubbleGroup* mClosestThreat;
 	BubbleGroup* mClosestTarget; 
+	Bubble* mClosestBubbleTarget;
 	Bubble* mClosestUnit;
+	Bubble* mLargestBubble;
 
 	glm::vec3 nextPosition;
 
