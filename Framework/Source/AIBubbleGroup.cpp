@@ -74,7 +74,7 @@ void AIBubbleGroup::setBubbleGroupDistances()
 
 	for (vector<BubbleGroup*>::iterator it = mBubbleGroups->begin(); it < mBubbleGroups->end(); ++it)
 	{
-		// check for nullptr
+		// check for this AI bubblegroup or dead bubblegroups
 		if ((*it) == this || (*it)->GetGroupVolume() == 0 )
 			continue;
 
@@ -110,8 +110,10 @@ void AIBubbleGroup::setMoveTowards()
 	// find closest unit & set unit Bubble score
 	setUnitBubbleDistances();
 	float unitScore = (float)scoreModifier(rng);
+	float unitDistance = 0;
+
 	if (mClosestUnit != nullptr) {
-		float unitDistance = glm::distance(this->GetCenterOfMass(), mClosestUnit->GetPosition());
+		unitDistance = glm::distance(this->GetCenterOfMass(), mClosestUnit->GetPosition());
 		unitScore += (1 / unitDistance);
 	}
 
@@ -120,26 +122,37 @@ void AIBubbleGroup::setMoveTowards()
 	setBubbleGroupDistances();
 	float targetScore = 0;
 	float targetVolumeDifference = 0;
+	float targetDistance = numeric_limits<float>::max();
+	float threatDistance = 0;
+
 	if ((mClosestTarget != nullptr) && (mClosestTarget->GetGroupVolume() > 0)) {
-		float targetDistance = glm::distance(this->GetCenterOfMass(), mClosestTarget->GetCenterOfMass());
-		float threatDistance = glm::distance(this->GetCenterOfMass(), mClosestThreat->GetCenterOfMass());
+		targetDistance = glm::distance(this->GetCenterOfMass(), mClosestTarget->GetCenterOfMass());
+		threatDistance = glm::distance(this->GetCenterOfMass(), mClosestThreat->GetCenterOfMass());
 		targetVolumeDifference = this->GetGroupVolume() / mClosestTarget->GetGroupVolume();
 		targetScore = (20/targetDistance) + scoreModifier(rng);
 	} 
 
-	glm::vec3 nextPosition;
+	glm::vec3 nextPosition = World::GetInstance()->GetRandomPositionInsideUnitSphere();
 
 	// * Note larger the score the better!
-
+	/*
 	if ( (targetScore > unitScore) && targetVolumeDifference > 1.2) {
 		nextPosition = mClosestTarget->GetCenterOfMass();
 	}
 	else {
 		nextPosition = mClosestUnit->GetPosition();
 	}
+	*/
+	// Note unit distance is set before target distance...
+	
+		if (unitDistance <= targetDistance) {
+			nextPosition = mClosestUnit->GetPosition();
+		}
+		else {
+			nextPosition = mClosestTarget->GetCenterOfMass();
+		}
 
-	// reset Closest Bubble references
-	mClosestUnit = nullptr;
+
 
 	glm::vec3 direction = (nextPosition - GetCenterOfMass());
 	mMoveTowards = direction;
