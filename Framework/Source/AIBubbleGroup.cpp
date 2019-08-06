@@ -41,7 +41,7 @@ void AIBubbleGroup::setUnitBubbleDistances()
 	World* mWorld = World::GetInstance();
 	vector<Bubble*>* mBubbles = mWorld->GetBubbles();
 	float minDistance = numeric_limits<float>::max();
-	glm::vec3 closestPosition = glm::vec3(1.f);
+	glm::vec3 closestPosition = glm::vec3(numeric_limits<float>::max());
 	for (vector<Bubble*>::iterator it = mBubbles->begin(); it < mBubbles->end(); ++it)
 	{
 		if (*it == nullptr)
@@ -69,7 +69,7 @@ void AIBubbleGroup::setBubbleGroupDistances()
 		if ((*it) == this || (*it)->GetGroupVolume() == 0 )
 			continue;
 		float distance = glm::distance((*it)->GetCenterOfMass(), GetCenterOfMass());
-		if (distance < minDistance) {
+		if (distance < minDistance && GetGroupVolume() > (*it)->GetGroupVolume()) {
 			closestPosition = (*it)->GetCenterOfMass();
 			minDistance = distance;
 		}
