@@ -14,10 +14,13 @@ ThirdPersonCamera::ThirdPersonCamera(PlayerBubbleGroup* playerBubbleGroup) :
 
 glm::mat4 ThirdPersonCamera::GetViewMatrix() const
 {
+	vec3 eyeVector = CalculateEyeVector();
+	vec3 centerOfMass = mPlayerBubbleGroup->GetCenterOfMass();
+	vec3 up = mPlayerBubbleGroup->GetUp();
 	mat4 viewMatrix = glm::lookAt(
-		CalculateEyeVector(),
-		mPlayerBubbleGroup->GetCenterOfMass(),
-		mPlayerBubbleGroup->GetUp());
+		eyeVector,
+		centerOfMass,
+		up);
 	return viewMatrix;
 }
 
@@ -37,6 +40,13 @@ glm::vec3 ThirdPersonCamera::CalculateEyeVector() const
 	{
 		tween = 1.0f;
 	}
-
-	return mPlayerBubbleGroup->GetCenterOfMass() - (7.5f * tween + 2.5f) * mPlayerBubbleGroup->GetGroupRadius() * mPlayerBubbleGroup->GetLookAt();
+	vec3 playerCenterOfMass = mPlayerBubbleGroup->GetCenterOfMass();
+	float playerRadius = mPlayerBubbleGroup->GetGroupRadius();
+	if (playerRadius == 0.0f)
+	{
+		playerRadius = 1.0f;
+	}
+	vec3 playerLookAt = mPlayerBubbleGroup->GetLookAt();
+	vec3 value = playerCenterOfMass - (7.5f * tween + 2.5f) * playerRadius * playerLookAt;
+	return value;
 }
