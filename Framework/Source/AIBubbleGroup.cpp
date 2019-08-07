@@ -130,10 +130,14 @@ void AIBubbleGroup::setMoveTowards()
 		float nextDistance = glm::distance(nextPosition, GetCenterOfMass());
 		float mClosestTargetDistance = glm::distance(mClosestTarget->GetCenterOfMass(), GetCenterOfMass());
 
-		if (mClosestTargetDistance < nextDistance) {
+		if (mClosestTargetDistance < 1.3*nextDistance) {
 			// Check if there is a bubble in BubbleGroup that you can eat
 			if (mClosestBubbleTarget != nullptr) {
 				nextPosition = mClosestBubbleTarget->GetPosition();
+
+				if (mClosestTargetDistance < 2 && mLargestBubble->GetVolume() > 2 * mClosestBubbleTarget->GetVolume()) {
+					this->Split();
+				}
 			}
 			
 		}
@@ -142,6 +146,7 @@ void AIBubbleGroup::setMoveTowards()
 	glm::vec3 direction = (nextPosition - mLargestBubble->GetPosition());
 	mMoveTowards = direction;
 	float groupSize = this->GetBubbles()->size();
+
 	if (mLargestBubble->GetVolume() > 30 && groupSize < 5 && scoreModifier(rng) > 9) {
 		this->Split();
 	}
