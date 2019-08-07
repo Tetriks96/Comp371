@@ -18,7 +18,7 @@ protected:
 	void setBubbleGroupDistances();
 	void setMoveTowards();
 	void compareBubbleGroups(BubbleGroup* bubbleGroup);
-	bool shouldSplit(float volumeDifference, float distance);
+	bool shouldSplit(Bubble* target, float distance);
 
 private:
 	BubbleGroup* mClosestThreat;
@@ -28,14 +28,8 @@ private:
 	Bubble* mLargestBubble;
 
 	glm::vec3 nextPosition;
-
-	// If we ever need to add the plane algorithm we will need these...
-	enum Plane { top, bottom, left, right, front, back };
-
-	std::map<BubbleGroup*, float>* bubbleGroupDistances; // distance between AI and all other bubble groups
-	std::map<BubbleGroup*, float> bubbleGroupThreats; // threat level between AI and all other bubble groups
-	std::map<BubbleGroup *, Plane> m;
-	std::vector<float> unitDistances;
-	std::vector<float> vBubbleGroupDistances;
+	std::vector<Bubble*> threatBubbles; // Bubbles from other groups that are a threat
+	std::vector<Bubble*> capturableBubbles; // Bubbles from other groups that are capturable
+	
 	
 };
