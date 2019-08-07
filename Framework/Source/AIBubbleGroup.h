@@ -13,7 +13,6 @@ public:
 	virtual void Update(float dt);
 
 protected:
-	void setLargestBubble();
 	void setUnitBubbleDistances(); // returns the coordinates of the closest unit sphere
 	void setBubbleGroupDistances();
 	void setMoveTowards();
@@ -25,7 +24,6 @@ private:
 	BubbleGroup* mClosestTarget; 
 	Bubble* mClosestBubbleTarget;
 	Bubble* mClosestUnit;
-	Bubble* mLargestBubble;
 
 	glm::vec3 nextPosition;
 	std::vector<Bubble*> threatBubbles; // Bubbles from other groups that are a threat
