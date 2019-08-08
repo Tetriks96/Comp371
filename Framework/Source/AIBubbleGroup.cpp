@@ -78,7 +78,7 @@ void AIBubbleGroup::setUnitBubbleDistances()
 				minDistance = distance;
 				mClosestUnit = (*it);
 				unitBubbles->insert(pair<Bubble*, Bubble*>(*it, *mIt));
-			}
+			} 
 		}
 	}
 }
@@ -114,31 +114,26 @@ void AIBubbleGroup::setMoveTowards()
 	// set scores
 	float scoreModifier = (float)random(rng);
 	float targetScore = calculateScore(targetBubbles, 0);
-	float unitScore = calculateScore(unitBubbles, targetScore);
+	float unitScore = calculateScore(unitBubbles, 1);
+	
+	unitScore *= unitScoreWeight;
+	targetScore *= targetScoreWeight;
 
-	// apply weights
-	targetScore *= this->targetScoreWeight;
-	unitScore *= this->unitScoreWeight;
+	Bubble* mLargestBubble = this->findLargestBubble();
 
 	// based on score select next bubble to capture..
 	if (targetScore < unitScore) {
 		mTarget = mClosestUnit;
-		float minDistance = numeric_limits<float>::max();
-		for (map<Bubble*, Bubble*>::iterator it = unitBubbles->begin(); it != unitBubbles->end(); it++) {
-			float distance = glm::distance(it->first->GetPosition(), it->second->GetPosition());
-			if (distance < minDistance) {
-				minDistance = distance;
-				mAttacker = it->second;
-			}
-		}
+		auto bubblePos = unitBubbles->find(mClosestUnit);
+		if (bubblePos != unitBubbles->end())
+			mAttacker = bubblePos->second;
 	}
 	else {
 		// random splitting
-		Bubble* mLargestBubble = this->findLargestBubble();
 		if (mLargestBubble != nullptr) {
 			// set move towards
 			mAttacker = mLargestBubble;
-			if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9.5) {
+			if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9) {
 				this->Split();
 			}
 		}
@@ -150,7 +145,7 @@ void AIBubbleGroup::setMoveTowards()
 	mMoveTowards = direction;
 
 	float mTargetDistance = glm::distance(mTarget->GetPosition(), mAttacker->GetPosition());
-	if (shouldSplit(mTarget, mTargetDistance) && targetScore > unitScore)
+	if (shouldSplit(mTarget, mTargetDistance) && targetScore > unitScore && mLargestBubble->GetVolume() > 25)
 		this->Split();
 	
 }
@@ -219,8 +214,9 @@ float AIBubbleGroup::getBubbleThreatScore(Bubble* targetBubble, Bubble* mBubble)
 	return threatScore * this->threatScoreWeight;
 }
 
-float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, float bubbleScore)
+float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, bool isUnit)
 {
+	float bubbleScore = 0;
 	// calculate target bubble scores
 	for (map<Bubble*, Bubble*>::iterator it = bubbleMap->begin(); it != bubbleMap->end(); it++) {
 		float heuristicScore = this->heuristic(it->first, it->second);
@@ -228,7 +224,10 @@ float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, float bubb
 		float score = heuristicScore - threatScore;
 		if (bubbleScore < score) {
 			bubbleScore = score;
-			mTarget = it->first;
+
+			if (!isUnit)
+				mTarget = it->first;
+				
 			mAttacker = it->second;
 		}
 	}
