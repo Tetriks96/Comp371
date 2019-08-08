@@ -110,11 +110,6 @@ void AIBubbleGroup::setMoveTowards()
 	// set closest bubbles
 	setUnitBubbleDistances();
 	setBubbleGroupDistances();
-	
-	// Weights
-	int unitWeight = 2;
-	int bubbleTargetWeight = 5;
-	int bubbleThreatWeight = 5;
 
 	// set scores
 	float scoreModifier = (float)random(rng);
@@ -124,20 +119,28 @@ void AIBubbleGroup::setMoveTowards()
 	// based on score select next bubble to capture..
 	if (targetScore < unitScore) {
 		mTarget = mClosestUnit;
+		float minDistance = numeric_limits<float>::max();
+		for (map<Bubble*, Bubble*>::iterator it = unitBubbles->begin(); it != unitBubbles->end(); it++) {
+			float distance = glm::distance(it->first->GetPosition(), it->second->GetPosition());
+			if (distance < minDistance) {
+				minDistance = distance;
+				mAttacker = it->second;
+			}
+		}
+	}
+	else {
+		// random splitting
+		Bubble* mLargestBubble = this->findLargestBubble();
+		if (mLargestBubble != nullptr) {
+			// set move towards
+			mAttacker = mLargestBubble;
+			if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9.5) {
+				this->Split();
+			}
+		}
 	}
 
 	glm::vec3 nextPosition = mTarget->GetPosition();
-
-	
-	// random splitting
-	Bubble* mLargestBubble = this->findLargestBubble();
-	if (mLargestBubble != nullptr) {
-		// set move towards
-		mAttacker = mLargestBubble;
-		if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9.5) {
-			this->Split();
-		}
-	}
 
 	glm::vec3 direction = (nextPosition - mAttacker->GetPosition());
 	mMoveTowards = direction;
