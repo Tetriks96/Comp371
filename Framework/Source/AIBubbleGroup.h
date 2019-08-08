@@ -33,8 +33,9 @@ private:
 	Bubble* mTarget;
 	Bubble* mClosestUnit;
 
+	// These weights are super sensitive, probably best to leave them alone
 	float unitScoreWeight = 6;
-	float targetScoreWeight = 2;
+	float targetScoreWeight = 3;
 	float threatScoreWeight = 8; 
 
 	// dont need threat bubbles

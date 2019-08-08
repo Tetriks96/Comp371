@@ -224,10 +224,8 @@ float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, bool isUni
 		float score = heuristicScore - threatScore;
 		if (bubbleScore < score) {
 			bubbleScore = score;
-
 			if (!isUnit)
 				mTarget = it->first;
-				
 			mAttacker = it->second;
 		}
 	}
