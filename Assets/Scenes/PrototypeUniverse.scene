@@ -1,0 +1,24 @@
+# This is a comment
+
+[#Model]
+This is a commented model
+Every line until the next model is counted as a comment
+
+# Universe
+# numberOfSpheres: number of non-player spheres at the beginning of the universe
+# minSize: minimum size of non-player spheres at the beginning of the universe
+# maxSize: maximum size of non-player spheres at the beginning of the universe
+# maxDistance: maximum distance from the center of the universe of non-player spheres at the beginning of the universe
+# playerVolume: player's volume at the beginning of the universe
+# playerColor: player's color at the beginning of the universe
+# playerPosition: player's position at the beginning of the universe
+
+[World]
+name = "World"
+numberOfSpheres = 100
+minSize = 1.0
+maxSize = 1.0
+maxDistance = 25.0
+playerSize = 1.0
+playerPosition = 0.0 0.0 0.0
+playerColor = 0.05 1.0 0.05
