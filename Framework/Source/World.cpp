@@ -262,17 +262,14 @@ void World::Load(ci_istringstream& iss)
 
 	for (int i = 0; i < 1; i++)
 	{
-		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
-		float volume = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
+		vec3 position = vec3(0.0f, 0.0f, 5.0f);
+		float radius = 2.0f;
 		float color1 = (float)rand() / RAND_MAX;
 		float color2 = (float)rand() / RAND_MAX;
 		float color3 = (float)rand() / RAND_MAX;
 		vec3 vColor = vec3(color1, color2, color3);
-		Bubble* bubble = new Bubble(position, volume, vColor);
 
-		mBubbles.push_back(bubble);
-
-		SpikeBall* spikeball = new SpikeBall(position, volume, vColor);
+		SpikeBall* spikeball = new SpikeBall(position, radius, vColor);
 
 		mSpikeBalls.push_back(spikeball);
 	}

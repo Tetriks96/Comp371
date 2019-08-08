@@ -73,6 +73,9 @@
     <ClCompile Include="..\Source\WorldDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\SpikeBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Renderer.h">
@@ -120,13 +123,8 @@
     <ClInclude Include="..\Source\Bubble.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\Source\SpikeBall.h">
+    <ClInclude Include="..\Source\SpikeBall.h">
       <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="..\Source\SpikeBall.cpp">
-      <Filter>Source Files</Filter>
-    </Text>
+    </ClInclude>
   </ItemGroup>
 </Project>

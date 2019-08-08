@@ -9,11 +9,12 @@
 
 using namespace glm;
 
-ConeModel::ConeModel(glm::vec3 position, float radius, glm::vec3 color, glm::vec3 rotationAxis, float angle)
-	: Model(position, vec3(radius / 5.0), rotationAxis, angle)
+ConeModel::ConeModel(glm::vec3 position, float height, float radius, glm::vec3 color, glm::vec3 rotationAxis, float angle)
+	: Model(position, vec3(radius, radius, height), rotationAxis, angle)
 {
 	mColor = color;
 	mRadius = radius;
+	mHeight = height;
 	Initialize();
 }
 
@@ -41,12 +42,6 @@ void ConeModel::Draw()
 float ConeModel::GetRadius()
 {
 	return mRadius;
-}
-
-void ConeModel::SetVolume(float volume)
-{
-	mVolume = volume;
-	mScaling = vec3(GetRadius());
 }
 
 void ConeModel::Initialize()

@@ -116,6 +116,7 @@
     <ClCompile Include="..\Source\Renderer.cpp" />
     <ClCompile Include="..\Source\SceneLoader.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
+    <ClCompile Include="..\Source\SpikeBall.cpp" />
     <ClCompile Include="..\Source\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\Source\World.cpp" />
     <ClCompile Include="..\Source\WorldDrawer.cpp" />
@@ -133,13 +134,10 @@
     <ClInclude Include="..\Source\Renderer.h" />
     <ClInclude Include="..\Source\SceneLoader.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
+    <ClInclude Include="..\Source\SpikeBall.h" />
     <ClInclude Include="..\Source\ThirdPersonCamera.h" />
     <ClInclude Include="..\Source\World.h" />
     <ClInclude Include="..\Source\WorldDrawer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\Source\SpikeBall.cpp" />
-    <Text Include="..\Source\SpikeBall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
