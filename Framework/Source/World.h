@@ -17,7 +17,7 @@
 #include "Model.h"
 #include "Bubble.h"
 #include "BubbleGroup.h"
-#include "ConeModel.h"
+#include "SpikeBall.h"
 
 class Camera;
 class ControllableSphere;
@@ -47,7 +47,7 @@ public:
 
     const Camera* GetCurrentCamera() const;
 	std::vector<Bubble*>* GetBubbles();
-	std::vector<ConeModel*>* GetCones();
+	std::vector<SpikeBall*>* GetSpikeBalls();
 	std::vector<BubbleGroup*>* GetBubbleGroups();
 
 	static glm::vec3 GetRandomPositionInsideUnitSphere();
@@ -56,6 +56,7 @@ private:
     static World* instance;
     
 	std::vector<Bubble*> mBubbles;
+	std::vector<SpikeBall*> mSpikeBalls;
 	std::vector<Camera*> mCameras;
 	std::vector<ConeModel*> mCones;
 	unsigned int mCurrentCamera;

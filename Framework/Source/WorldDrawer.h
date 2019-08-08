@@ -3,7 +3,7 @@
 #include <vector>
 #include "Bubble.h"
 #include "BubbleGroup.h"
-#include "ConeModel.h"
+#include "SpikeBall.h"
 
 class Camera;
 
@@ -14,6 +14,6 @@ public:
 		std::vector<Camera*> camera,
 		unsigned int currentCamera,
 		std::vector<Bubble*> bubbles,
-		std::vector<ConeModel*> cones,
+		std::vector<SpikeBall*> spikeBalls,
 		std::vector<BubbleGroup*> bubbleGroups);
 };

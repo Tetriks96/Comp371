@@ -12,7 +12,7 @@ void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
 	vector<Bubble*> bubbles,
-	vector<ConeModel*> cones,
+	vector<SpikeBall*> spikeBalls,
 	vector<BubbleGroup*> bubbleGroups)
 {
 	Renderer::BeginFrame();
@@ -28,20 +28,17 @@ void WorldDrawer::DrawWorld(
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	// Draw models
-	for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
+	/*for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
 	{
 		if ((*it)->GetVolume() > 0.0f)
 		{
 			(*it)->Draw();
 		}
-	}
+	}*/
 
-	for (vector<ConeModel*>::iterator it = cones.begin(); it < cones.end(); ++it)
+	for (vector<SpikeBall*>::iterator it = spikeBalls.begin(); it < spikeBalls.end(); ++it)
 	{
-		if ((*it)->GetRadius() > 0.0f)
-		{
-			(*it)->Draw();
-		}
+		(*it)->Draw();
 	}
 
 	for (vector<BubbleGroup*>::iterator it = bubbleGroups.begin(); it < bubbleGroups.end(); ++it)

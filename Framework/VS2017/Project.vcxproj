@@ -137,6 +137,10 @@
     <ClInclude Include="..\Source\World.h" />
     <ClInclude Include="..\Source\WorldDrawer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Source\SpikeBall.cpp" />
+    <Text Include="..\Source\SpikeBall.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -32,11 +32,7 @@ void ConeModel::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
 	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
-	mat4 T = translate(mat4(1.0f), mPosition);
-	mat4 R = rotate(mat4(1.0f), radians(mRotationAngleInDegrees), mRotationAxis);
-	mat4 S = scale(mat4(1.0f), mScaling);
-	mat4 RTS = R * S;
-	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &RTS[0][0]);
+	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !
 	glDrawArrays(GL_TRIANGLE_FAN, 0, numOfVertices);
@@ -61,18 +57,23 @@ void ConeModel::Initialize()
 
 	vec3 newPos = vec3(0.0, 0.0, 1.0);
 
-	Vertex vertexBuffer[numberOfSlices + 1] = {
+	Vertex vertexBuffer[numberOfSlices + 1];
 		// position,    normal,      color
-		{ newPos, newPos, mColor }
-	};
+	vertexBuffer[0] = { newPos, newPos, mColor };
 
-	for (int i = 1; i < numberOfSlices + 1; i++) {
+	for (int i = 1; i < numberOfSlices; i++) {
 		float mX = (radius * cos(twoPi * i / numberOfSlices)) / radius;
 		float mY = (radius * sin(twoPi * i / numberOfSlices)) / radius;
 		float mZ = 0.0;
 		vec3 mConeVertice = vec3(mX, mY, mZ);
 		vertexBuffer[i] = { mConeVertice, mConeVertice, mColor };
 	}
+	
+	float mX = (radius * cos(twoPi * 1 / numberOfSlices)) / radius;
+	float mY = (radius * sin(twoPi * 1 / numberOfSlices)) / radius;
+	float mZ = 0.0;
+	vec3 mConeVertice = vec3(mX, mY, mZ);
+	vertexBuffer[numberOfSlices] = { mConeVertice, mConeVertice, mColor };
 
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
 
