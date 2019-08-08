@@ -192,6 +192,7 @@ float AIBubbleGroup::getBubbleThreatScore(Bubble* targetBubble, Bubble* mBubble)
 	vector<BubbleGroup*>* mBubbleGroups = mWorld->GetBubbleGroups();
 
 	float safeDistance = 10;
+	int threatWeight = 5;
 	float threatScore = 0;
 
 	for (vector<BubbleGroup*>::iterator bgIt = mBubbleGroups->begin(); bgIt < mBubbleGroups->end(); ++bgIt)
@@ -212,7 +213,7 @@ float AIBubbleGroup::getBubbleThreatScore(Bubble* targetBubble, Bubble* mBubble)
 		}
 	}
 	
-	return threatScore;
+	return threatScore * threatWeight;
 }
 
 float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, float bubbleScore)

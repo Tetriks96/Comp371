@@ -31,7 +31,6 @@ private:
 
 	Bubble* mAttacker;
 	Bubble* mTarget;
-
 	Bubble* mClosestUnit;
 
 	// dont need threat bubbles
