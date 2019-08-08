@@ -116,6 +116,10 @@ void AIBubbleGroup::setMoveTowards()
 	float targetScore = calculateScore(targetBubbles, 0);
 	float unitScore = calculateScore(unitBubbles, targetScore);
 
+	// apply weights
+	targetScore *= this->targetScoreWeight;
+	unitScore *= this->unitScoreWeight;
+
 	// based on score select next bubble to capture..
 	if (targetScore < unitScore) {
 		mTarget = mClosestUnit;
@@ -192,7 +196,6 @@ float AIBubbleGroup::getBubbleThreatScore(Bubble* targetBubble, Bubble* mBubble)
 	vector<BubbleGroup*>* mBubbleGroups = mWorld->GetBubbleGroups();
 
 	float safeDistance = 10;
-	int threatWeight = 5;
 	float threatScore = 0;
 
 	for (vector<BubbleGroup*>::iterator bgIt = mBubbleGroups->begin(); bgIt < mBubbleGroups->end(); ++bgIt)
@@ -213,7 +216,7 @@ float AIBubbleGroup::getBubbleThreatScore(Bubble* targetBubble, Bubble* mBubble)
 		}
 	}
 	
-	return threatScore * threatWeight;
+	return threatScore * this->threatScoreWeight;
 }
 
 float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, float bubbleScore)

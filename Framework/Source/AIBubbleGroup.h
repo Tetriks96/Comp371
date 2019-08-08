@@ -32,6 +32,11 @@ private:
 	Bubble* mAttacker;
 	Bubble* mTarget;
 	Bubble* mClosestUnit;
+	
+	// Note Bubble volumes are used as additional weight 
+	int unitScoreWeight = 1.5; 
+	int targetScoreWeight = 1;
+	int threatScoreWeight = 8; 
 
 	// dont need threat bubbles
 	std::map<Bubble*, Bubble*>* threatBubbles; // Bubbles from other groups that are a threat mapped to closest member bubble (enemy, mBubble)
