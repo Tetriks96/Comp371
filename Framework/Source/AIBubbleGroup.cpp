@@ -32,6 +32,7 @@ void AIBubbleGroup::Update(float dt)
 	threatBubbles = new map<Bubble*, Bubble*>();
 	unitBubbles = new map<Bubble*, Bubble*>();
 	targetBubbles = new map<Bubble*, Bubble*>();
+	
 }
 
 Bubble* AIBubbleGroup::findLargestBubble()
@@ -75,6 +76,7 @@ void AIBubbleGroup::setUnitBubbleDistances()
 
 			if (distance < minDistance) {
 				minDistance = distance;
+				mClosestUnit = (*it);
 				unitBubbles->insert(pair<Bubble*, Bubble*>(*it, *mIt));
 			}
 		}
@@ -119,41 +121,37 @@ void AIBubbleGroup::setMoveTowards()
 	float targetScore = calculateScore(targetBubbles, 0);
 	float unitScore = calculateScore(unitBubbles, targetScore);
 
-	// set next position
-	glm::vec3 nextPosition = glm::vec3(numeric_limits<float>::max());
-
 	// based on score select next bubble to capture..
-	// if target is a bubblegroup call shouldSplit
+	if (targetScore < unitScore) {
+		mTarget = mClosestUnit;
+	}
 
-	if (mTarget != nullptr) {
+	glm::vec3 nextPosition = mTarget->GetPosition();
+
 	
-		float mTargetDistance = glm::distance(mTarget->GetPosition(), GetCenterOfMass());
-		targetScore = (bubbleTargetWeight / mTargetDistance) + scoreModifier;
-
-		nextPosition = mTarget->GetPosition();
-
-		if (shouldSplit(mTarget, mTargetDistance) && targetScore > unitScore)
-			this->Split();
-	} 
-
-	// Add Heuristic Function to determine next position
-	glm::vec3 direction = (nextPosition - mAttacker->GetPosition());
-	mMoveTowards = direction;
-
 	// random splitting
 	Bubble* mLargestBubble = this->findLargestBubble();
 	if (mLargestBubble != nullptr) {
-		if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9) {
+		// set move towards
+		mAttacker = mLargestBubble;
+		if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9.5) {
 			this->Split();
 		}
 	}
+
+	glm::vec3 direction = (nextPosition - mAttacker->GetPosition());
+	mMoveTowards = direction;
+
+	float mTargetDistance = glm::distance(mTarget->GetPosition(), mAttacker->GetPosition());
+	if (shouldSplit(mTarget, mTargetDistance) && targetScore > unitScore)
+		this->Split();
 	
 }
 
 void AIBubbleGroup::compareBubbleGroups(BubbleGroup* bubbleGroup)
 {
 
-	for (vector<Bubble*>::iterator mIt = bubbleGroup->GetBubbles()->begin(); mIt < bubbleGroup->GetBubbles()->end(); mIt++) {
+	for (vector<Bubble*>::iterator mIt = this->GetBubbles()->begin(); mIt < this->GetBubbles()->end(); mIt++) {
 		if (*mIt == nullptr )
 			continue;
 
@@ -223,6 +221,7 @@ float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, float bubb
 		float score = heuristicScore - threatScore;
 		if (bubbleScore < score) {
 			bubbleScore = score;
+			mTarget = it->first;
 			mAttacker = it->second;
 		}
 	}
@@ -238,7 +237,7 @@ float AIBubbleGroup::heuristic(Bubble* enemyBubble, Bubble* mBubble)
 	float volumeDifference = enemyBubble->GetVolume() - mBubble->GetVolume();
 
 	// Create equation based on distance and volume difference..
-	score += distance/(enemyBubble->GetVolume());
+	score += (enemyBubble->GetVolume())/distance; // smaller distnace the better, the larger the volume the better
 	return score;
 }
 
