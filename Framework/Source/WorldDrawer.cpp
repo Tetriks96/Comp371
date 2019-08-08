@@ -30,12 +30,13 @@ void WorldDrawer::DrawWorld(
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//Need depth test and culling to avoid for better rendering of the spheres
+	//Need depth test and culling for better rendering of the spheres
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
 	//Draw Bubbles
+
 	//set the uniform variable transparency to 1 for opaqueness
 	GLuint transparencyLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "transparency");
 	glUniform1f(transparencyLocation, 0.5f);
@@ -44,6 +45,7 @@ void WorldDrawer::DrawWorld(
 	{
 		(*it)->Draw();
 	}
+
 	glDisable(GL_DEPTH_TEST);
 
 	//Draw Bubble Group
