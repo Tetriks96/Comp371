@@ -18,6 +18,8 @@ public:
     virtual ~SphereModel(void);
 
     virtual void Draw();
+
+	glm::vec3 GetColor() { return mColor; }
     
 protected:
 	virtual void Initialize();
