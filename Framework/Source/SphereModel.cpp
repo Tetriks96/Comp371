@@ -37,6 +37,10 @@ void SphereModel::Draw()
 
     GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
+
+	//test
+	GLuint MaterialCoefficientsLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+	glUniform4f(MaterialCoefficientsLocation, 0.3, 0.8, 0.7, 1.0);
     
     // Draw the triangles !
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
@@ -1348,4 +1352,10 @@ void SphereModel::Initialize()
 		(void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
 	);
 	glEnableVertexAttribArray(2);
+
+
+	//enable blending to add transparency to sphere
+	//glEnable(GL_BLEND);
+	// (A*S)+(B*D)
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

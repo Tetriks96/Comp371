@@ -97,6 +97,7 @@ void World::Update(float dt)
 	mCameras[mCurrentCamera]->Update(dt);
 }
 
+
 void World::Draw()
 {
 	WorldDrawer::DrawWorld(
@@ -104,6 +105,13 @@ void World::Draw()
 		mCurrentCamera,
 		mBubbles,
 		mBubbleGroups);
+
+	// This looks for the View Transform Uniform variable in the Vertex Program
+	GLuint VMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
+	// Send the view constants to the shader
+	mat4 V = mCameras[mCurrentCamera]->GetViewMatrix();
+	glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
+
 }
 
 void World::LoadScene(const char * scene_path)
