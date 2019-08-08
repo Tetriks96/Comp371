@@ -12,21 +12,12 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 using namespace glm;
 
-SphereModel::SphereModel(vec3 position, float volume, vec3 color)
-	: Model(position, vec3(0.0f), vec3(0.0f, 1.0f, 0.0f), 0.0f)
+SphereModel::SphereModel(vec3 position, float radius, vec3 color)
+	: Model(position, vec3(radius), vec3(0.0f, 1.0f, 0.0f), 0.0f)
 {
-	mVolume = volume;
-
-	float radius = GetRadius();
-	mScaling = vec3(radius);
-
 	mColor = color;
-
 	Initialize();
 }
 
@@ -46,20 +37,13 @@ void SphereModel::Draw()
 
     GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
+
+	//test
+	GLuint MaterialCoefficientsLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+	glUniform4f(MaterialCoefficientsLocation, 0.3, 0.8, 0.7, 1.0);
     
     // Draw the triangles !
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
-}
-
-float SphereModel::GetRadius()
-{
-	return pow(((3 * mVolume) / (4 * (float)M_PI)), (1.0f / 3.0f));
-}
-
-void SphereModel::SetVolume(float volume)
-{
-	mVolume = volume;
-	mScaling = vec3(GetRadius());
 }
 
 void SphereModel::Initialize()
@@ -1368,4 +1352,10 @@ void SphereModel::Initialize()
 		(void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
 	);
 	glEnableVertexAttribArray(2);
+
+
+	//enable blending to add transparency to sphere
+	//glEnable(GL_BLEND);
+	// (A*S)+(B*D)
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

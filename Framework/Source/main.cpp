@@ -10,12 +10,15 @@
 #include "Renderer.h"
 #include "World.h"
 #include "EventManager.h"
+#include "Menu.h"
+#include <GLFW/glfw3.h>
 
 int main(int argc, char*argv[])
 {
 	EventManager::Initialize();
 	Renderer::Initialize();
 
+	Menu menu;
 	World world;    
     
 	if (argc > 1)
@@ -34,11 +37,29 @@ int main(int argc, char*argv[])
 		EventManager::Update();
 
 		// Update World
-		float dt = EventManager::GetFrameTime();
-		world.Update(dt);
+		
 
-		// Draw World
-		world.Draw();        
+
+		float dt = EventManager::GetFrameTime();
+
+		Renderer::BeginFrame();
+		if (menu.isPaused()) {
+			world.Draw();
+			menu.Draw();
+			if (EventManager::PlayGame()) {
+				menu.toggle();
+			}
+		}
+		else {
+			if (EventManager::PauseGame()) {
+				menu.Draw();
+				menu.toggle();
+			}
+			world.Update(dt);
+			// Draw World
+			world.Draw();
+		}
+		Renderer::EndFrame();
 	}
 	while(EventManager::ExitRequested() == false);
 

@@ -24,7 +24,7 @@ using namespace std;
 
 
 // Time
-double EventManager::sLastFrameTime = glfwGetTime();
+double EventManager::sGameTime = glfwGetTime();
 float  EventManager::sFrameTime = 0.0f;
 
 // Mouse
@@ -90,7 +90,7 @@ void EventManager::Initialize()
 	sLastMousePositionY = y;
 
 	// Initial time
-	sLastFrameTime = glfwGetTime();
+	sGameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
 
 	glfwSetScrollCallback(spWindow, ScrollCallback);
@@ -130,8 +130,8 @@ void EventManager::Update()
 
 	// Update frame time
 	double currentTime = glfwGetTime();
-	sFrameTime = static_cast<float>(currentTime - sLastFrameTime);
-	sLastFrameTime = currentTime;
+	sFrameTime = static_cast<float>(currentTime - sGameTime);
+	sGameTime = currentTime;
 }
 
 float EventManager::GetFrameTime()
@@ -174,4 +174,13 @@ float EventManager::GetRandomFloat(float min, float max)
     float value = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 
     return min + value*(max - min);
+}
+bool EventManager::PlayGame()
+{
+	return glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS;
+}
+
+bool EventManager::PauseGame()
+{
+	return glfwGetKey(spWindow, GLFW_KEY_P) == GLFW_PRESS;
 }

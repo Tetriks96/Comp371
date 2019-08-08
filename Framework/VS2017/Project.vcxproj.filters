@@ -15,6 +15,9 @@
     <Filter Include="Resource Files\Scenes">
       <UniqueIdentifier>{66439e2a-f58c-4c2a-aad1-3af2e58e4920}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{7ed1a4dd-0ff4-4b01-b26c-41b24ae198bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\Shaders\SolidColor.fragmentshader">
@@ -25,6 +28,12 @@
     </None>
     <None Include="..\Assets\Scenes\PrototypeUniverse.scene">
       <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\Texture.fragmentshader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\Texture.vertexshader">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -55,10 +64,22 @@
     <ClCompile Include="..\Source\SceneLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\ControllableSphere.cpp">
+    <ClCompile Include="..\Source\ThirdPersonCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\ThirdPersonCamera.cpp">
+    <ClCompile Include="..\Source\BubbleGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\PlayerBubbleGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\AIBubbleGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Bubble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,11 +111,31 @@
     <ClInclude Include="..\Source\SceneLoader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\ControllableSphere.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\ThirdPersonCamera.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\BubbleGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\PlayerBubbleGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\AIBubbleGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Bubble.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Menu.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Assets\Textures\Press.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\Title.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
