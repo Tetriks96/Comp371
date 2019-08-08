@@ -64,21 +64,6 @@ void BubbleGroup::Draw()
 	}
 }
 
-void BubbleGroup::setLargestBubble()
-{
-	float largestVolume = 0;
-	for (vector<Bubble*>::iterator it = this->GetBubbles()->begin(); it < this->GetBubbles()->end(); ++it)
-	{
-		// check for nullptr
-		if (*it == nullptr)
-			continue;
-
-		if ((*it)->GetVolume() > largestVolume) {
-			mLargestBubble = (*it);
-		}
-	}
-}
-
 void BubbleGroup::Split()
 {
 	if (length(mMoveTowards) <= 0.0f || EventManager::GetGameTime() - mLastSplitTime < 1.0)

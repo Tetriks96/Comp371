@@ -5,17 +5,18 @@
 #include <limits>
 #include <GLFW/glfw3.h>
 #include <random>
+#include <algorithm>
 
 using namespace std;
 using namespace glm;
 
 AIBubbleGroup::AIBubbleGroup(vec3 position, float volume, glm::vec3 color) : BubbleGroup(position, volume, color)
 {
-	mClosestUnit = nullptr;
-	mClosestThreat = nullptr;
-	mClosestTarget = nullptr;
-	mClosestBubbleTarget = nullptr;
-	nextPosition = World::GetInstance()->GetRandomPositionInsideUnitSphere();
+	threatBubbles = new map<Bubble*, Bubble*>();
+	unitBubbles = new map<Bubble*, Bubble*>();
+	targetBubbles = new map<Bubble*, Bubble*>();
+	mTarget = nullptr;
+	mAttacker = nullptr;
 }
 
 AIBubbleGroup::~AIBubbleGroup()
@@ -26,47 +27,65 @@ void AIBubbleGroup::Update(float dt)
 {
 	setMoveTowards();
 	BubbleGroup::Update(dt);
+	// Clear memory
+
+	threatBubbles = new map<Bubble*, Bubble*>();
+	unitBubbles = new map<Bubble*, Bubble*>();
+	targetBubbles = new map<Bubble*, Bubble*>();
 }
 
-void AIBubbleGroup::setUnitBubbleDistances()
+Bubble* AIBubbleGroup::findLargestBubble()
 {
-	// TODO: 
-	// find the closest unit bubble that is not in the vicinity of threats
-	World* mWorld = World::GetInstance();
-	vector<Bubble*>* mBubbles = mWorld->GetBubbles();
-	mClosestUnit = nullptr;
-	float minDistance = numeric_limits<float>::max();
-	
-
-	for (vector<Bubble*>::iterator it = mBubbles->begin(); it < mBubbles->end(); ++it)
+	float largestVolume = 0;
+	Bubble* largestBubble = nullptr;
+	for (vector<Bubble*>::iterator it = this->GetBubbles()->begin(); it < this->GetBubbles()->end(); ++it)
 	{
 		// check for nullptr
 		if (*it == nullptr)
 			continue;
 
-		// check min distance
-		glm::vec3 unitPosition = (*it)->GetPosition();
-		float distance = glm::distance(unitPosition, GetCenterOfMass());
-
-		if (distance < minDistance) {
-			minDistance = distance;
-			mClosestUnit = (*it);
+		if ((*it)->GetVolume() > largestVolume) {
+			largestVolume = (*it)->GetVolume();
+			largestBubble = *it;
 		}
+	}
+	return largestBubble;
+}
 
+void AIBubbleGroup::setUnitBubbleDistances()
+{
+	World* mWorld = World::GetInstance();
+	vector<Bubble*>* mBubbles = mWorld->GetBubbles();
+
+	for (vector<Bubble*>::iterator mIt = GetBubbles()->begin(); mIt < GetBubbles()->end(); ++mIt) {
+
+		if (*mIt == nullptr)
+			continue;
+
+		float minDistance = numeric_limits<float>::max();
+
+		for (vector<Bubble*>::iterator it = mBubbles->begin(); it < mBubbles->end(); ++it) {
+			// check for nullptr
+			if (*it == nullptr)
+				continue;
+
+			// check min distance
+			glm::vec3 unitPosition = (*it)->GetPosition();
+			float distance = glm::distance(unitPosition,(*mIt)->GetPosition());
+
+			if (distance < minDistance) {
+				minDistance = distance;
+				unitBubbles->insert(pair<Bubble*, Bubble*>(*it, *mIt));
+			}
+		}
 	}
 }
 
 void AIBubbleGroup::setBubbleGroupDistances()
 {
-	// TODO
-	// Find closest target bubble that is not in the vicinity of threats
-
+	
 	World* mWorld = World::GetInstance();
 	vector<BubbleGroup*>* mBubbleGroups = mWorld->GetBubbleGroups();
-
-
-	float minThreatDistance = numeric_limits<float>::max();
-	float minTargetDistance = numeric_limits<float>::max();
 
 	for (vector<BubbleGroup*>::iterator it = mBubbleGroups->begin(); it < mBubbleGroups->end(); ++it)
 	{
@@ -74,119 +93,158 @@ void AIBubbleGroup::setBubbleGroupDistances()
 		if ((*it) == this || (*it)->GetGroupVolume() == 0 )
 			continue;
 
-		(*it)->setLargestBubble();
-
-		// check min distance
-		float distance = glm::distance((*it)->GetCenterOfMass(), GetCenterOfMass());
-
-		if (distance < minTargetDistance && GetGroupVolume() > (*it)->GetGroupVolume()) {
-			// Target BubbleGroup
-			minTargetDistance = distance;
-			mClosestTarget = (*it);
-			compareBubbleGroups((*it));
-			
-		}
-		else if (glm::distance((*it)->GetCenterOfMass(), GetCenterOfMass()) < minThreatDistance)
-		{
-			// Threat BubbleGroup
-			minThreatDistance = distance;
-			mClosestThreat = (*it);
-			compareBubbleGroups((*it));
-		}
-
-	}
-	
+		this->compareBubbleGroups((*it));
+	}	
 }
 
 void AIBubbleGroup::setMoveTowards()
 {
-	// NOTE SCORES NOT BEING USED YET! 
-
 	// used for random number
 	// random number being used to avoid equilibrium state
 	std::random_device dev;
 	std::mt19937 rng(dev());
-	std::uniform_int_distribution<std::mt19937::result_type> scoreModifier(1, 10);
+	std::uniform_int_distribution<std::mt19937::result_type> random(1, 10);
 
 	// set closest bubbles
-	setLargestBubble();
 	setUnitBubbleDistances();
 	setBubbleGroupDistances();
-
+	
 	// Weights
 	int unitWeight = 2;
 	int bubbleTargetWeight = 5;
+	int bubbleThreatWeight = 5;
 
 	// set scores
-	float unitScore = (float)scoreModifier(rng);
-	float targetScore = 0;
+	float scoreModifier = (float)random(rng);
+	float targetScore = calculateScore(targetBubbles, 0);
+	float unitScore = calculateScore(unitBubbles, targetScore);
 
-	nextPosition = glm::vec3(numeric_limits<float>::max());
+	// set next position
+	glm::vec3 nextPosition = glm::vec3(numeric_limits<float>::max());
 
-	if (mClosestUnit != nullptr) {
-		float unitDistance = glm::distance(this->GetCenterOfMass(), mClosestUnit->GetPosition());
-		unitScore += (unitWeight / unitDistance);
-		nextPosition = mClosestUnit->GetPosition();
-	}
+	// based on score select next bubble to capture..
+	// if target is a bubblegroup call shouldSplit
 
-	if ((mClosestTarget != nullptr) && (mClosestTarget->GetGroupVolume() > 0)) {
+	if (mTarget != nullptr) {
 	
-		float mClosestTargetDistance = glm::distance(mClosestTarget->GetCenterOfMass(), GetCenterOfMass());
-		targetScore = (bubbleTargetWeight / mClosestTargetDistance) + scoreModifier(rng);
+		float mTargetDistance = glm::distance(mTarget->GetPosition(), GetCenterOfMass());
+		targetScore = (bubbleTargetWeight / mTargetDistance) + scoreModifier;
 
-	//	if (mClosestTargetDistance < nextDistance) {
-		if (targetScore > unitScore) {
-			// has minor bug with equilibrium
-			// Check if there is a bubble in BubbleGroup that you can eat
-			if (mClosestBubbleTarget != nullptr) {
-				nextPosition = mClosestBubbleTarget->GetPosition();
-				if (shouldSplit(mClosestBubbleTarget, mClosestTargetDistance))
-					this->Split();
-			}
-		}
+		nextPosition = mTarget->GetPosition();
+
+		if (shouldSplit(mTarget, mTargetDistance) && targetScore > unitScore)
+			this->Split();
 	} 
+
 	// Add Heuristic Function to determine next position
-
-	glm::vec3 direction = (nextPosition - mLargestBubble->GetPosition());
+	glm::vec3 direction = (nextPosition - mAttacker->GetPosition());
 	mMoveTowards = direction;
-	float groupSize = this->GetBubbles()->size();
 
-	if (mLargestBubble->GetVolume() > 30 && groupSize < 5 && scoreModifier(rng) > 9) {
-		this->Split();
+	// random splitting
+	Bubble* mLargestBubble = this->findLargestBubble();
+	if (mLargestBubble != nullptr) {
+		if (mLargestBubble->GetVolume() > 30 && scoreModifier > 9) {
+			this->Split();
+		}
 	}
 	
 }
 
 void AIBubbleGroup::compareBubbleGroups(BubbleGroup* bubbleGroup)
 {
-	// TODO:
-	// Find bubbles that are threats
-	// Find bubbles that are capturable
 
-	// Should do bubble to bubble comparison, right now only compares Largest bubble to bubble
-	float minTargetDistance = numeric_limits<float>::max();
-
-
-	for (vector<Bubble*>::iterator it = bubbleGroup->GetBubbles()->begin(); it < bubbleGroup->GetBubbles()->end(); it++) {
-		
-		if (*it == nullptr || mLargestBubble == nullptr)
+	for (vector<Bubble*>::iterator mIt = bubbleGroup->GetBubbles()->begin(); mIt < bubbleGroup->GetBubbles()->end(); mIt++) {
+		if (*mIt == nullptr )
 			continue;
 
-		if (mLargestBubble->GetVolume() > (*it)->GetVolume()) {
+		float minTargetDistance = numeric_limits<float>::max();
+		float minThreatDistance = numeric_limits<float>::max();
 
-			float distance = glm::distance(mLargestBubble->GetPosition(), (*it)->GetPosition());
+		for (vector<Bubble*>::iterator eIt = bubbleGroup->GetBubbles()->begin(); eIt < bubbleGroup->GetBubbles()->end(); eIt++) {
 
-			if (distance < minTargetDistance) {
-				minTargetDistance = distance;
-				mClosestBubbleTarget = (*it);
+			if (*eIt == nullptr)
+				continue;
+
+			float distance = glm::distance((*eIt)->GetPosition(), (*mIt)->GetPosition());
+
+			if ((*mIt)->GetVolume() > (*eIt)->GetVolume()) {
+				// bubble is capturable
+				if (distance < minTargetDistance) {
+					// enemy bubble is capturable and closer than existing one
+					targetBubbles->insert(pair<Bubble*, Bubble*>(*eIt, *mIt));
+					minTargetDistance = distance;
+				}			
+			} else {
+				// These bubbles are threats! 
+				if (distance < minThreatDistance) {
+					threatBubbles->insert(pair<Bubble*, Bubble*>(*eIt, *mIt));
+					minThreatDistance = distance;
+				} 
+			}
+		}
+	}
+}
+
+float AIBubbleGroup::getBubbleThreatScore(Bubble* targetBubble, Bubble* mBubble) {
+	
+	World* mWorld = World::GetInstance();
+	vector<BubbleGroup*>* mBubbleGroups = mWorld->GetBubbleGroups();
+
+	float safeDistance = 10;
+	float threatScore = 0;
+
+	for (vector<BubbleGroup*>::iterator bgIt = mBubbleGroups->begin(); bgIt < mBubbleGroups->end(); ++bgIt)
+	{
+		if (*bgIt == nullptr)
+			continue;
+
+		for (vector<Bubble*>::iterator it = (*bgIt)->GetBubbles()->begin(); it < (*bgIt)->GetBubbles()->end(); ++it)
+		{
+			if (*it == nullptr)
+				continue;
+
+			float distance = glm::distance((*it)->GetPosition(), targetBubble->GetPosition());
+			if ((*it)->GetVolume() > mBubble->GetVolume() && distance < safeDistance) {
+				threatScore += distance;
+				// come up with equation for distance to danger ratio
 			}
 		}
 	}
 	
+	return threatScore;
+}
+
+float AIBubbleGroup::calculateScore(map<Bubble*, Bubble*>* bubbleMap, float bubbleScore)
+{
+	// calculate target bubble scores
+	for (map<Bubble*, Bubble*>::iterator it = bubbleMap->begin(); it != bubbleMap->end(); it++) {
+		float heuristicScore = this->heuristic(it->first, it->second);
+		float threatScore = this->getBubbleThreatScore(it->first, it->second);
+		float score = heuristicScore - threatScore;
+		if (bubbleScore < score) {
+			bubbleScore = score;
+			mAttacker = it->second;
+		}
+	}
+	return bubbleScore;
+}
+
+float AIBubbleGroup::heuristic(Bubble* enemyBubble, Bubble* mBubble)
+{
+	float score = 0;
+	score += getBubbleThreatScore(enemyBubble, mBubble);
+
+	float distance = glm::distance(enemyBubble->GetPosition(), mBubble->GetPosition());
+	float volumeDifference = enemyBubble->GetVolume() - mBubble->GetVolume();
+
+	// Create equation based on distance and volume difference..
+	score += distance/(enemyBubble->GetVolume());
+	return score;
 }
 
 bool AIBubbleGroup::shouldSplit(Bubble* target, float distance)
 {
-	return ((target->GetVolume()*2.2 < mLargestBubble->GetVolume()) && (distance < 4));
+	// change largest bubble to "Attacker Bubble"
+	return ((target->GetVolume()*2.2 < mAttacker->GetVolume()) && (distance < 4));
 }
 
