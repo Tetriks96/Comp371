@@ -34,12 +34,32 @@ void SpikeBall::Draw()
 	// y : y coordinate of rotation axis
 	// z : angular distance from z axis in degrees
 	vector<vec3> coneInfos {
-		vec3(1.0f,  0.0f, 0.0f),
-		vec3(1.0f,  0.0f, 90.0f),
+		vec3(1.0f, 0.0f, 0.0f),
+		vec3(1.0f, 0.0f, 45.0f),
+		vec3(1.0f, 0.0f, 90.0f),
+		vec3(1.0f, 0.0f, 135.0f),
 		vec3(1.0f,  0.0f, 180.0f),
+		vec3(1.0f, 0.0f, -45.0f),
 		vec3(1.0f,  0.0f, -90.0f),
+		vec3(1.0f, 0.0f, -135.0f),
+		vec3(0.0f, 1.0f, 45.0f),
 		vec3(0.0f,  1.0f, 90.0f),
+		vec3(0.0f, 1.0f, 135.0f),
+		vec3(0.0f, 1.0f, -45.0f),
 		vec3(0.0f,  1.0f, -90.0f),
+		vec3(0.0f, 1.0f, -135.0f),
+		vec3(cos(M_PI / 4), sin(M_PI / 4), 45.0f),
+		vec3(cos(M_PI / 4), sin(M_PI / 4), 90.0f),
+		vec3(cos(M_PI / 4), sin(M_PI / 4), 135.0f),
+		vec3(cos(M_PI / 4), sin(M_PI / 4), -45.0f),
+		vec3(cos(M_PI / 4), sin(M_PI / 4), -90.0f),
+		vec3(cos(M_PI / 4), sin(M_PI / 4), -135.0f),
+		vec3(cos(M_PI / 4), sin(-M_PI / 4), 45.0f),
+		vec3(cos(M_PI / 4), sin(-M_PI / 4), 90.0f),
+		vec3(cos(M_PI / 4), sin(-M_PI / 4), 135.0f),
+		vec3(cos(M_PI / 4), sin(-M_PI / 4), -45.0f),
+		vec3(cos(M_PI / 4), sin(-M_PI / 4), -90.0f),
+		vec3(cos(M_PI / 4), sin(-M_PI / 4), -135.0f),
 		// TODO
 		// ...
 	};
@@ -53,7 +73,7 @@ void SpikeBall::Draw()
 		mConeModel->SetRotation(coneRotationAxis, coneInfo.z);
 
 		// TODO: Adjust the constant until the cone's base connects with the sphere correctly
-		float constant = 1.0f;
+		float constant = 0.97f;
 
 		vec3 unrotatedConeTranslation = constant * sphereRadius * vec3(0.0f, 0.0f, 1.0f);
 

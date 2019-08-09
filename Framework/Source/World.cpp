@@ -260,9 +260,10 @@ void World::Load(ci_istringstream& iss)
 		);
 	}
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numberOfSpheres; i++)
 	{
-		vec3 position = vec3(0.0f, 0.0f, 5.0f);
+		//vec3 position = vec3(0.0f, 0.0f, 5.0f);
+		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
 		float radius = 2.0f;
 		float color1 = (float)rand() / RAND_MAX;
 		float color2 = (float)rand() / RAND_MAX;
