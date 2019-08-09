@@ -45,11 +45,11 @@ void Menu::Draw()
 	if (paused) {
 		glDisable(GL_DEPTH_TEST);
 #if defined(PLATFORM_OSX)
-		GLuint titleTextureID = loadTexture("Textures/Title.png");
-		GLuint pressTextureID = loadTexture("Textures/Press.png");
+		GLuint titleTextureID = loadTexture("Textures/NeonTitle.png");
+		GLuint pressTextureID = loadTexture("Textures/NeonPress.png");
 #else
-		GLuint titleTextureID = loadTexture("../Assets/Textures/Title.png");
-		GLuint pressTextureID = loadTexture("../Assets/Textures/Press.png");
+		GLuint titleTextureID = loadTexture("../Assets/Textures/NeonTitle.png");
+		GLuint pressTextureID = loadTexture("../Assets/Textures/NeonPress.png");
 #endif
 		// White background
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);	
