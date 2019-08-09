@@ -52,7 +52,7 @@ void Menu::Draw()
 		GLuint pressTextureID = loadTexture("../Assets/Textures/NeonPress.png");
 #endif
 		// White background
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);	
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
 		
 		// Compile and link shaders here ...
 		int shaderProgram = compileAndLinkShaders();
@@ -95,7 +95,7 @@ void Menu::toggle()
 	paused = !paused;
 
 	if (paused)
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	else
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
