@@ -15,11 +15,19 @@ public:
 	glm::vec3 GetCenterOfMass() { return mCenterOfMass; }
 	float GetGroupRadius() { return mGroupRadius; }
 	float GetGroupVolume() { return mGroupVolume; }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 protected:
 	virtual void Split();
 	virtual void Pop();
 	std::vector<Bubble*> mBubbles;
 	glm::vec3 mMoveTowards;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 private:
 	glm::vec3 mCenterOfMass;
 	float mGroupVolume;
