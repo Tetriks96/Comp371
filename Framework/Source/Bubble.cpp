@@ -75,7 +75,7 @@ void Bubble::UpdatePosition(float dt, glm::vec3 moveTowards, glm::vec3 gravity)
 
 float Bubble::CalculateEquilibriumSpeed()
 {
-	return 20.0f / mRadius;
+	return 10.0f / mRadius;
 }
 
 void Bubble::Draw()
