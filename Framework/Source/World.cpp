@@ -279,10 +279,10 @@ void World::Load(ci_istringstream& iss)
 		mBubbles.push_back(bubble);
 	}
 
-	for (int i = 0; i < std::floor(numberOfSpheres * 0.1); i++) {
+	for (int i = 0; i < 0.1 * numberOfSpheres; i++) {
 		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
-		float radius = 0.5f + (2.0f * rand() / RAND_MAX);
-		SpikeBall* spikeball = new SpikeBall(position, radius, GetRandomColor());
+		float radius = 1.0f;
+		SpikeBall* spikeball = new SpikeBall(position, radius, vec3(0.25f));
 		mSpikeBalls.push_back(spikeball);
 	}
 

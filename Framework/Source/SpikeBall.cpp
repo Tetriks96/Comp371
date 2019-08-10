@@ -14,7 +14,7 @@ using namespace glm;
 SpikeBall::SpikeBall(vec3 position, float radius, vec3 color) : Model(position, vec3(radius), vec3(0.0f, 1.0f, 0.0f), 0.0f)
 {
 	mSphereModel = new SphereModel(position, radius, color);
-	mConeModel = new ConeModel(vec3(0.0f), 0.5f * radius, 0.2f * radius, color, vec3(0.0f, 1.0f, 0.0f), 0.0f);
+	mConeModel = new ConeModel(vec3(0.0f), coneRatio * radius, 0.2f * radius, color, vec3(0.0f, 1.0f, 0.0f), 0.0f);
 }
 
 SpikeBall::~SpikeBall()
@@ -60,8 +60,6 @@ void SpikeBall::Draw()
 		vec3(cos(M_PI / 4), sin(-M_PI / 4), -45.0f),
 		vec3(cos(M_PI / 4), sin(-M_PI / 4), -90.0f),
 		vec3(cos(M_PI / 4), sin(-M_PI / 4), -135.0f),
-		// TODO
-		// ...
 	};
 
 	for (int i = 0; i < (int)coneInfos.size(); i++)
@@ -71,9 +69,6 @@ void SpikeBall::Draw()
 		vec3 coneRotationAxis = vec3(coneInfo.x, coneInfo.y, 0.0f);
 
 		mConeModel->SetRotation(coneRotationAxis, coneInfo.z);
-
-		// TODO: Adjust the constant until the cone's base connects with the sphere correctly
-		float constant = 0.97f;
 
 		vec3 unrotatedConeTranslation = constant * sphereRadius * vec3(0.0f, 0.0f, 1.0f);
 
