@@ -17,6 +17,8 @@
 #include "Model.h"
 #include "Bubble.h"
 #include "BubbleGroup.h"
+#include "SpikeBall.h"
+#include "Endgame.h"
 
 class Camera;
 class ControllableSphere;
@@ -24,8 +26,10 @@ class ControllableSphere;
 class World
 {
 public:
-	World();
+	World(Endgame* endgame);
 	~World();
+
+	static bool sStartupScreen;
 	
     static World* GetInstance();
 
@@ -46,15 +50,19 @@ public:
 
     const Camera* GetCurrentCamera() const;
 	std::vector<Bubble*>* GetBubbles();
+	std::vector<SpikeBall*>* GetSpikeBalls();
 	std::vector<BubbleGroup*>* GetBubbleGroups();
 
 	static glm::vec3 GetRandomPositionInsideUnitSphere();
     
 private:
     static World* instance;
+	Endgame* mEndgame;
     
-	std::vector<Bubble*> mBubbles;
+	std::vector<Bubble*>* mBubbles;
+	std::vector<SpikeBall*> mSpikeBalls;
 	std::vector<Camera*> mCameras;
+	std::vector<ConeModel*> mCones;
 	unsigned int mCurrentCamera;
 	std::vector<BubbleGroup*> mBubbleGroups;
 	glm::vec3 GetRandomColor();

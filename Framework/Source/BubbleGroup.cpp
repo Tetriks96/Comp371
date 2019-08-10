@@ -1,5 +1,7 @@
 #include "BubbleGroup.h"
 #include "EventManager.h"
+#include "SpikeBall.h"
+#include "World.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -10,12 +12,20 @@ using namespace glm;
 BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume, vec3 color)
 {
 	mCenterOfMass = centerOfMass;
-	mGroupVolume = volume;
-	Bubble* initialBubble = new Bubble(centerOfMass, volume, color);
-	mGroupRadius = initialBubble->GetRadius();
+	mGroupVolume = std::max(0.0f, volume);
 	mMoveTowards = vec3(0.0f);
-	mBubbles.push_back(initialBubble);
 	mLastSplitTime = -1.0;
+
+	if (volume > 0.0f)
+	{
+		Bubble* initialBubble = new Bubble(centerOfMass, volume, color);
+		mGroupRadius = initialBubble->GetRadius();
+		mBubbles.push_back(initialBubble);
+	}
+	else
+	{
+		mGroupRadius = 0.0f;
+	}
 }
 
 BubbleGroup::~BubbleGroup()
@@ -25,13 +35,14 @@ BubbleGroup::~BubbleGroup()
 
 void BubbleGroup::Update(float dt)
 {
-	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); it++)
+	for (int bb = 0; bb < (int)mBubbles.size(); bb++)
 	{
-		if (*it == nullptr)
+		Bubble* bubble = mBubbles[bb];
+		if (bubble == nullptr)
 		{
 			continue;
 		}
-		(*it)->Update(dt, mMoveTowards, mCenterOfMass - (*it)->GetPosition());
+		bubble->Update(dt, mMoveTowards, mCenterOfMass - bubble->GetPosition());
 	}
 
 	// Remove null bubbles
@@ -138,7 +149,7 @@ float BubbleGroup::CalculateGroupRadius()
 		}
 
 		float itsLength = distance(mCenterOfMass, (*it)->GetPosition()) + (*it)->GetRadius();
-		maxLength = max(maxLength, itsLength);
+		maxLength = std::max(maxLength, itsLength);
 	}
 
 	return maxLength;

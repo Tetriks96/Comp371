@@ -12,9 +12,9 @@ void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
 	vector<Bubble*> bubbles,
+	vector<SpikeBall*> spikeBalls,
 	vector<BubbleGroup*> bubbleGroups)
 {
-	Renderer::BeginFrame();
 
 	// Set shader to use
 	glUseProgram(Renderer::GetShaderProgramID());
@@ -42,6 +42,18 @@ void WorldDrawer::DrawWorld(
 	glUniform1f(transparencyLocation, 0.5f);
 
 	for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
+	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
+		if ((*it)->GetVolume() > 0.0f)
+		{
+			(*it)->Draw();
+		}
+	}
+
+	for (vector<SpikeBall*>::iterator it = spikeBalls.begin(); it < spikeBalls.end(); ++it)
 	{
 		(*it)->Draw();
 	}
@@ -76,6 +88,4 @@ void WorldDrawer::DrawWorld(
 
 	// Restore previous shader
 	Renderer::SetShader((ShaderType)prevShader);
-
-	Renderer::EndFrame();
 }

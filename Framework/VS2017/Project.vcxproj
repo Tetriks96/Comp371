@@ -102,19 +102,25 @@
     <None Include="..\Assets\Scenes\PrototypeUniverse.scene" />
     <None Include="..\Assets\Shaders\SolidColor.fragmentshader" />
     <None Include="..\Assets\Shaders\SolidColor.vertexshader" />
+    <None Include="..\Assets\Shaders\Texture.fragmentshader" />
+    <None Include="..\Assets\Shaders\Texture.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\AIBubbleGroup.cpp" />
     <ClCompile Include="..\Source\Bubble.cpp" />
     <ClCompile Include="..\Source\BubbleGroup.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
+    <ClCompile Include="..\Source\ConeModel.cpp" />
+    <ClCompile Include="..\Source\Endgame.cpp" />
     <ClCompile Include="..\Source\EventManager.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
+    <ClCompile Include="..\Source\Menu.cpp" />
     <ClCompile Include="..\Source\Model.cpp" />
     <ClCompile Include="..\Source\PlayerBubbleGroup.cpp" />
     <ClCompile Include="..\Source\Renderer.cpp" />
     <ClCompile Include="..\Source\SceneLoader.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
+    <ClCompile Include="..\Source\SpikeBall.cpp" />
     <ClCompile Include="..\Source\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\Source\World.cpp" />
     <ClCompile Include="..\Source\WorldDrawer.cpp" />
@@ -124,16 +130,24 @@
     <ClInclude Include="..\Source\Bubble.h" />
     <ClInclude Include="..\Source\BubbleGroup.h" />
     <ClInclude Include="..\Source\Camera.h" />
+    <ClInclude Include="..\Source\ConeModel.h" />
+    <ClInclude Include="..\Source\Endgame.h" />
     <ClInclude Include="..\Source\EventManager.h" />
+    <ClInclude Include="..\Source\Menu.h" />
     <ClInclude Include="..\Source\Model.h" />
     <ClInclude Include="..\Source\ParsingHelper.h" />
     <ClInclude Include="..\Source\PlayerBubbleGroup.h" />
     <ClInclude Include="..\Source\Renderer.h" />
     <ClInclude Include="..\Source\SceneLoader.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
+    <ClInclude Include="..\Source\SpikeBall.h" />
     <ClInclude Include="..\Source\ThirdPersonCamera.h" />
     <ClInclude Include="..\Source\World.h" />
     <ClInclude Include="..\Source\WorldDrawer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Assets\Textures\Press.png" />
+    <Image Include="..\Assets\Textures\Title.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

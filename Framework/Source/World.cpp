@@ -19,29 +19,45 @@
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <cmath>
 
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 
+bool World::sStartupScreen = true;
 
-World::World()
+World::World(Endgame* endgame)
 {
     instance = this;
 
 	mCurrentCamera = 0;
+
+	mEndgame = endgame;
+
+	mBubbles = new vector<Bubble*>();
 }
 
 World::~World()
 {
 	// Bubbles
-	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); ++it)
+	for (vector<Bubble*>::iterator it = mBubbles->begin(); it < mBubbles->end(); ++it)
 	{
 		delete *it;
 	}
 
-	mBubbles.clear();
+	mBubbles->clear();
+
+	// Spike Balls
+	for (vector<SpikeBall*>::iterator it = mSpikeBalls.begin(); it < mSpikeBalls.end(); ++it)
+	{
+		delete *it;
+	}
+
+	mSpikeBalls.clear();
 
 	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
 	{
@@ -65,7 +81,12 @@ World* World::GetInstance()
 
 vector<Bubble*>* World::GetBubbles()
 {
-	return &mBubbles;
+	return mBubbles;
+}
+
+vector<SpikeBall*>* World::GetSpikeBalls()
+{
+	return &mSpikeBalls;
 }
 
 vector<BubbleGroup*>* World::GetBubbleGroups()
@@ -75,17 +96,21 @@ vector<BubbleGroup*>* World::GetBubbleGroups()
 
 void World::Update(float dt)
 {
-	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
+	for (vector<Bubble*>::iterator it = mBubbles->begin(); it < mBubbles->end(); it++)
 	{
-		(*it)->Update(dt);
+		if (*it != nullptr)
+		{
+			(*it)->Update(dt, vec3(0.0f), vec3(0.0f));
+		}
 	}
 
-	// Remove null bubbles
-	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end();)
+	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end();)
 	{
-		if (*it == nullptr)
+		(*it)->Update(dt);
+
+		if (*it != mBubbleGroups[0] && (*it)->GetGroupVolume() == 0.0f)
 		{
-			it = mBubbles.erase(it);
+			it = mBubbleGroups.erase(it);
 		}
 		else
 		{
@@ -95,6 +120,15 @@ void World::Update(float dt)
 
 	// Update current Camera
 	mCameras[mCurrentCamera]->Update(dt);
+
+	if ((int)mBubbleGroups.size() == 1)
+	{
+		mEndgame->setWin(true);
+	}
+	else if (mBubbleGroups[0]->GetGroupVolume() == 0.0f)
+	{
+		mEndgame->setLoss(true);
+	}
 }
 
 
@@ -103,7 +137,8 @@ void World::Draw()
 	WorldDrawer::DrawWorld(
 		mCameras,
 		mCurrentCamera,
-		mBubbles,
+		*mBubbles,
+		mSpikeBalls,
 		mBubbleGroups);
 
 	// This looks for the View Transform Uniform variable in the Vertex Program
@@ -252,16 +287,26 @@ void World::Load(ci_istringstream& iss)
 		);
 	}
 
+	mBubbles->reserve(2 * numberOfSpheres);
+
 	for (int i = 0; i < numberOfSpheres; i++)
 	{
+		//vec3 position = vec3(0.0f, 0.0f, 5.0f);
 		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
 		float volume = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
 		Bubble* bubble = new Bubble(position, volume, GetRandomColor());
 
-		mBubbles.push_back(bubble);
+		mBubbles->push_back(bubble);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
+	for (int i = 0; i < 0.1 * numberOfSpheres; i++) {
+		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
+		float radius = 1.0f;
+		SpikeBall* spikeball = new SpikeBall(position, radius, vec3(0.25f));
+		mSpikeBalls.push_back(spikeball);
+	}
+
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(sStartupScreen ? 0.0f : playerSize, playerColor);
 	AIBubbleGroup* aiBubbleGroup = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 	AIBubbleGroup* aiBubbleGroup2 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 	AIBubbleGroup* aiBubbleGroup3 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
