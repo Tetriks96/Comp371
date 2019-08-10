@@ -29,20 +29,17 @@ void PlayerBubbleGroup::Draw()
 	//Enable blending for transparency
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	//Need depth test and culling for better rendering of the spheres
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	glCullFace(GL_FRONT);
 
 	//set the uniform variable transparency to 1 for opaqueness
 	GLuint transparencyLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "transparency");
-	glUniform1f(transparencyLocation, 0.5f);
+	glUniform1f(transparencyLocation, 0.9f);
 
 	BubbleGroup::Draw();
 
 	glUniform1f(transparencyLocation, 1.0f);
-	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 }
 
