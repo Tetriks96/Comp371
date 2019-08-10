@@ -36,47 +36,44 @@ using namespace glm;
 
 void Menu::Draw()
 {
-	if (paused) {
-		glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 #if defined(PLATFORM_OSX)
-		GLuint titleTextureID = loadTexture("Textures/NeonTitle.png");
-		GLuint pressTextureID = loadTexture("Textures/NeonPress.png");
+	GLuint titleTextureID = loadTexture("Textures/NeonTitle.png");
+	GLuint pressTextureID = loadTexture("Textures/NeonPress.png");
 #else
-		GLuint titleTextureID = loadTexture("../Assets/Textures/NeonTitle.png");
-		GLuint pressTextureID = loadTexture("../Assets/Textures/NeonPress.png");
+	GLuint titleTextureID = loadTexture("../Assets/Textures/NeonTitle.png");
+	GLuint pressTextureID = loadTexture("../Assets/Textures/NeonPress.png");
 #endif
-		// White background
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
-		
-		// Compile and link shaders here ...
-		int shaderProgram = compileAndLinkShaders();
+	// White background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-		// Define and upload geometry to the GPU here ...
-		int vbo = createVertexBufferObject();
+	// Compile and link shaders here ...
+	int shaderProgram = compileAndLinkShaders();
 
-		mat4 world(1.0f);
-		setWorldMatrix(shaderProgram, world);
-		glUseProgram(shaderProgram);
+	// Define and upload geometry to the GPU here ...
+	int vbo = createVertexBufferObject();
 
-		glActiveTexture(GL_TEXTURE0);
-		GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
-		glBindTexture(GL_TEXTURE_2D, titleTextureID);
-		glUniform1i(textureLocation, 0);
+	mat4 world(1.0f);
+	setWorldMatrix(shaderProgram, world);
+	glUseProgram(shaderProgram);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glActiveTexture(GL_TEXTURE0);
+	GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
+	glBindTexture(GL_TEXTURE_2D, titleTextureID);
+	glUniform1i(textureLocation, 0);
 
-		glBindTexture(GL_TEXTURE_2D, titleTextureID);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		glBindTexture(GL_TEXTURE_2D, pressTextureID);
-		mat4 pressworld = translate(mat4(1.0f), vec3(0.0f, -1.25f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 0.5f, 1.0f));
-		setWorldMatrix(shaderProgram, pressworld);
+	glBindTexture(GL_TEXTURE_2D, titleTextureID);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, pressTextureID);
+	mat4 pressworld = translate(mat4(1.0f), vec3(0.0f, -1.25f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 0.5f, 1.0f));
+	setWorldMatrix(shaderProgram, pressworld);
 
-		glEnable(GL_DEPTH_TEST);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-	}
+	glEnable(GL_DEPTH_TEST);
 }
 
 bool Menu::isPaused()
@@ -84,15 +81,16 @@ bool Menu::isPaused()
 	return paused;
 }
 
-void Menu::toggle()
+void Menu::Pause()
 {
-	paused = !paused;
+	paused = true;
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+}
 
-	if (paused)
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	else
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
+void Menu::Resume()
+{
+	paused = false;
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 int Menu::loadTexture(char* imagepath)

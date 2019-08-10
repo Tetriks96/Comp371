@@ -42,38 +42,47 @@ int main(int argc, char*argv[])
 
 			// Update World
 
-			float dt = EventManager::GetFrameTime();
+			bool gameOver = end.getWin() || end.getLoss();
+			bool gameInProgress = !(World::sStartupScreen || gameOver);
+
+			if (!gameInProgress || !menu.isPaused())
+			{
+				float dt = EventManager::GetFrameTime();
+				world.Update(dt);
+			}
+
+			if (gameInProgress)
+			{
+				if (menu.isPaused() && EventManager::PlayGame())
+				{
+					menu.Resume();
+				}
+				else if (!menu.isPaused() && EventManager::PauseGame())
+				{
+					menu.Pause();
+				}
+			}
+
+			// Draw
 
 			Renderer::BeginFrame();
-			if (menu.isPaused() && !(end.getWin() || end.getLoss())) {
-				world.Draw();
+
+			world.Draw();
+
+			if ((gameInProgress && menu.isPaused()) || World::sStartupScreen)
+			{
 				menu.Draw();
-				if (EventManager::PlayGame()) {
-					menu.toggle();
-				}
 			}
-			else {
-				if (EventManager::PauseGame()) {
-					menu.toggle();
-				}
-				world.Update(dt);
-				// Draw World
-				world.Draw();
-			}
-
-			if (end.getLoss()) {
-				world.Draw();
-				end.Draw();
-			}
-
-			if (end.getWin()) {
-				world.Draw();
+			else if (gameOver)
+			{
 				end.Draw();
 			}
 
 			Renderer::EndFrame();
 
-		} while (EventManager::ExitRequested() == false && !((end.getLoss() || end.getWin()) && EventManager::PlayGame()));
+		} while (EventManager::ExitRequested() == false && !((end.getLoss() || end.getWin() || World::sStartupScreen) && EventManager::PlayGame()));
+
+		World::sStartupScreen = false;
 
 	} while (EventManager::ExitRequested() == false);
 

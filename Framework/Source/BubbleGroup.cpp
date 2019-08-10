@@ -12,12 +12,20 @@ using namespace glm;
 BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume, vec3 color)
 {
 	mCenterOfMass = centerOfMass;
-	mGroupVolume = volume;
-	Bubble* initialBubble = new Bubble(centerOfMass, volume, color);
-	mGroupRadius = initialBubble->GetRadius();
+	mGroupVolume = std::max(0.0f, volume);
 	mMoveTowards = vec3(0.0f);
-	mBubbles.push_back(initialBubble);
 	mLastSplitTime = -1.0;
+
+	if (volume > 0.0f)
+	{
+		Bubble* initialBubble = new Bubble(centerOfMass, volume, color);
+		mGroupRadius = initialBubble->GetRadius();
+		mBubbles.push_back(initialBubble);
+	}
+	else
+	{
+		mGroupRadius = 0.0f;
+	}
 }
 
 BubbleGroup::~BubbleGroup()

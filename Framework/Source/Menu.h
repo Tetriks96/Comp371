@@ -4,7 +4,8 @@ class Menu {
 public:
 	void Draw();
 	bool isPaused();
-	void toggle();
+	void Pause();
+	void Resume();
 	int loadTexture(char* imagepath);
 	int createVertexBufferObject();
 	int compileAndLinkShaders();
@@ -13,7 +14,7 @@ public:
 	void setWorldMatrix(int shaderProgram, glm::mat4 worldMatrix);
 
 protected:
-	bool paused = true;
+	bool paused = false;
 private:
 
 	struct MenuVertex {

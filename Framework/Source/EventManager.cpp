@@ -38,6 +38,7 @@ double EventManager::sMouseDeltaScroll = 0;
 GLFWwindow* EventManager::spWindow = nullptr;
 
 bool EventManager::sPlayGame = false;
+bool EventManager::sPauseGame = false;
 
 void EventManager::Initialize()
 {
@@ -135,6 +136,7 @@ void EventManager::Update()
 	sGameTime = currentTime;
 
 	sPlayGame = glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS || glfwGetKey(spWindow, GLFW_KEY_KP_ENTER) == GLFW_PRESS;
+	sPauseGame = glfwGetKey(spWindow, GLFW_KEY_P) == GLFW_PRESS;
 }
 
 float EventManager::GetFrameTime()
@@ -185,5 +187,5 @@ bool EventManager::PlayGame()
 
 bool EventManager::PauseGame()
 {
-	return glfwGetKey(spWindow, GLFW_KEY_P) == GLFW_PRESS;
+	return sPauseGame;
 }
