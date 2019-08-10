@@ -24,8 +24,6 @@ public:
 	static bool ExitRequested();
 	static bool PlayGame();
 	static bool PauseGame();
-	static bool LostGame();
-	static bool WonGame();
 
 	static GLFWwindow* GetWindow();
 
@@ -53,4 +51,6 @@ private:
 	static GLFWwindow* spWindow;
 
 	static void ScrollCallback(GLFWwindow* window, double x, double y);
+
+	static bool sPlayGame;
 };

@@ -37,6 +37,7 @@ double EventManager::sMouseDeltaScroll = 0;
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
+bool EventManager::sPlayGame = false;
 
 void EventManager::Initialize()
 {
@@ -132,6 +133,8 @@ void EventManager::Update()
 	double currentTime = glfwGetTime();
 	sFrameTime = static_cast<float>(currentTime - sGameTime);
 	sGameTime = currentTime;
+
+	sPlayGame = glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS;
 }
 
 float EventManager::GetFrameTime()
@@ -177,20 +180,10 @@ float EventManager::GetRandomFloat(float min, float max)
 }
 bool EventManager::PlayGame()
 {
-	return glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS;
+	return sPlayGame;
 }
 
 bool EventManager::PauseGame()
 {
 	return glfwGetKey(spWindow, GLFW_KEY_P) == GLFW_PRESS;
-}
-
-bool EventManager::LostGame()
-{
-	return glfwGetKey(spWindow, GLFW_KEY_M) == GLFW_PRESS;
-}
-
-bool EventManager::WonGame()
-{
-	return glfwGetKey(spWindow, GLFW_KEY_N) == GLFW_PRESS;
 }

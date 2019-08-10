@@ -19,63 +19,63 @@ int main(int argc, char*argv[])
 	EventManager::Initialize();
 	Renderer::Initialize();
 
-	Menu menu;
-	World world;
-	Endgame end;
-    
-	if (argc > 1)
-	{
-		world.LoadScene(argv[1]);
-	}
-	else
-	{
-		world.LoadScene("../Assets/Scenes/PrototypeUniverse.scene");
-	}
-
-	// Main Loop
 	do
 	{
-		// Update Event Manager - Frame time / input / events processing 
-		EventManager::Update();
+		Menu menu;
+		Endgame end;
+		World world(&end);
 
-		// Update World
-		
+		if (argc > 1)
+		{
+			world.LoadScene(argv[1]);
+		}
+		else
+		{
+			world.LoadScene("../Assets/Scenes/PrototypeUniverse.scene");
+		}
 
+		// Main Loop
+		do
+		{
+			// Update Event Manager - Frame time / input / events processing 
+			EventManager::Update();
 
-		float dt = EventManager::GetFrameTime();
+			// Update World
 
-		Renderer::BeginFrame();
-		if (menu.isPaused()) {
-			world.Draw();
-			menu.Draw();
-			if (EventManager::PlayGame()) {
-				menu.toggle();
+			float dt = EventManager::GetFrameTime();
+
+			Renderer::BeginFrame();
+			if (menu.isPaused() && !(end.getWin() || end.getLoss())) {
+				world.Draw();
+				menu.Draw();
+				if (EventManager::PlayGame()) {
+					menu.toggle();
+				}
 			}
-		}
-		else {
-			if (EventManager::PauseGame()) {
-				menu.toggle();
+			else {
+				if (EventManager::PauseGame()) {
+					menu.toggle();
+				}
+				world.Update(dt);
+				// Draw World
+				world.Draw();
 			}
-			world.Update(dt);
-			// Draw World
-			world.Draw();
-		}
 
-		if (EventManager::LostGame() || end.getLoss()) {
-			end.setLoss(true);
-			world.Draw();
-			end.Draw();
-		}
+			if (end.getLoss()) {
+				world.Draw();
+				end.Draw();
+			}
 
-		if (EventManager::WonGame() || end.getWin()) {
-			end.setWin(true);
-			world.Draw();
-			end.Draw();
-		}
-		
-		Renderer::EndFrame();
-	}
-	while(EventManager::ExitRequested() == false);
+			if (end.getWin()) {
+				world.Draw();
+				end.Draw();
+			}
+
+			Renderer::EndFrame();
+
+		} while (EventManager::ExitRequested() == false && !((end.getLoss() || end.getWin()) && EventManager::PlayGame()));
+
+	} while (EventManager::ExitRequested() == false);
 
 	Renderer::Shutdown();
 	EventManager::Shutdown();

@@ -26,11 +26,13 @@ using namespace glm;
 World* World::instance;
 
 
-World::World()
+World::World(Endgame* endgame)
 {
     instance = this;
 
 	mCurrentCamera = 0;
+
+	mEndgame = endgame;
 }
 
 World::~World()
@@ -75,9 +77,18 @@ vector<BubbleGroup*>* World::GetBubbleGroups()
 
 void World::Update(float dt)
 {
-	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end(); ++it)
+	for (vector<BubbleGroup*>::iterator it = mBubbleGroups.begin(); it < mBubbleGroups.end();)
 	{
 		(*it)->Update(dt);
+
+		if (*it != mBubbleGroups[0] && (*it)->GetGroupVolume() == 0.0f)
+		{
+			it = mBubbleGroups.erase(it);
+		}
+		else
+		{
+			it++;
+		}
 	}
 
 	// Remove null bubbles
@@ -95,6 +106,15 @@ void World::Update(float dt)
 
 	// Update current Camera
 	mCameras[mCurrentCamera]->Update(dt);
+
+	if ((int)mBubbleGroups.size() == 1)
+	{
+		mEndgame->setWin(true);
+	}
+	else if (mBubbleGroups[0]->GetGroupVolume() == 0.0f)
+	{
+		mEndgame->setLoss(true);
+	}
 }
 
 

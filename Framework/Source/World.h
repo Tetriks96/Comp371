@@ -17,6 +17,7 @@
 #include "Model.h"
 #include "Bubble.h"
 #include "BubbleGroup.h"
+#include "Endgame.h"
 
 class Camera;
 class ControllableSphere;
@@ -24,7 +25,7 @@ class ControllableSphere;
 class World
 {
 public:
-	World();
+	World(Endgame* endgame);
 	~World();
 	
     static World* GetInstance();
@@ -52,6 +53,7 @@ public:
     
 private:
     static World* instance;
+	Endgame* mEndgame;
     
 	std::vector<Bubble*> mBubbles;
 	std::vector<Camera*> mCameras;
