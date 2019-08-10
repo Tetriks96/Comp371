@@ -27,9 +27,6 @@ BubbleGroup::~BubbleGroup()
 
 void BubbleGroup::Update(float dt)
 {
-	World* world = World::GetInstance();
-	vector<SpikeBall*>* spikeBalls = world->GetSpikeBalls();
-
 	for (int bb = 0; bb < (int)mBubbles.size(); bb++)
 	{
 		Bubble* bubble = mBubbles[bb];
@@ -38,38 +35,6 @@ void BubbleGroup::Update(float dt)
 			continue;
 		}
 		bubble->Update(dt, mMoveTowards, mCenterOfMass - bubble->GetPosition());
-
-		for (vector<SpikeBall*>::iterator sb = spikeBalls->begin(); sb < spikeBalls->end(); sb++)
-		{
-			float distance = length(bubble->GetPosition() - (*sb)->GetPosition());
-			if (distance < bubble->GetRadius() + (*sb)->GetRadius())
-			{
-				vector<Bubble*>* newBubbles = bubble->Pop();
-				if (newBubbles != nullptr)
-				{
-					int w = 0;
-					vector<Bubble*>* worldBubbles = world->GetBubbles();
-
-					for (int n = 0; n < (int)newBubbles->size(); n++)
-					{
-						bool bubbleHandled = false;
-						for (; w < (int)worldBubbles->size(); w++)
-						{
-							if ((*worldBubbles)[w] == nullptr)
-							{
-								(*worldBubbles)[w] = (*newBubbles)[n];
-								bubbleHandled = true;
-								break;
-							}
-						}
-						if (!bubbleHandled)
-						{
-							world->GetBubbles()->push_back((*newBubbles)[n]);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	// Remove null bubbles
