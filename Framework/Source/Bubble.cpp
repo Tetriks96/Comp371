@@ -2,6 +2,7 @@
 #include "World.h"
 #include <vector>
 #include "EventManager.h"
+#include "SpikeBall.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -39,19 +40,26 @@ Bubble::~Bubble()
 
 void Bubble::Update(float dt, glm::vec3 moveTowards, vec3 gravity)
 {
+	if (length(moveTowards) == 0.0f &&
+		length(gravity) == 0.0f &&
+		length(mDivisionVelocity) == 0.0f)
+	{
+		return;
+	}
+
 	vec3 previousPosition = mSphereModel->GetPosition();
 	UpdatePosition(dt, moveTowards, gravity);
 
 	// Handle Collisions
 	World* world = World::GetInstance();
 
-	HandleCollisions(world->GetBubbles(), previousPosition);
+	HandleCollisions(world->GetBubbles());
 
 	vector<BubbleGroup*>* bubbleGroups = world->GetBubbleGroups();
 	for (vector<BubbleGroup*>::iterator it = bubbleGroups->begin(); it < bubbleGroups->end(); it++)
 	{
 		vector<Bubble*>* bubbles = (*it)->GetBubbles();
-		HandleCollisions(bubbles, previousPosition);
+		HandleCollisions(bubbles);
 	}
 }
 
@@ -75,7 +83,12 @@ void Bubble::UpdatePosition(float dt, glm::vec3 moveTowards, glm::vec3 gravity)
 
 float Bubble::CalculateEquilibriumSpeed()
 {
-	return 20.0f / mRadius;
+	return CalculateEquilibriumSpeed(mRadius);
+}
+
+float Bubble::CalculateEquilibriumSpeed(float radius)
+{
+	return 10.0f / radius;
 }
 
 void Bubble::Draw()
@@ -95,7 +108,7 @@ float Bubble::CalculateRadius(float volume)
 	return pow((3.0f * volume) / (4.0f * (float)M_PI), (1.0f / 3.0f));
 }
 
-void Bubble::HandleCollisions(vector<Bubble*>* bubbles, vec3 previousPosition)
+void Bubble::HandleCollisions(vector<Bubble*>* bubbles)
 {
 	for (vector<Bubble*>::iterator it = bubbles->begin(); it < bubbles->end(); it++)
 	{
@@ -146,19 +159,22 @@ Bubble* Bubble::Split(vec3 direction)
 
 std::vector<Bubble*>* Bubble::Pop()
 {
-	int popCount = std::max(1, (int)mVolume);
-	if (popCount <= 1)
+	if (mVolume < 2.0f)
 	{
 		return nullptr;
 	}
-	SetVolume(mVolume / (float)popCount);
+
+	SetVolume(mVolume / 2);
+
+	int popCount = (int)mVolume;
+	float newBubbleVolume = mVolume / popCount;
+
 	vector<Bubble*>* newBubbles = new vector<Bubble*>();
-	for (int i = 1; i < popCount; i++)
+	for (int i = 0; i < popCount; i++)
 	{
-		Bubble* newBubble = new Bubble(GetPosition(), mVolume, mSphereModel->GetColor(), mDivisionVelocity + CalculateEquilibriumSpeed() * World::GetRandomPositionInsideUnitSphere(), this);
+		Bubble* newBubble = new Bubble(GetPosition(), newBubbleVolume, mSphereModel->GetColor(), mDivisionVelocity + CalculateEquilibriumSpeed(newBubbleVolume) * World::GetRandomPositionInsideUnitSphere(), this);
 		newBubbles->push_back(newBubble);
 	}
-	mDivisionVelocity += CalculateEquilibriumSpeed() * World::GetRandomPositionInsideUnitSphere();
 	mLastSplitTime = EventManager::GetGameTime();
 	return newBubbles;
 }

@@ -1,5 +1,7 @@
 #include "BubbleGroup.h"
 #include "EventManager.h"
+#include "SpikeBall.h"
+#include "World.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -25,13 +27,49 @@ BubbleGroup::~BubbleGroup()
 
 void BubbleGroup::Update(float dt)
 {
-	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); it++)
+	World* world = World::GetInstance();
+	vector<SpikeBall*>* spikeBalls = world->GetSpikeBalls();
+
+	for (int bb = 0; bb < (int)mBubbles.size(); bb++)
 	{
-		if (*it == nullptr)
+		Bubble* bubble = mBubbles[bb];
+		if (bubble == nullptr)
 		{
 			continue;
 		}
-		(*it)->Update(dt, mMoveTowards, mCenterOfMass - (*it)->GetPosition());
+		bubble->Update(dt, mMoveTowards, mCenterOfMass - bubble->GetPosition());
+
+		for (vector<SpikeBall*>::iterator sb = spikeBalls->begin(); sb < spikeBalls->end(); sb++)
+		{
+			float distance = length(bubble->GetPosition() - (*sb)->GetPosition());
+			if (distance < bubble->GetRadius() + (*sb)->GetRadius())
+			{
+				vector<Bubble*>* newBubbles = bubble->Pop();
+				if (newBubbles != nullptr)
+				{
+					int w = 0;
+					vector<Bubble*>* worldBubbles = world->GetBubbles();
+
+					for (int n = 0; n < (int)newBubbles->size(); n++)
+					{
+						bool bubbleHandled = false;
+						for (; w < (int)worldBubbles->size(); w++)
+						{
+							if ((*worldBubbles)[w] == nullptr)
+							{
+								(*worldBubbles)[w] = (*newBubbles)[n];
+								bubbleHandled = true;
+								break;
+							}
+						}
+						if (!bubbleHandled)
+						{
+							world->GetBubbles()->push_back((*newBubbles)[n]);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// Remove null bubbles
@@ -138,7 +176,7 @@ float BubbleGroup::CalculateGroupRadius()
 		}
 
 		float itsLength = distance(mCenterOfMass, (*it)->GetPosition()) + (*it)->GetRadius();
-		maxLength = max(maxLength, itsLength);
+		maxLength = std::max(maxLength, itsLength);
 	}
 
 	return maxLength;

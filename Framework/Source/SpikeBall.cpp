@@ -30,41 +30,9 @@ void SpikeBall::Draw()
 	// Scaling of sphere x = y = z = radius. Any will do.
 	float sphereRadius = mSphereModel->GetScaling().x;
 
-	// x : x coordinate of rotation axis
-	// y : y coordinate of rotation axis
-	// z : angular distance from z axis in degrees
-	vector<vec3> coneInfos {
-		vec3(1.0f, 0.0f, 0.0f),
-		vec3(1.0f, 0.0f, 45.0f),
-		vec3(1.0f, 0.0f, 90.0f),
-		vec3(1.0f, 0.0f, 135.0f),
-		vec3(1.0f,  0.0f, 180.0f),
-		vec3(1.0f, 0.0f, -45.0f),
-		vec3(1.0f,  0.0f, -90.0f),
-		vec3(1.0f, 0.0f, -135.0f),
-		vec3(0.0f, 1.0f, 45.0f),
-		vec3(0.0f,  1.0f, 90.0f),
-		vec3(0.0f, 1.0f, 135.0f),
-		vec3(0.0f, 1.0f, -45.0f),
-		vec3(0.0f,  1.0f, -90.0f),
-		vec3(0.0f, 1.0f, -135.0f),
-		vec3(cos(M_PI / 4), sin(M_PI / 4), 45.0f),
-		vec3(cos(M_PI / 4), sin(M_PI / 4), 90.0f),
-		vec3(cos(M_PI / 4), sin(M_PI / 4), 135.0f),
-		vec3(cos(M_PI / 4), sin(M_PI / 4), -45.0f),
-		vec3(cos(M_PI / 4), sin(M_PI / 4), -90.0f),
-		vec3(cos(M_PI / 4), sin(M_PI / 4), -135.0f),
-		vec3(cos(M_PI / 4), sin(-M_PI / 4), 45.0f),
-		vec3(cos(M_PI / 4), sin(-M_PI / 4), 90.0f),
-		vec3(cos(M_PI / 4), sin(-M_PI / 4), 135.0f),
-		vec3(cos(M_PI / 4), sin(-M_PI / 4), -45.0f),
-		vec3(cos(M_PI / 4), sin(-M_PI / 4), -90.0f),
-		vec3(cos(M_PI / 4), sin(-M_PI / 4), -135.0f),
-	};
-
-	for (int i = 0; i < (int)coneInfos.size(); i++)
+	for (int i = 0; i < (int)sConeInfos.size(); i++)
 	{
-		vec3 coneInfo = coneInfos[i];
+		vec3 coneInfo = sConeInfos[i];
 
 		vec3 coneRotationAxis = vec3(coneInfo.x, coneInfo.y, 0.0f);
 
@@ -79,3 +47,36 @@ void SpikeBall::Draw()
 		mConeModel->Draw();
 	}
 }
+
+
+// x : x coordinate of rotation axis
+// y : y coordinate of rotation axis
+// z : angular distance from z axis in degrees
+vector<vec3> SpikeBall::sConeInfos = vector<vec3> {
+	vec3(1.0f, 0.0f, 0.0f),
+	vec3(1.0f, 0.0f, 45.0f),
+	vec3(1.0f, 0.0f, 90.0f),
+	vec3(1.0f, 0.0f, 135.0f),
+	vec3(1.0f,  0.0f, 180.0f),
+	vec3(1.0f, 0.0f, -45.0f),
+	vec3(1.0f,  0.0f, -90.0f),
+	vec3(1.0f, 0.0f, -135.0f),
+	vec3(0.0f, 1.0f, 45.0f),
+	vec3(0.0f,  1.0f, 90.0f),
+	vec3(0.0f, 1.0f, 135.0f),
+	vec3(0.0f, 1.0f, -45.0f),
+	vec3(0.0f,  1.0f, -90.0f),
+	vec3(0.0f, 1.0f, -135.0f),
+	vec3(cos(M_PI / 4), sin(M_PI / 4), 45.0f),
+	vec3(cos(M_PI / 4), sin(M_PI / 4), 90.0f),
+	vec3(cos(M_PI / 4), sin(M_PI / 4), 135.0f),
+	vec3(cos(M_PI / 4), sin(M_PI / 4), -45.0f),
+	vec3(cos(M_PI / 4), sin(M_PI / 4), -90.0f),
+	vec3(cos(M_PI / 4), sin(M_PI / 4), -135.0f),
+	vec3(cos(M_PI / 4), sin(-M_PI / 4), 45.0f),
+	vec3(cos(M_PI / 4), sin(-M_PI / 4), 90.0f),
+	vec3(cos(M_PI / 4), sin(-M_PI / 4), 135.0f),
+	vec3(cos(M_PI / 4), sin(-M_PI / 4), -45.0f),
+	vec3(cos(M_PI / 4), sin(-M_PI / 4), -90.0f),
+	vec3(cos(M_PI / 4), sin(-M_PI / 4), -135.0f),
+};

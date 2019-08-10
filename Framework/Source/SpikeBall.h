@@ -16,6 +16,7 @@ public:
 private:
 	SphereModel* mSphereModel;
 	ConeModel* mConeModel;
+	static std::vector<glm::vec3> sConeInfos;
 	const float coneRatio = 0.5f;
 	const float constant = 0.97f;
 };
