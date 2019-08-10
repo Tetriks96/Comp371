@@ -184,3 +184,13 @@ bool EventManager::PauseGame()
 {
 	return glfwGetKey(spWindow, GLFW_KEY_P) == GLFW_PRESS;
 }
+
+bool EventManager::LostGame()
+{
+	return glfwGetKey(spWindow, GLFW_KEY_M) == GLFW_PRESS;
+}
+
+bool EventManager::WonGame()
+{
+	return glfwGetKey(spWindow, GLFW_KEY_N) == GLFW_PRESS;
+}

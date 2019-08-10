@@ -24,6 +24,8 @@ public:
 	static bool ExitRequested();
 	static bool PlayGame();
 	static bool PauseGame();
+	static bool LostGame();
+	static bool WonGame();
 
 	static GLFWwindow* GetWindow();
 

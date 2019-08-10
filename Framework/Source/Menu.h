@@ -1,8 +1,7 @@
 #pragma once
-#include "Model.h"
+#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Languag
 class Menu {
 public:
-	void Update(float dt);
 	void Draw();
 	bool isPaused();
 	void toggle();

@@ -11,6 +11,7 @@
 #include "World.h"
 #include "EventManager.h"
 #include "Menu.h"
+#include "Endgame.h"
 #include <GLFW/glfw3.h>
 
 int main(int argc, char*argv[])
@@ -19,7 +20,8 @@ int main(int argc, char*argv[])
 	Renderer::Initialize();
 
 	Menu menu;
-	World world;    
+	World world;
+	Endgame end;
     
 	if (argc > 1)
 	{
@@ -52,13 +54,25 @@ int main(int argc, char*argv[])
 		}
 		else {
 			if (EventManager::PauseGame()) {
-				menu.Draw();
 				menu.toggle();
 			}
 			world.Update(dt);
 			// Draw World
 			world.Draw();
 		}
+
+		if (EventManager::LostGame() || end.getLoss()) {
+			end.setLoss(true);
+			world.Draw();
+			end.Draw();
+		}
+
+		if (EventManager::WonGame() || end.getWin()) {
+			end.setWin(true);
+			world.Draw();
+			end.Draw();
+		}
+		
 		Renderer::EndFrame();
 	}
 	while(EventManager::ExitRequested() == false);
