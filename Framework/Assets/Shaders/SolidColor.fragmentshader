@@ -45,5 +45,5 @@ void main()
     float kA = 0.5f;
     float kD = 1.0f;
     float kS = 0.2f;
-    color = v_color.rgb * (kA + kD * lambertian + kS * specular);
+    color = v_color.rgb * (kA + kD * lambertian0 + kS * specular);
 }
