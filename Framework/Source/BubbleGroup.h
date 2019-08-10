@@ -9,7 +9,7 @@ public:
 	~BubbleGroup();
 
 	virtual void Update(float dt);
-	void Draw();
+	virtual void Draw();
 
 	std::vector<Bubble*>* GetBubbles() { return &mBubbles; }
 	glm::vec3 GetCenterOfMass() { return mCenterOfMass; }

@@ -1,7 +1,9 @@
 #include "PlayerBubbleGroup.h"
 #include "EventManager.h"
+#include "Renderer.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -20,6 +22,28 @@ PlayerBubbleGroup::PlayerBubbleGroup(float volume, vec3 color) : BubbleGroup(vec
 PlayerBubbleGroup::~PlayerBubbleGroup()
 {
 
+}
+
+void PlayerBubbleGroup::Draw()
+{
+	//Enable blending for transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//Need depth test and culling for better rendering of the spheres
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	//set the uniform variable transparency to 1 for opaqueness
+	GLuint transparencyLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "transparency");
+	glUniform1f(transparencyLocation, 0.5f);
+
+	BubbleGroup::Draw();
+
+	glUniform1f(transparencyLocation, 1.0f);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 }
 
 void PlayerBubbleGroup::Update(float dt)

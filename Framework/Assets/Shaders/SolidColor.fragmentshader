@@ -1,8 +1,9 @@
 #version 330 core
 
 // Ouput to fragment shader
-out vec3 color;
+out vec4 color;
 uniform vec4 materialCoefficients;
+uniform float transparency;
 
 in vec4 v_color;
 in vec3 normal; // You will need this when you do per-fragment lighting
@@ -45,5 +46,5 @@ void main()
     float kA = 0.5f;
     float kD = 1.0f;
     float kS = 0.2f;
-    color = v_color.rgb * (kA + kD * lambertian0 + kS * specular);
+    color = vec4(v_color.rgb * (kA + kD * lambertian + kS * specular), transparency);
 }
