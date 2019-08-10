@@ -46,6 +46,7 @@ void Bubble::Update(float dt, glm::vec3 moveTowards, vec3 gravity)
 	World* world = World::GetInstance();
 
 	HandleCollisions(world->GetBubbles(), previousPosition);
+	HandleSpikeBallCollisions(world->GetSpikeBalls(), previousPosition);
 
 	vector<BubbleGroup*>* bubbleGroups = world->GetBubbleGroups();
 	for (vector<BubbleGroup*>::iterator it = bubbleGroups->begin(); it < bubbleGroups->end(); it++)
@@ -125,6 +126,20 @@ void Bubble::HandleCollisions(vector<Bubble*>* bubbles, vec3 previousPosition)
 				*it = nullptr;
 				continue;
 			}
+		}
+	}
+}
+
+void Bubble::HandleSpikeBallCollisions(vector<SpikeBall*>* spikeballs, vec3 previousPosition)
+{
+	for (vector<SpikeBall*>::iterator it = spikeballs->begin(); it < spikeballs->end(); it++)
+	{
+		vec3 itsPosition = (*it)->GetSpikeBallPosition();
+		float itsRadius = (*it)->GetSpikeRadius();
+		if (distance(GetPosition(), itsPosition) <= itsRadius + mRadius)
+		{
+			Pop();
+			break;
 		}
 	}
 }

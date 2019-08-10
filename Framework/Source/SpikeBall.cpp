@@ -27,13 +27,10 @@ void SpikeBall::Draw()
 {
 	mSphereModel->Draw();
 
-	// Scaling of sphere x = y = z = radius. Any will do.
-	float sphereRadius = mSphereModel->GetScaling().x;
-
 	// x : x coordinate of rotation axis
 	// y : y coordinate of rotation axis
 	// z : angular distance from z axis in degrees
-	vector<vec3> coneInfos {
+	vector<vec3> coneInfos = {
 		vec3(1.0f, 0.0f, 0.0f),
 		vec3(1.0f, 0.0f, 45.0f),
 		vec3(1.0f, 0.0f, 90.0f),
@@ -64,7 +61,10 @@ void SpikeBall::Draw()
 		// ...
 	};
 
-	for (int i = 0; i < (int)coneInfos.size(); i++)
+	// Scaling of sphere x = y = z = radius. Any will do.
+	float sphereRadius = mSphereModel->GetScaling().x;
+
+	for (int i = 0; i < (int) coneInfos.size(); i++)
 	{
 		vec3 coneInfo = coneInfos[i];
 

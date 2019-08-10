@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SphereModel.h"
+#include "SpikeBall.h"
 
 class Bubble
 {
@@ -32,5 +33,6 @@ private:
 	float CalculateRadius(float volume);
 	float CalculateEquilibriumSpeed();
 	void HandleCollisions(std::vector<Bubble*>* bubbles, glm::vec3 previousPosition);
+	void HandleSpikeBallCollisions(std::vector<SpikeBall*>* spikeballs, glm::vec3 previousPosition);
 	void UpdatePosition(float dt, glm::vec3 moveTowards, glm::vec3 gravity);
 };
