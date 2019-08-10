@@ -15,6 +15,7 @@
 #include "SceneLoader.h"
 #include "EventManager.h"
 #include "PlayerBubbleGroup.h"
+#include "AIBubbleGroup.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -112,6 +113,7 @@ void World::Update(float dt)
 	mCameras[mCurrentCamera]->Update(dt);
 }
 
+
 void World::Draw()
 {
 	WorldDrawer::DrawWorld(
@@ -120,6 +122,13 @@ void World::Draw()
 		mBubbles,
 		mSpikeBalls,
 		mBubbleGroups);
+
+	// This looks for the View Transform Uniform variable in the Vertex Program
+	GLuint VMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
+	// Send the view constants to the shader
+	mat4 V = mCameras[mCurrentCamera]->GetViewMatrix();
+	glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
+
 }
 
 void World::LoadScene(const char * scene_path)
@@ -264,21 +273,28 @@ void World::Load(ci_istringstream& iss)
 	{
 		//vec3 position = vec3(0.0f, 0.0f, 5.0f);
 		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
-		float radius = 2.0f;
-		float color1 = (float)rand() / RAND_MAX;
-		float color2 = (float)rand() / RAND_MAX;
-		float color3 = (float)rand() / RAND_MAX;
-		vec3 vColor = vec3(color1, color2, color3);
+		float volume = minSize + ((float)rand() / RAND_MAX) * (maxSize - minSize);
+		Bubble* bubble = new Bubble(position, volume, GetRandomColor());
 
-		SpikeBall* spikeball = new SpikeBall(position, radius, vColor);
+		mBubbles.push_back(bubble);
+	}
 
+	for (int i = 0; i < std::floor(numberOfSpheres * 0.1); i++) {
+		vec3 position = maxDistance * GetRandomPositionInsideUnitSphere();
+		float radius = 0.5f + (2.0f * rand() / RAND_MAX);
+		SpikeBall* spikeball = new SpikeBall(position, radius, GetRandomColor());
 		mSpikeBalls.push_back(spikeball);
 	}
 
 	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
-	
-	mBubbleGroups.push_back(playerBubbleGroup);
+	AIBubbleGroup* aiBubbleGroup = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
+	AIBubbleGroup* aiBubbleGroup2 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
+	AIBubbleGroup* aiBubbleGroup3 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 
+	mBubbleGroups.push_back(playerBubbleGroup);
+	mBubbleGroups.push_back(aiBubbleGroup);
+	mBubbleGroups.push_back(aiBubbleGroup2);
+	mBubbleGroups.push_back(aiBubbleGroup3);
 	mCameras.push_back(new ThirdPersonCamera(playerBubbleGroup));
 }
 
@@ -302,4 +318,13 @@ vec3 World::GetRandomPositionInsideUnitSphere()
 const Camera* World::GetCurrentCamera() const
 {
      return mCameras[mCurrentCamera];
+}
+
+vec3 World::GetRandomColor()
+{
+	float color1 = (float)rand() / RAND_MAX;
+	float color2 = (float)rand() / RAND_MAX;
+	float color3 = (float)rand() / RAND_MAX;
+
+	return vec3(color1, color2, color3);
 }

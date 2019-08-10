@@ -61,4 +61,5 @@ private:
 	std::vector<ConeModel*> mCones;
 	unsigned int mCurrentCamera;
 	std::vector<BubbleGroup*> mBubbleGroups;
+	glm::vec3 GetRandomColor();
 };

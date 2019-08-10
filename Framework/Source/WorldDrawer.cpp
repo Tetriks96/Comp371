@@ -28,13 +28,13 @@ void WorldDrawer::DrawWorld(
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	// Draw models
-	/*for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
+	for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
 	{
 		if ((*it)->GetVolume() > 0.0f)
 		{
 			(*it)->Draw();
 		}
-	}*/
+	}
 
 	for (vector<SpikeBall*>::iterator it = spikeBalls.begin(); it < spikeBalls.end(); ++it)
 	{
