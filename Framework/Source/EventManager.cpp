@@ -37,6 +37,7 @@ double EventManager::sMouseDeltaScroll = 0;
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
+double EventManager::sLastRestartTime = -1.0;
 
 void EventManager::Initialize()
 {
@@ -142,6 +143,17 @@ float EventManager::GetFrameTime()
 bool EventManager::ExitRequested()
 {
 	return glfwGetKey(spWindow, GLFW_KEY_ESCAPE ) == GLFW_PRESS || glfwWindowShouldClose(spWindow);
+}
+
+bool EventManager::RestartRequested()
+{
+	double currentTime = GetGameTime();
+	if (glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS && currentTime - sLastRestartTime > 1.0)
+	{
+		sLastRestartTime = currentTime;
+		return true;
+	}
+	return false;
 }
 
 GLFWwindow* EventManager::GetWindow()

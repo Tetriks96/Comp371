@@ -16,31 +16,35 @@ int main(int argc, char*argv[])
 	EventManager::Initialize();
 	Renderer::Initialize();
 
-	World world;    
-    
-	if (argc > 1)
-	{
-		world.LoadScene(argv[1]);
-	}
-	else
-	{
-		world.LoadScene("../Assets/Scenes/PrototypeUniverse.scene");
-	}
-
-	// Main Loop
 	do
 	{
-		// Update Event Manager - Frame time / input / events processing 
-		EventManager::Update();
+		World world;
+		bool restartRequested = false;
 
-		// Update World
-		float dt = EventManager::GetFrameTime();
-		world.Update(dt);
+		if (argc > 1)
+		{
+			world.LoadScene(argv[1]);
+		}
+		else
+		{
+			world.LoadScene("../Assets/Scenes/PrototypeUniverse.scene");
+		}
 
-		// Draw World
-		world.Draw();        
-	}
-	while(EventManager::ExitRequested() == false);
+		// Main Loop
+		do
+		{
+			// Update Event Manager - Frame time / input / events processing 
+			EventManager::Update();
+
+			// Update World
+			float dt = EventManager::GetFrameTime();
+			world.Update(dt);
+
+			// Draw World
+			world.Draw();
+		} while (EventManager::ExitRequested() == false && EventManager::RestartRequested() == false);
+
+	} while (EventManager::ExitRequested() == false);
 
 	Renderer::Shutdown();
 	EventManager::Shutdown();

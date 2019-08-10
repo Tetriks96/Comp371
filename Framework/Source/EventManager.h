@@ -22,6 +22,7 @@ public:
 	static double GetGameTime() { return sGameTime; }
 	static float GetFrameTime();
 	static bool ExitRequested();
+	static bool RestartRequested();
 
 	static GLFWwindow* GetWindow();
 
@@ -49,4 +50,6 @@ private:
 	static GLFWwindow* spWindow;
 
 	static void ScrollCallback(GLFWwindow* window, double x, double y);
+
+	static double sLastRestartTime;
 };
