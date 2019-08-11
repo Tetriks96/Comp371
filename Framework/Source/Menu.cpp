@@ -56,6 +56,37 @@ void Menu::Draw()
 
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
+
+Menu::~Menu()
+{
+
+}
+
+void Menu::Draw()
+{
+	Renderer::SetShader(SHADER_MENU);
+	int shaderProgram = Renderer::GetShaderProgramID();
+
+	glDisable(GL_DEPTH_TEST);
+
+	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texturedSquareVertexArray), texturedSquareVertexArray, GL_STATIC_DRAW);
+
+	// White background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	mat4 world(1.0f);
+
+	setWorldMatrix(shaderProgram, world);
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
+	glBindTexture(GL_TEXTURE_2D, mTitleTextureID);
+	glUniform1i(textureLocation, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 	glBindTexture(GL_TEXTURE_2D, mTitleTextureID);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 

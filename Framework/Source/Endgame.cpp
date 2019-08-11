@@ -236,6 +236,7 @@ bool Endgame::getLoss()
 
 void Endgame::setLoss(bool state)
 {
+	if (stateWin) return;
 	stateLoss = state;
 }
 
@@ -246,6 +247,7 @@ bool Endgame::getWin()
 
 void Endgame::setWin(bool state)
 {
+	if (stateLoss) return;
 	stateWin = state;
 }
 
