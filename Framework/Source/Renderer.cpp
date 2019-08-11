@@ -8,7 +8,7 @@
 //
 
 #include "Renderer.h"
-
+#include "Menu.h"
 
 #include <stdio.h>
 #include <string>
@@ -79,6 +79,10 @@ void Renderer::Initialize()
 			shaderPathPrefix + "SolidColor.vertexshader",
             shaderPathPrefix + "SolidColor.fragmentshader"
 		)
+	);
+
+	sShaderProgramID.push_back(
+		Menu::compileAndLinkShaders()
 	);
     
 	sCurrentShader = 0;

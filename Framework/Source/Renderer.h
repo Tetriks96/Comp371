@@ -23,9 +23,7 @@ struct GLFWwindow;
 enum ShaderType
 {
 	SHADER_SOLID_COLOR,
-	SHADER_PATH_LINES,
-	SHADER_BLUE,
-	NUM_SHADERS
+	SHADER_MENU,
 };
 
 
