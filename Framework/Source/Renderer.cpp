@@ -9,6 +9,7 @@
 
 #include "Renderer.h"
 #include "Menu.h"
+#include "Endgame.h"
 
 #include <stdio.h>
 #include <string>
@@ -84,7 +85,10 @@ void Renderer::Initialize()
 	sShaderProgramID.push_back(
 		Menu::compileAndLinkShaders()
 	);
-    
+
+	sShaderProgramID.push_back(
+		Endgame::compileAndLinkShaders()
+	);
 	sCurrentShader = 0;
 
 }

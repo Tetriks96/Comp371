@@ -52,7 +52,7 @@ void Endgame::Draw()
 		mEndTextureID = loadTexture("../Assets/Textures/GameOver.png");
 	}
 
-	Renderer::SetShader(SHADER_MENU);
+	Renderer::SetShader(SHADER_END);
 	int shaderProgram = Renderer::GetShaderProgramID();
 
 	glDisable(GL_DEPTH_TEST);
@@ -236,7 +236,6 @@ bool Endgame::getLoss()
 
 void Endgame::setLoss(bool state)
 {
-	if (stateWin) return;
 	stateLoss = state;
 }
 
@@ -247,7 +246,6 @@ bool Endgame::getWin()
 
 void Endgame::setWin(bool state)
 {
-	if (stateLoss) return;
 	stateWin = state;
 }
 

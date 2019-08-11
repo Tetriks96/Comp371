@@ -24,6 +24,7 @@ enum ShaderType
 {
 	SHADER_SOLID_COLOR,
 	SHADER_MENU,
+	SHADER_END
 };
 
 
