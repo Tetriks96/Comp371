@@ -44,9 +44,10 @@ void WorldDrawer::DrawWorld(
 		(*it)->Draw();
 	}
 
-	for (vector<BubbleGroup*>::iterator it = bubbleGroups.begin(); it < bubbleGroups.end(); ++it)
+	// Draw Player Bubble (BubbleGroups[0]) last, because the Player Bubble Group is Transparent
+	for (int i = (int)bubbleGroups.size() - 1; i >= 0; i--)
 	{
-		(*it)->Draw();
+		bubbleGroups[i]->Draw();
 	}
 
 	// Send the view projection constants to the shader
