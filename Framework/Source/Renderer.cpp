@@ -8,7 +8,8 @@
 //
 
 #include "Renderer.h"
-
+#include "Menu.h"
+#include "Endgame.h"
 
 #include <stdio.h>
 #include <string>
@@ -80,6 +81,11 @@ void Renderer::Initialize()
             shaderPathPrefix + "SolidColor.fragmentshader"
 		)
 	);
+
+	sShaderProgramID.push_back(
+		Menu::compileAndLinkShaders()
+	);
+
     
 	sCurrentShader = 0;
 

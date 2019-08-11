@@ -53,4 +53,5 @@ private:
 	static void ScrollCallback(GLFWwindow* window, double x, double y);
 
 	static bool sPlayGame;
+	static bool sPauseGame;
 };

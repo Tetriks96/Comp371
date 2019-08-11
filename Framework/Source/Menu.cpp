@@ -1,82 +1,72 @@
 #include "Menu.h"
-#include "World.h"
-#include "WorldDrawer.h"
 #include "Renderer.h"
-#include "EventManager.h"
-#include "Model.h"
 
 #include <iostream>
-#include <list>
-#include <algorithm>
 
-#define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
-#include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
-
-#include <GLFW/glfw3.h> // GLFW provides a cross-platform interface for creating a graphical context,
-// initializing OpenGL and binding inputs
-
-#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
 #include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
-#include <glm/common.hpp>
 
 #include <FreeImageIO.h>
-
-#define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
-#include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
-
-#include <GLFW/glfw3.h> // GLFW provides a cross-platform interface for creating a graphical context,
-						// initializing OpenGL and binding inputs
-
-#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
 
 
 using namespace std;
 using namespace glm;
 
+Menu::Menu()
+{
+#if defined(PLATFORM_OSX)
+	mTitleTextureID = loadTexture("Textures/NeonTitle.png");
+	mPressTextureID = loadTexture("Textures/NeonPress.png");
+#else
+	mTitleTextureID = loadTexture("../Assets/Textures/NeonTitle.png");
+	mPressTextureID = loadTexture("../Assets/Textures/NeonPress.png");
+#endif
+
+	// Define and upload geometry to the GPU here ...
+	createVertexBufferObject();
+}
+
+Menu::~Menu()
+{
+
+}
 
 void Menu::Draw()
 {
-	if (paused) {
-		glDisable(GL_DEPTH_TEST);
-#if defined(PLATFORM_OSX)
-		GLuint titleTextureID = loadTexture("Textures/NeonTitle.png");
-		GLuint pressTextureID = loadTexture("Textures/NeonPress.png");
-#else
-		GLuint titleTextureID = loadTexture("../Assets/Textures/NeonTitle.png");
-		GLuint pressTextureID = loadTexture("../Assets/Textures/NeonPress.png");
-#endif
-		// White background
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
-		
-		// Compile and link shaders here ...
-		int shaderProgram = compileAndLinkShaders();
+	Renderer::SetShader(SHADER_MENU);
+	int shaderProgram = Renderer::GetShaderProgramID();
 
-		// Define and upload geometry to the GPU here ...
-		int vbo = createVertexBufferObject();
+	glDisable(GL_DEPTH_TEST);
 
-		mat4 world(1.0f);
-		setWorldMatrix(shaderProgram, world);
-		glUseProgram(shaderProgram);
+	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texturedSquareVertexArray), texturedSquareVertexArray, GL_STATIC_DRAW);
 
-		glActiveTexture(GL_TEXTURE0);
-		GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
-		glBindTexture(GL_TEXTURE_2D, titleTextureID);
-		glUniform1i(textureLocation, 0);
+	// White background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	mat4 world(1.0f);
 
-		glBindTexture(GL_TEXTURE_2D, titleTextureID);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	setWorldMatrix(shaderProgram, world);
+	glUseProgram(shaderProgram);
 
-		glBindTexture(GL_TEXTURE_2D, pressTextureID);
-		mat4 pressworld = translate(mat4(1.0f), vec3(0.0f, -1.25f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 0.5f, 1.0f));
-		setWorldMatrix(shaderProgram, pressworld);
+	glActiveTexture(GL_TEXTURE0);
+	GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
+	glBindTexture(GL_TEXTURE_2D, mTitleTextureID);
+	glUniform1i(textureLocation, 0);
 
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
-		glEnable(GL_DEPTH_TEST);
+	glBindTexture(GL_TEXTURE_2D, mTitleTextureID);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-	}
+	glBindTexture(GL_TEXTURE_2D, mPressTextureID);
+	mat4 pressworld = translate(mat4(1.0f), vec3(0.0f, -1.25f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 0.5f, 1.0f));
+	setWorldMatrix(shaderProgram, pressworld);
+
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	glEnable(GL_DEPTH_TEST);
+	Renderer::SetShader(SHADER_SOLID_COLOR);
 }
 
 bool Menu::isPaused()
@@ -84,15 +74,16 @@ bool Menu::isPaused()
 	return paused;
 }
 
-void Menu::toggle()
+void Menu::Pause()
 {
-	paused = !paused;
+	paused = true;
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+}
 
-	if (paused)
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	else
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
+void Menu::Resume()
+{
+	paused = false;
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 int Menu::loadTexture(char* imagepath)
@@ -127,18 +118,16 @@ int Menu::loadTexture(char* imagepath)
 	return texture;
 }
 
-int Menu::createVertexBufferObject()
+void Menu::createVertexBufferObject()
 {
 	// Create a vertex array
-	GLuint vertexArrayObject;
-	glGenVertexArrays(1, &vertexArrayObject);
-	glBindVertexArray(vertexArrayObject);
+	glGenVertexArrays(1, &mVAO);
+	glBindVertexArray(mVAO);
 
 
 	// Upload Vertex Buffer to the GPU, keep a reference to it (vertexBufferObject)
-	GLuint vertexBufferObject;
-	glGenBuffers(1, &vertexBufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+	glGenBuffers(1, &mVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texturedSquareVertexArray), texturedSquareVertexArray, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0,                   // attribute 0 matches aPos in Vertex Shader
@@ -168,12 +157,9 @@ int Menu::createVertexBufferObject()
 		(void*)(2 * sizeof(vec3))      // uv is offseted by 2 vec3 (comes after position and color)
 	);
 	glEnableVertexAttribArray(2);
-
-
-	return vertexBufferObject;
 }
 
-int Menu::compileAndLinkShaders()
+GLuint Menu::compileAndLinkShaders()
 {
 	// vertex shader
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -200,7 +186,7 @@ int Menu::compileAndLinkShaders()
 		std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 	// link shaders
-	int shaderProgram = glCreateProgram();
+	GLuint shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);

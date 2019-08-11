@@ -1,14 +1,17 @@
 #pragma once
 
 #include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Languag
+#include <GL/glew.h>
 class Endgame {
 public:
+	Endgame();
+	~Endgame();
 	void Draw();
-	int loadTexture(char* imagepath);
-	int createVertexBufferObject();
-	int compileAndLinkShaders();
-	const char* getFragmentShaderSource();
-	const char* getVertexShaderSource();
+	static int loadTexture(char* imagepath);
+	void createVertexBufferObject();
+	static GLuint compileAndLinkShaders();
+	static const char* getFragmentShaderSource();
+	static const char* getVertexShaderSource();
 	void setWorldMatrix(int shaderProgram, glm::mat4 worldMatrix);
 	bool getLoss();
 	void setLoss(bool state);
@@ -32,4 +35,10 @@ private:
 	};
 	bool stateLoss = false;
 	bool stateWin = false;
+
+
+	GLuint mEndTextureID;
+	GLuint mPressTextureID;
+	unsigned int mVAO;
+	unsigned int mVBO;
 };

@@ -25,6 +25,7 @@ using namespace glm;
 
 World* World::instance;
 
+bool World::sStartupScreen = true;
 
 World::World(Endgame* endgame)
 {
@@ -83,6 +84,7 @@ void World::Update(float dt)
 
 		if (*it != mBubbleGroups[0] && (*it)->GetGroupVolume() == 0.0f)
 		{
+			delete *it;
 			it = mBubbleGroups.erase(it);
 		}
 		else
@@ -281,7 +283,7 @@ void World::Load(ci_istringstream& iss)
 		mBubbles.push_back(bubble);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerSize, playerColor);
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(sStartupScreen ? 0.0f : playerSize, playerColor);
 	AIBubbleGroup* aiBubbleGroup = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 	AIBubbleGroup* aiBubbleGroup2 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 	AIBubbleGroup* aiBubbleGroup3 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());

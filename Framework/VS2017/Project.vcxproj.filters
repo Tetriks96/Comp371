@@ -1,42 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{d8c6f640-d50d-4388-8a50-90686886c71a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Scenes">
-      <UniqueIdentifier>{66439e2a-f58c-4c2a-aad1-3af2e58e4920}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Textures">
-      <UniqueIdentifier>{7ed1a4dd-0ff4-4b01-b26c-41b24ae198bb}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="..\Source\AIBubbleGroup.cpp" />
+    <ClCompile Include="..\Source\Bubble.cpp" />
+    <ClCompile Include="..\Source\BubbleGroup.cpp" />
+    <ClCompile Include="..\Source\Camera.cpp" />
+    <ClCompile Include="..\Source\ConeModel.cpp" />
+    <ClCompile Include="..\Source\Endgame.cpp" />
+    <ClCompile Include="..\Source\EventManager.cpp" />
+    <ClCompile Include="..\Source\main.cpp" />
+    <ClCompile Include="..\Source\Menu.cpp" />
+    <ClCompile Include="..\Source\Model.cpp" />
+    <ClCompile Include="..\Source\PlayerBubbleGroup.cpp" />
+    <ClCompile Include="..\Source\Renderer.cpp" />
+    <ClCompile Include="..\Source\SceneLoader.cpp" />
+    <ClCompile Include="..\Source\SphereModel.cpp" />
+    <ClCompile Include="..\Source\SpikeBall.cpp" />
+    <ClCompile Include="..\Source\ThirdPersonCamera.cpp" />
+    <ClCompile Include="..\Source\World.cpp" />
+    <ClCompile Include="..\Source\WorldDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\Shaders\SolidColor.fragmentshader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\Assets\Shaders\SolidColor.vertexshader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\Assets\Scenes\PrototypeUniverse.scene">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="..\Assets\Shaders\Texture.fragmentshader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\Assets\Shaders\Texture.vertexshader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <ClInclude Include="..\Source\AIBubbleGroup.h" />
+    <ClInclude Include="..\Source\Bubble.h" />
+    <ClInclude Include="..\Source\BubbleGroup.h" />
+    <ClInclude Include="..\Source\Camera.h" />
+    <ClInclude Include="..\Source\ConeModel.h" />
+    <ClInclude Include="..\Source\Endgame.h" />
+    <ClInclude Include="..\Source\EventManager.h" />
+    <ClInclude Include="..\Source\Menu.h" />
+    <ClInclude Include="..\Source\Model.h" />
+    <ClInclude Include="..\Source\ParsingHelper.h" />
+    <ClInclude Include="..\Source\PlayerBubbleGroup.h" />
+    <ClInclude Include="..\Source\Renderer.h" />
+    <ClInclude Include="..\Source\SceneLoader.h" />
+    <ClInclude Include="..\Source\SphereModel.h" />
+    <ClInclude Include="..\Source\SpikeBall.h" />
+    <ClInclude Include="..\Source\ThirdPersonCamera.h" />
+    <ClInclude Include="..\Source\World.h" />
+    <ClInclude Include="..\Source\WorldDrawer.h" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
     <ClCompile Include="..\Source\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -143,5 +148,16 @@
     <Image Include="..\Assets\Textures\Title.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+=======
+    <Image Include="..\Assets\Textures\Press.png" />
+    <Image Include="..\Assets\Textures\Title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Scenes\PrototypeUniverse.scene" />
+    <None Include="..\Assets\Shaders\SolidColor.fragmentshader" />
+    <None Include="..\Assets\Shaders\SolidColor.vertexshader" />
+    <None Include="..\Assets\Shaders\Texture.fragmentshader" />
+    <None Include="..\Assets\Shaders\Texture.vertexshader" />
+>>>>>>> Stashed changes
   </ItemGroup>
 </Project>

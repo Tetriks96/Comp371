@@ -1,94 +1,92 @@
 #include "Endgame.h"
-#include "World.h"
-#include "WorldDrawer.h"
 #include "Renderer.h"
-#include "EventManager.h"
-#include "Model.h"
 
 #include <iostream>
-#include <list>
-#include <algorithm>
 
-#define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
-#include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
-
-#include <GLFW/glfw3.h> // GLFW provides a cross-platform interface for creating a graphical context,
-// initializing OpenGL and binding inputs
-
-#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
 #include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
-#include <glm/common.hpp>
 
 #include <FreeImageIO.h>
-
-#define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
-#include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
-
-#include <GLFW/glfw3.h> // GLFW provides a cross-platform interface for creating a graphical context,
-						// initializing OpenGL and binding inputs
-
-#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
-
 using namespace std;
 using namespace glm;
 
+Endgame::Endgame()
+{
+#if defined(PLATFORM_OSX)
+	mEndTextureID = loadTexture("Textures/Winner.png");
+	mPressTextureID = loadTexture("Textures/PlayAgain.png");
+#else
+	mEndTextureID = loadTexture("../Assets/Textures/Winner.png");
+	mPressTextureID = loadTexture("../Assets/Textures/PlayAgain.png");
+#endif
+
+	// Define and upload geometry to the GPU here ...
+	createVertexBufferObject();
+}
+
+Endgame::~Endgame()
+{
+
+}
 void Endgame::Draw()
 {
 	glDisable(GL_DEPTH_TEST);
+/*
 #if defined(PLATFORM_OSX)
 	std::string texturePathPrefix = "Textures/";
 #else
 	std::string texturePathPrefix = "../Assets/Textures/";
 #endif
-
-	GLuint textureID;
-	std::string image;
-	/*if (true) {
+	if (true) {
 		image = "GameOver.png";
 		char* path = &(texturePathPrefix + image)[0];
 		textureID = loadTexture(path);
 	}
 	else {
 		textureID = loadTexture("../Assets/Textures");
-	}*/
-
+	}
+*/
 	if (getWin()) {
-		textureID = loadTexture("../Assets/Textures/Winner.png");
+		mEndTextureID = loadTexture("../Assets/Textures/Winner.png");
 	}
 	if (getLoss()) {
-		textureID = loadTexture("../Assets/Textures/GameOver.png");
+		mEndTextureID = loadTexture("../Assets/Textures/GameOver.png");
 	}
 
-	GLuint pressTextureID = loadTexture("../Assets/Textures/PlayAgain.png");
-	// Black background
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	// Compile and link shaders here ...
-	int shaderProgram = compileAndLinkShaders();
+	Renderer::SetShader(SHADER_MENU);
+	int shaderProgram = Renderer::GetShaderProgramID();
 
-	// Define and upload geometry to the GPU here ...
-	int vbo = createVertexBufferObject();
+	glDisable(GL_DEPTH_TEST);
+
+	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texturedSquareVertexArray), texturedSquareVertexArray, GL_STATIC_DRAW);
+
+	// White background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	mat4 world(1.0f);
+
 	setWorldMatrix(shaderProgram, world);
 	glUseProgram(shaderProgram);
 
 	glActiveTexture(GL_TEXTURE0);
 	GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, mEndTextureID);
 	glUniform1i(textureLocation, 0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, mEndTextureID);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-	glBindTexture(GL_TEXTURE_2D, pressTextureID);
+	glBindTexture(GL_TEXTURE_2D, mPressTextureID);
 	mat4 pressworld = translate(mat4(1.0f), vec3(0.0f, -0.9f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 0.5f, 1.0f));
 	setWorldMatrix(shaderProgram, pressworld);
 
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glEnable(GL_DEPTH_TEST);
+	Renderer::SetShader(SHADER_SOLID_COLOR);
 }
 
 int Endgame::loadTexture(char* imagepath)
@@ -123,18 +121,16 @@ int Endgame::loadTexture(char* imagepath)
 	return texture;
 }
 
-int Endgame::createVertexBufferObject()
+void Endgame::createVertexBufferObject()
 {
 	// Create a vertex array
-	GLuint vertexArrayObject;
-	glGenVertexArrays(1, &vertexArrayObject);
-	glBindVertexArray(vertexArrayObject);
+	glGenVertexArrays(1, &mVAO);
+	glBindVertexArray(mVAO);
 
 
 	// Upload Vertex Buffer to the GPU, keep a reference to it (vertexBufferObject)
-	GLuint vertexBufferObject;
-	glGenBuffers(1, &vertexBufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+	glGenBuffers(1, &mVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texturedSquareVertexArray), texturedSquareVertexArray, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0,                   // attribute 0 matches aPos in Vertex Shader
@@ -164,12 +160,9 @@ int Endgame::createVertexBufferObject()
 		(void*)(2 * sizeof(vec3))      // uv is offseted by 2 vec3 (comes after position and color)
 	);
 	glEnableVertexAttribArray(2);
-
-
-	return vertexBufferObject;
 }
 
-int Endgame::compileAndLinkShaders()
+GLuint Endgame::compileAndLinkShaders()
 {
 	// vertex shader
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -196,7 +189,7 @@ int Endgame::compileAndLinkShaders()
 		std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 	// link shaders
-	int shaderProgram = glCreateProgram();
+	GLuint shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);

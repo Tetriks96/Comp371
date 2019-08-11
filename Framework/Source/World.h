@@ -27,6 +27,8 @@ class World
 public:
 	World(Endgame* endgame);
 	~World();
+
+	static bool sStartupScreen;
 	
     static World* GetInstance();
 

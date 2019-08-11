@@ -36,19 +36,9 @@ void WorldDrawer::DrawWorld(
 		(*it)->Draw();
 	}
 
-	// Draw Path Lines
-
-	// Set Shader for path lines
-	unsigned int prevShader = Renderer::GetCurrentShader();
-	Renderer::SetShader(SHADER_PATH_LINES);
-	glUseProgram(Renderer::GetShaderProgramID());
-
 	// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	Renderer::CheckForErrors();
-
-	// Restore previous shader
-	Renderer::SetShader((ShaderType)prevShader);
 }
