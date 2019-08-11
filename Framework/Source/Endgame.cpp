@@ -30,21 +30,21 @@ Endgame::~Endgame()
 void Endgame::Draw()
 {
 	glDisable(GL_DEPTH_TEST);
-/*
-#if defined(PLATFORM_OSX)
-	std::string texturePathPrefix = "Textures/";
-#else
-	std::string texturePathPrefix = "../Assets/Textures/";
-#endif
-	if (true) {
-		image = "GameOver.png";
-		char* path = &(texturePathPrefix + image)[0];
-		textureID = loadTexture(path);
-	}
-	else {
-		textureID = loadTexture("../Assets/Textures");
-	}
-*/
+	/*
+	#if defined(PLATFORM_OSX)
+		std::string texturePathPrefix = "Textures/";
+	#else
+		std::string texturePathPrefix = "../Assets/Textures/";
+	#endif
+		if (true) {
+			image = "GameOver.png";
+			char* path = &(texturePathPrefix + image)[0];
+			textureID = loadTexture(path);
+		}
+		else {
+			textureID = loadTexture("../Assets/Textures");
+		}
+	*/
 	if (getWin()) {
 		mEndTextureID = loadTexture("../Assets/Textures/Winner.png");
 	}

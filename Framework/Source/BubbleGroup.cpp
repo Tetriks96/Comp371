@@ -1,5 +1,7 @@
 #include "BubbleGroup.h"
 #include "EventManager.h"
+#include "SpikeBall.h"
+#include "World.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -37,13 +39,14 @@ BubbleGroup::~BubbleGroup()
 
 void BubbleGroup::Update(float dt)
 {
-	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); it++)
+	for (int bb = 0; bb < (int)mBubbles.size(); bb++)
 	{
-		if (*it == nullptr)
+		Bubble* bubble = mBubbles[bb];
+		if (bubble == nullptr)
 		{
 			continue;
 		}
-		(*it)->Update(dt, mMoveTowards, mCenterOfMass - (*it)->GetPosition());
+		bubble->Update(dt, mMoveTowards, mCenterOfMass - bubble->GetPosition());
 	}
 
 	// Remove null bubbles
@@ -150,7 +153,7 @@ float BubbleGroup::CalculateGroupRadius()
 		}
 
 		float itsLength = distance(mCenterOfMass, (*it)->GetPosition()) + (*it)->GetRadius();
-		maxLength = max(maxLength, itsLength);
+		maxLength = std::max(maxLength, itsLength);
 	}
 
 	return maxLength;

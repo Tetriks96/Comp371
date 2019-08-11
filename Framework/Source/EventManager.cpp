@@ -135,12 +135,8 @@ void EventManager::Update()
 	sFrameTime = static_cast<float>(currentTime - sGameTime);
 	sGameTime = currentTime;
 
-<<<<<<< Updated upstream
-	sPlayGame = glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS;
-=======
 	sPlayGame = glfwGetKey(spWindow, GLFW_KEY_ENTER) == GLFW_PRESS || glfwGetKey(spWindow, GLFW_KEY_KP_ENTER) == GLFW_PRESS;
 	sPauseGame = glfwGetKey(spWindow, GLFW_KEY_P) == GLFW_PRESS;
->>>>>>> Stashed changes
 }
 
 float EventManager::GetFrameTime()

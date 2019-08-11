@@ -121,9 +121,4 @@ void PlayerBubbleGroup::Update(float dt)
 	{
 		BubbleGroup::Split();
 	}
-
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-	{
-		BubbleGroup::Pop();
-	}
 }

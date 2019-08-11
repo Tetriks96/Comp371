@@ -110,6 +110,7 @@
     <ClCompile Include="..\Source\Bubble.cpp" />
     <ClCompile Include="..\Source\BubbleGroup.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
+    <ClCompile Include="..\Source\ConeModel.cpp" />
     <ClCompile Include="..\Source\Endgame.cpp" />
     <ClCompile Include="..\Source\EventManager.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="..\Source\Renderer.cpp" />
     <ClCompile Include="..\Source\SceneLoader.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
+    <ClCompile Include="..\Source\SpikeBall.cpp" />
     <ClCompile Include="..\Source\ThirdPersonCamera.cpp" />
     <ClCompile Include="..\Source\World.cpp" />
     <ClCompile Include="..\Source\WorldDrawer.cpp" />
@@ -128,6 +130,7 @@
     <ClInclude Include="..\Source\Bubble.h" />
     <ClInclude Include="..\Source\BubbleGroup.h" />
     <ClInclude Include="..\Source\Camera.h" />
+    <ClInclude Include="..\Source\ConeModel.h" />
     <ClInclude Include="..\Source\Endgame.h" />
     <ClInclude Include="..\Source\EventManager.h" />
     <ClInclude Include="..\Source\Menu.h" />
@@ -137,6 +140,7 @@
     <ClInclude Include="..\Source\Renderer.h" />
     <ClInclude Include="..\Source\SceneLoader.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
+    <ClInclude Include="..\Source\SpikeBall.h" />
     <ClInclude Include="..\Source\ThirdPersonCamera.h" />
     <ClInclude Include="..\Source\World.h" />
     <ClInclude Include="..\Source\WorldDrawer.h" />

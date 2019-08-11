@@ -31,6 +31,7 @@ private:
 
 	float CalculateRadius(float volume);
 	float CalculateEquilibriumSpeed();
-	void HandleCollisions(std::vector<Bubble*>* bubbles, glm::vec3 previousPosition);
+	float CalculateEquilibriumSpeed(float radius);
+	void HandleCollisions(std::vector<Bubble*>* bubbles);
 	void UpdatePosition(float dt, glm::vec3 moveTowards, glm::vec3 gravity);
 };

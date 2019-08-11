@@ -12,6 +12,7 @@ void WorldDrawer::DrawWorld(
 	vector<Camera*> camera,
 	unsigned int currentCamera,
 	vector<Bubble*> bubbles,
+	vector<SpikeBall*> spikeBalls,
 	vector<BubbleGroup*> bubbleGroups)
 {
 
@@ -27,6 +28,18 @@ void WorldDrawer::DrawWorld(
 
 	// Draw models
 	for (vector<Bubble*>::iterator it = bubbles.begin(); it < bubbles.end(); ++it)
+	{
+		if (*it == nullptr)
+		{
+			continue;
+		}
+		if ((*it)->GetVolume() > 0.0f)
+		{
+			(*it)->Draw();
+		}
+	}
+
+	for (vector<SpikeBall*>::iterator it = spikeBalls.begin(); it < spikeBalls.end(); ++it)
 	{
 		(*it)->Draw();
 	}
