@@ -21,6 +21,9 @@ AIBubbleGroup::AIBubbleGroup(vec3 position, float volume, glm::vec3 color) : Bub
 
 AIBubbleGroup::~AIBubbleGroup()
 {
+	threatBubbles->clear();
+	unitBubbles->clear();
+	targetBubbles->clear();
 }
 
 void AIBubbleGroup::Update(float dt)

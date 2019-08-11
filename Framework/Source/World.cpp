@@ -110,6 +110,7 @@ void World::Update(float dt)
 
 		if (*it != mBubbleGroups[0] && (*it)->GetGroupVolume() == 0.0f)
 		{
+			delete *it;
 			it = mBubbleGroups.erase(it);
 		}
 		else

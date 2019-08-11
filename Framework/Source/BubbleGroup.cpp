@@ -30,7 +30,11 @@ BubbleGroup::BubbleGroup(vec3 centerOfMass, float volume, vec3 color)
 
 BubbleGroup::~BubbleGroup()
 {
-
+	for (vector<Bubble*>::iterator it = mBubbles.begin(); it < mBubbles.end(); it++)
+	{
+		delete *it;
+	}
+	mBubbles.clear();
 }
 
 void BubbleGroup::Update(float dt)
