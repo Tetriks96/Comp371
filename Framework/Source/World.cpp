@@ -307,7 +307,7 @@ void World::Load(ci_istringstream& iss)
 		mSpikeBalls.push_back(spikeball);
 	}
 
-	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(sStartupScreen ? 0.0f : playerSize, playerColor);
+	PlayerBubbleGroup* playerBubbleGroup = new PlayerBubbleGroup(playerPosition, sStartupScreen ? 0.0f : playerSize, playerColor);
 	AIBubbleGroup* aiBubbleGroup = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 	AIBubbleGroup* aiBubbleGroup2 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());
 	AIBubbleGroup* aiBubbleGroup3 = new AIBubbleGroup(maxDistance * GetRandomPositionInsideUnitSphere(), minSize, GetRandomColor());

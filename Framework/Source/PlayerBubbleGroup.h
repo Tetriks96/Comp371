@@ -5,7 +5,7 @@
 class PlayerBubbleGroup : public BubbleGroup
 {
 public:
-	PlayerBubbleGroup(float volume, glm::vec3 color);
+	PlayerBubbleGroup(glm::vec3 position, float volume, glm::vec3 color);
 	~PlayerBubbleGroup();
 	virtual void Update(float dt);
 	virtual void Draw();
