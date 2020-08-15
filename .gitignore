@@ -1,4 +1,5 @@
 .vs/
-Framework/Bin
+Framework/Bin/*
+!Framework/Bin/FreeImage.dll
 Framework/Build
 Framework/VS2017/Project.log
